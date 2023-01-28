@@ -38,8 +38,8 @@ class _PostTabState extends State<PostTab> {
                                         Text("Username",
                                             style: TextStyle(fontSize: 18)),
                                         // Expanded(
-                                        //     child: 
-                                            Text(
+                                        //     child:
+                                        Text(
                                           "รายละเอียดโพสต์",
                                           overflow: TextOverflow.ellipsis,
                                         )

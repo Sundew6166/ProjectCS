@@ -11,11 +11,7 @@ class _SaleTabState extends State<SaleTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: BookCard(),
-      ),
-      // )
+      body: BookCard(),
     );
   }
 }
@@ -30,7 +26,7 @@ class BookCard extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        itemCount: 6,
+        itemCount: 16,
         itemBuilder: (BuildContext context, index) {
           return Card(
             child: Container(
@@ -44,24 +40,23 @@ class BookCard extends StatelessWidget {
                       fit: BoxFit.fill,
                     ),
                   ),
-                  Text(
-                    'Title',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Row(
-                    children: [
-                      Text(
-                        'Subtitle',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
-                        ),
-                      ),
-                    ],
-                  )
+                  Padding(
+                      padding: EdgeInsets.all(2),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text("ชื่อหนังสือชื่อว่าอะไรนะต้องไปหาอาแล้ว",
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 18)),
+                            SizedBox(
+                              height: 5,
+                            ),
+                            Text(
+                              '200฿',
+                              style: TextStyle(fontSize: 18, color: Colors.red),
+                            ),
+                          ]))
                 ],
               ),
             ),
@@ -70,7 +65,7 @@ class BookCard extends StatelessWidget {
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           crossAxisSpacing: 2.0,
-          mainAxisExtent: 264,
+          mainAxisExtent: 290,
         ),
       ),
     );
