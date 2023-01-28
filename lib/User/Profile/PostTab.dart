@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-class StockTab extends StatefulWidget {
-  const StockTab({super.key});
+class PostTab extends StatefulWidget {
+  const PostTab({super.key});
 
   @override
-  State<StockTab> createState() => _StockTabState();
+  State<PostTab> createState() => _PostTabState();
 }
 
-class _StockTabState extends State<StockTab> {
+class _PostTabState extends State<PostTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: new ListView.builder(
         padding: const EdgeInsets.all(5),
         itemBuilder: (context, i) {
@@ -23,7 +22,12 @@ class _StockTabState extends State<StockTab> {
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset('images/Conan.jpg'),
+                            CircleAvatar(
+                              backgroundImage:
+                                  const AssetImage("images/rambo.jpg"),
+                              backgroundColor: Color(0xffadd1dc),
+                              radius: 30,
+                            ),
                             Expanded(
                               child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -31,13 +35,15 @@ class _StockTabState extends State<StockTab> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text("ชื่อหนังสือ",
+                                        Text("Username",
                                             style: TextStyle(fontSize: 18)),
-                                        Expanded(
-                                            child: Text(
-                                          "ISBN",
+                                        // Expanded(
+                                        //     child: 
+                                            Text(
+                                          "รายละเอียดโพสต์",
                                           overflow: TextOverflow.ellipsis,
-                                        ))
+                                        )
+                                        // )
                                       ])),
                             ),
                             Text("03.03.2020"),

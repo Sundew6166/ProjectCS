@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
           title: Text(
             "My Book",
           ),
-          leading: Image.asset("images/book-icon.png"),
+          // leading: Image.asset("images/logo.PNG"),
           actions: [
             IconButton(
               icon: Icon(Icons.notifications),

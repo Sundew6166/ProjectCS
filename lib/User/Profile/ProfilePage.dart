@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/User/Profile/SettingPage.dart';
 import 'package:my_book/User/Profile/StockTab.dart';
+import 'package:my_book/User/Profile/SaleTab.dart';
+import 'package:my_book/User/Profile/PostTab.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -20,7 +22,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
         title: Text(
           "My Book",
         ),
-        leading: Image.asset("images/book-icon.png"),
+        // leading: Image.asset("images/logo.PNG"),
         actions: [
           IconButton(
             icon: Icon(Icons.more_vert),
@@ -59,7 +61,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             height: 10,
           ),
           Container(
-          height: 35,
+            height: 35,
             child: TabBar(
                 indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(50), // Creates border
@@ -82,7 +84,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   ),
                   Tab(
                     icon: Icon(
-                      Icons.sell_outlined,
+                      Icons.shopping_cart_outlined,
                       size: 30,
                     ),
                   )
@@ -91,13 +93,14 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           Container(
             width: double.maxFinite,
             height: 485,
-            child: TabBarView(
-                controller: _tabController,
-                children: [
-                  // Text('stock'), 
-                  StockTab(),
-                Text('post'), 
-                Text('sell')]),
+            child: TabBarView(controller: _tabController, children: [
+              // Text('stock'),
+              StockTab(),
+              // Text('post'),
+              PostTab(),
+              // Text('sell'),
+              SaleTab(),
+            ]),
           ),
         ],
       ),

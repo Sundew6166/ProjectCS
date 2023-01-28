@@ -1,26 +1,70 @@
 import 'package:flutter/material.dart';
 
-class SettingPage extends StatefulWidget {
+class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
 
-  @override
-  State<SettingPage> createState() => _SettingPageState();
-}
+  Widget _arrow() {
+    return Icon(
+      Icons.arrow_forward_ios,
+      size: 20.0,
+    );
+  }
 
-class _SettingPageState extends State<SettingPage> {
   @override
   Widget build(BuildContext context) {
+    var brightness = MediaQuery.of(context).platformBrightness;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('ตั้งค่า'),
+        title: Text(
+          'ตั้งค่า',
+        ),
       ),
-      body: Center(
-        // child: ElevatedButton(
-        //   onPressed: () {
-        //     Navigator.pop(context);
-        //   },
-        child: const Text('Go back!'),
-        // ),
+      body: ListView(
+        padding: const EdgeInsets.all(8),
+        children: <Widget>[
+          Card(
+              child: ListTile(
+                  title: Text("เปลี่ยนรหัสผ่าน"),
+                  // subtitle: Text("The battery is full."),
+                  leading: Icon(
+                    Icons.password,
+                    size: 40,
+                    color: Color(0xffcaa171),
+                  ),
+                  trailing: Icon(Icons.navigate_next))),
+          Card(
+              child: ListTile(
+                  title: Text("แก้ไขข้อมูลการจัดส่ง"),
+                  leading: Icon(
+                    Icons.edit_location_outlined,
+                    size: 40, 
+                    color: Color(0xffcaa171)),
+                  trailing: Icon(Icons.navigate_next))),
+          Card(
+              child: ListTile(
+                  title: Text("แก้ไขโปร์ไฟล์"),
+                  leading: Icon(
+                    Icons.account_circle_outlined,
+                    size: 40, 
+                    color: Color(0xffcaa171)),
+                  trailing: Icon(Icons.navigate_next))),
+          Card(
+              child: ListTile(
+                  title: Text("ประวัติการซื้อขาย"),
+                  leading:
+                      Icon(Icons.history, 
+                      size: 40, 
+                      color: Color(0xffcaa171)),
+                  trailing: Icon(Icons.navigate_next))),
+          Card(
+              child: ListTile(
+                title: Text("ออกจากระบบ"),
+                leading: Icon(
+                  Icons.logout, 
+                  size: 40, 
+                  color: Color(0xffcaa171)),
+          )),
+        ],
       ),
     );
   }

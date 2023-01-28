@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-class StockTab extends StatefulWidget {
-  const StockTab({super.key});
+class SaleTab extends StatefulWidget {
+  const SaleTab({super.key});
 
   @override
-  State<StockTab> createState() => _StockTabState();
+  State<SaleTab> createState() => _SaleTabState();
 }
 
-class _StockTabState extends State<StockTab> {
+class _SaleTabState extends State<SaleTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
       body: new ListView.builder(
         padding: const EdgeInsets.all(5),
         itemBuilder: (context, i) {
@@ -35,7 +34,7 @@ class _StockTabState extends State<StockTab> {
                                             style: TextStyle(fontSize: 18)),
                                         Expanded(
                                             child: Text(
-                                          "ISBN",
+                                          "ราคา",
                                           overflow: TextOverflow.ellipsis,
                                         ))
                                       ])),
