@@ -17,6 +17,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     TabController _tabController = TabController(length: 3, vsync: this);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         centerTitle: false,
         title: Text(
@@ -35,7 +36,8 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           ),
         ],
       ),
-      body: Column(
+      body: SingleChildScrollView(
+          child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
@@ -92,7 +94,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           ),
           Container(
             width: double.maxFinite,
-            height: 485,
+            height: 480,
             child: TabBarView(controller: _tabController, children: [
               // Text('stock'),
               StockTab(),
@@ -104,6 +106,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
           ),
         ],
       ),
-    );
+    ));
   }
 }
