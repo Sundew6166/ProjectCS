@@ -14,9 +14,11 @@ class _SearchPageState extends State<SearchPage> {
       appBar: AppBar(
         title: const Text('ค้นหา'),
       ),
-      body: Center(
+      body: Container(
+            color: Color(0xfff5f3e8),
+            child:Center(
         child: const Text('search page'),
       ),
-    );
+    ));
   }
 }

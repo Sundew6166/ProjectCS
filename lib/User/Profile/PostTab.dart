@@ -11,8 +11,11 @@ class _PostTabState extends State<PostTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: new ListView.builder(
+        body: Container(
+      color: Color(0xfff5f3e8),
+      child: new ListView.builder(
         padding: const EdgeInsets.all(5),
+        itemCount: 5,
         itemBuilder: (context, i) {
           return Container(
               height: 100,
@@ -50,6 +53,6 @@ class _PostTabState extends State<PostTab> {
                           ]))));
         },
       ),
-    );
+    ));
   }
 }

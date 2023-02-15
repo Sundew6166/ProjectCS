@@ -38,15 +38,15 @@ class _BottomBarState extends State<BottomBar> {
         items: [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
-            label: 'Home',
+            label: 'หน้าแรก',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.qr_code_scanner),
-            label: 'Scan',
+            label: 'สแกน',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
-            label: 'Profile',
+            label: 'โปรไฟล์',
           ),
         ],
         selectedItemColor: Colors.white,

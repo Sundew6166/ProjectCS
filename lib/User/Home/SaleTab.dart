@@ -11,8 +11,7 @@ class _SaleTabState extends State<SaleTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BookCard(),
-    );
+        body: Container(color: Color(0xfff5f3e8), child: BookCard()));
   }
 }
 
@@ -26,7 +25,7 @@ class BookCard extends StatelessWidget {
       child: GridView.builder(
         shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        itemCount: 16,
+        itemCount: 6,
         itemBuilder: (BuildContext context, index) {
           return Card(
             child: Container(
@@ -34,12 +33,20 @@ class BookCard extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  // Expanded(
+                  //   child: Image.asset(
+                  //     "images/Conan.jpg",
+                  //     fit: BoxFit.fill,
+                  //   ),
+                  // ),
                   Expanded(
+                      child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10), // Image border
                     child: Image.asset(
-                      "images/Conan.jpg",
+                      'images/Conan.jpg',
                       fit: BoxFit.fill,
                     ),
-                  ),
+                  )),
                   Padding(
                       padding: EdgeInsets.all(2),
                       child: Column(

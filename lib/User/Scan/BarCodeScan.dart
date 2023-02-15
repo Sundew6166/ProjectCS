@@ -29,7 +29,9 @@ class _BarCodeScanState extends State<BarCodeScan> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Barcode Scanner"),),
-      body: Column(
+      body: Container(
+          color: Color(0xfff5f3e8),
+          child:Column(
         children: <Widget>[
           Expanded(flex: 4, child: _buildQrView(context)),
           Expanded(
@@ -115,13 +117,13 @@ class _BarCodeScanState extends State<BarCodeScan> {
           )
         ],
       ),
-    );
+    ));
   }
 
   Widget _buildQrView(BuildContext context) {
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
         MediaQuery.of(context).size.height < 400)
-        ? 150.0
+        ? 250.0
         : 300.0;
     return QRView(
       key: qrKey,

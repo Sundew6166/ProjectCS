@@ -11,8 +11,11 @@ class _SaleTabState extends State<SaleTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: new ListView.builder(
+        body: Container(
+      color: Color(0xfff5f3e8),
+      child: new ListView.builder(
         padding: const EdgeInsets.all(5),
+        itemCount: 5,
         itemBuilder: (context, i) {
           return Container(
               height: 100,
@@ -22,7 +25,11 @@ class _SaleTabState extends State<SaleTab> {
                       child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Image.asset('images/Conan.jpg'),
+                            ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(5), // Image border
+                              child: Image.asset('images/Conan.jpg'),
+                            ),
                             Expanded(
                               child: Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 16),
@@ -43,6 +50,6 @@ class _SaleTabState extends State<SaleTab> {
                           ]))));
         },
       ),
-    );
+    ));
   }
 }

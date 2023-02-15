@@ -15,17 +15,15 @@ class _PostTabState extends State<PostTab> {
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
           child: Container(
-              padding: EdgeInsets.all(20),
+              color: Color(0xfff5f3e8),
+              padding: EdgeInsets.all(5),
               child: Column(
                 children: [
-                  recommendSection(),
+                  RecommendSection(),
                   Container(
-                      height: 100,
-                      child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [],
-                          )))
+                    height: 370,
+                    child: PostSection(),
+                  )
                 ],
               ))),
       floatingActionButton: FloatingActionButton(
@@ -42,8 +40,8 @@ class _PostTabState extends State<PostTab> {
   }
 }
 
-class recommendSection extends StatelessWidget {
-  const recommendSection({super.key});
+class RecommendSection extends StatelessWidget {
+  const RecommendSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +51,7 @@ class recommendSection extends StatelessWidget {
         Container(
           child: Text(
             "แนะนำสำหรับคุณ",
-            style: TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 20),
           ),
         ),
         SizedBox(
@@ -61,7 +59,7 @@ class recommendSection extends StatelessWidget {
         ),
         Container(
             height: 180,
-            color: Color(0xfff0dfa0),
+            color: Color(0xffadd1dc),
             child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,
                 child: Column(
@@ -84,11 +82,6 @@ class recommendSection extends StatelessWidget {
                     )
                   ],
                 ))),
-        Container(
-          height: 370,
-          // color: Colors.blue,
-          child: PostSection(),
-        )
       ],
     );
   }
@@ -108,7 +101,11 @@ class RecommendCard extends StatelessWidget {
                 child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Image.asset('images/Conan.jpg'),
+                      // Image.asset('images/Conan.jpg'),
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(5), // Image border
+                        child: Image.asset('images/Conan.jpg'),
+                      ),
                       Expanded(
                         child: Padding(
                             padding: EdgeInsets.symmetric(horizontal: 16),
@@ -136,7 +133,8 @@ class PostSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-      padding: const EdgeInsets.all(5),
+      // padding: const EdgeInsets.all(5),
+      itemCount: 5,
       itemBuilder: (context, i) {
         return Container(
             height: 90,
@@ -160,6 +158,7 @@ class PostSection extends StatelessWidget {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text("Username",
+                                          maxLines: 1,
                                           style: TextStyle(fontSize: 18)),
                                       Text(
                                         "รายละเอียดโพสต์",

@@ -19,7 +19,9 @@ class SettingPage extends StatelessWidget {
           'ตั้งค่า',
         ),
       ),
-      body: ListView(
+      body: Container(
+      color: Color(0xfff5f3e8),
+      child: ListView(
         padding: const EdgeInsets.all(8),
         children: <Widget>[
           Card(
@@ -66,6 +68,6 @@ class SettingPage extends StatelessWidget {
           )),
         ],
       ),
-    );
+    ));
   }
 }
