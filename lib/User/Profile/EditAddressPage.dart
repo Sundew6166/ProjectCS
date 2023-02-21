@@ -14,7 +14,7 @@ class _PostPageState extends State<PostPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text('สร้างโพสต์'),
+          title: const Text('แก้ไขข้อมูลการจัดส่ง'),
         ),
         body: Container(
           alignment: Alignment.center,
