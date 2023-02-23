@@ -1,49 +1,124 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+import 'package:path/path.dart' as Path;
+import 'package:path_provider/path_provider.dart';
 
-class PostPage extends StatefulWidget {
-  const PostPage({super.key});
+class EditProfilePage extends StatefulWidget {
+  const EditProfilePage({super.key});
 
   @override
-  State<PostPage> createState() => _PostPageState();
+  State<EditProfilePage> createState() => _EditProfilePageState();
 }
 
-class _PostPageState extends State<PostPage> {
-  TextEditingController textarea = TextEditingController();
+class _EditProfilePageState extends State<EditProfilePage> {
+  File? _image;
+
+  final _picker = ImagePicker();
+
+  Future<void> _openImagePicker() async {
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+        print(_image);
+      });
+    } else {
+      // print("No image selected");
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('คุณยังไม่ได้เลือกรูป')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('แก้ไขโปรไฟล์'),
-        ),
-        body: Container(
-          alignment: Alignment.center,
-          padding: EdgeInsets.all(20),
-          child: Column(
-            children: [
-              TextField(
-                controller: textarea,
-                keyboardType: TextInputType.multiline,
-                maxLines: 8,
-                decoration: InputDecoration(
-                    hintText: "Write something here...",
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 2, color: const Color(0xff795e35)))),
-              ),
-              ElevatedButton(
-                  onPressed: () {
-                    print(textarea.text);
-                  },
-                  style: ElevatedButton.styleFrom(
-                      fixedSize: Size(400, 40), // specify width, height
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                        10,
-                      ))),
-                  child: Text("Post", style: TextStyle(fontSize: 20)))
-            ],
-          ),
-        ));
+      appBar: AppBar(
+        title: const Text('แก้ไขโปร์ไฟล์'),
+      ),
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+          child: Padding(
+              padding: const EdgeInsets.all(35),
+              child: Column(
+                children: [
+                  // Container(
+                  //   alignment: Alignment.center,
+                  //   width: double.infinity,
+                  //   height: 300,
+
+                  //   color: Colors.grey[300],
+                  //   child: _image != null
+                  //       ? Image.file(_image!, fit: BoxFit.cover)
+                  //       : const Text('กรุณาเลือกรูป'),
+                  // ),
+                  Container(
+                      alignment: Alignment.center,
+                      width: double.infinity,
+                      height: 300,
+                      color: Colors.grey[300],
+                      // child: Column(
+                      //   mainAxisAlignment: MainAxisAlignment.center,
+                      //   mainAxisSize: MainAxisSize.max,
+                      //   crossAxisAlignment: CrossAxisAlignment.stretch,
+                      //   children: <Widget>[
+                      // Container(
+                      //   child: Icon(Icons.image_outlined, size: 300.0),
+                      // ),
+                      child: Container(
+                        child: _image != null
+                            ? Image.file(_image!, fit: BoxFit.cover)
+                            // : Icon(Icons.image_outlined, size: 200),
+                            : const Text('Please select an image'),
+                      )
+                      //   ],
+                      // ),
+                      ),
+                  const SizedBox(height: 20),
+                  Center(
+                    child: ElevatedButton(
+                      onPressed: _openImagePicker,
+                      child: const Text('เลือกรูป'),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  Container(
+                      margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                      child: ElevatedButton(
+                          onPressed: () {
+                            if (_image != null) {
+                              showDialog(
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                        title: const Text("เสร็จสิ้น"),
+                                        content: Text(
+                                            'การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context, 'ตกลง'),
+                                            child: const Text('ตกลง'),
+                                          ),
+                                        ],
+                                      ));
+                            } else {
+                              // print("No image selected");
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      content: Text('คุณยังไม่ได้เลือกรูป')));
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                              fixedSize: Size(400, 40), // specify width, height
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                10,
+                              ))),
+                          child: Text("บันทึก",
+                              style: TextStyle(fontSize: 20)))), //button: login
+                ],
+              ))),
+    );
   }
 }

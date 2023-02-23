@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Profile/EditPasswordPage.dart';
+import 'package:my_book/User/Profile/ChangePasswordPage.dart';
+import 'package:my_book/User/Profile/EditAddressPage.dart';
+import 'package:my_book/User/Profile/EditProfilePage.dart';
+import 'package:my_book/User/Profile/HistoryPage.dart';
+
+import 'package:my_book/User/RegisterPage.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -25,10 +30,11 @@ class SettingPage extends StatelessWidget {
           child: ListView(
             padding: const EdgeInsets.all(8),
             children: <Widget>[
+              // Password
               GestureDetector(
                 onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditPasswordPage()),
+                  MaterialPageRoute(builder: (context) => ChangePasswordPage()),
                 ),
                 child: Card(
                     child: ListTile(
@@ -41,29 +47,58 @@ class SettingPage extends StatelessWidget {
                         ),
                         trailing: Icon(Icons.navigate_next))),
               ),
-              Card(
-                  child: ListTile(
-                      title: Text("แก้ไขข้อมูลการจัดส่ง"),
-                      leading: Icon(Icons.edit_location_outlined,
-                          size: 40, color: Color(0xffcaa171)),
-                      trailing: Icon(Icons.navigate_next))),
-              Card(
-                  child: ListTile(
-                      title: Text("แก้ไขโปร์ไฟล์"),
-                      leading: Icon(Icons.account_circle_outlined,
-                          size: 40, color: Color(0xffcaa171)),
-                      trailing: Icon(Icons.navigate_next))),
-              Card(
-                  child: ListTile(
-                      title: Text("ประวัติการซื้อขาย"),
-                      leading: Icon(Icons.history,
-                          size: 40, color: Color(0xffcaa171)),
-                      trailing: Icon(Icons.navigate_next))),
-              Card(
-                  child: ListTile(
-                title: Text("ออกจากระบบ"),
-                leading: Icon(Icons.logout, size: 40, color: Color(0xffcaa171)),
-              )),
+              // Address
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditAddressPage()),
+                      ),
+                  child: Card(
+                      child: ListTile(
+                          title: Text("แก้ไขข้อมูลการจัดส่ง"),
+                          leading: Icon(Icons.edit_location_outlined,
+                              size: 40, color: Color(0xffcaa171)),
+                          trailing: Icon(Icons.navigate_next)))),
+              // Profile
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EditProfilePage()),
+                      ),
+                  child: Card(
+                      child: ListTile(
+                          title: Text("แก้ไขโปร์ไฟล์"),
+                          leading: Icon(Icons.account_circle_outlined,
+                              size: 40, color: Color(0xffcaa171)),
+                          trailing: Icon(Icons.navigate_next)))),
+              // History
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => HistoryPage()),
+                      ),
+                  child: Card(
+                      child: ListTile(
+                          title: Text("ประวัติการซื้อขาย"),
+                          leading: Icon(Icons.history,
+                              size: 40, color: Color(0xffcaa171)),
+                          trailing: Icon(Icons.navigate_next)))),
+              // Log out
+              GestureDetector(
+                  onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => RegisterScreen()),
+                      ),
+                  child: Card(
+                      child: ListTile(
+                    title: Text("ออกจากระบบ"),
+                    leading:
+                        Icon(Icons.logout, size: 40, color: Color(0xffcaa171)),
+                  ))),
             ],
           ),
         ));

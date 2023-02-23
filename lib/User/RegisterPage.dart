@@ -1,212 +1,240 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/main.dart';
 // import 'package:thought_factory/utils/colors.dart';
 
 class RegisterScreen extends StatefulWidget {
-@override
-_RegisterScreenState createState() => _RegisterScreenState();
+  @override
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-static var _keyValidationForm = GlobalKey<FormState>();
-TextEditingController _textEditConName = TextEditingController();
-TextEditingController _textEditConEmail = TextEditingController();
-TextEditingController _textEditConPassword = TextEditingController();
-TextEditingController _textEditConConfirmPassword = TextEditingController();
-bool isPasswordVisible = false;
-bool isConfirmPasswordVisible = false;
+  static var _keyValidationForm = GlobalKey<FormState>();
+  TextEditingController _textEditName = TextEditingController();
+  TextEditingController _textEditUsername = TextEditingController();
+  TextEditingController _textEditPassword = TextEditingController();
+  TextEditingController _textEditConfirmPassword = TextEditingController();
+  TextEditingController _textEditPhone = TextEditingController();
+  TextEditingController _textEditAddress = TextEditingController();
+  bool isPasswordVisible = false;
+  bool isConfirmPasswordVisible = false;
 
-@override
-void initState() {
-isPasswordVisible = false;
-isConfirmPasswordVisible = false;
-super.initState();
-}
+  @override
+  void initState() {
+    isPasswordVisible = false;
+    isConfirmPasswordVisible = false;
+    super.initState();
+  }
 
-@override
-Widget build(BuildContext context) {
-return Scaffold(
-  // backgroundColor: AppColors.colorGrey,
-  body: SingleChildScrollView(
-    child: Padding(
-        padding: EdgeInsets.only(top: 32.0),
-        child: Column(
-          children: <Widget>[
-            getWidgetImageLogo(),
-            getWidgetRegistrationCard(),
-          ],
-        )),
-  ),
-);
-}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: const Color(0xff795e35),
+      body: SingleChildScrollView(
+        child: Padding(
+            padding: EdgeInsets.only(top: 32.0),
+            child: Column(
+              children: <Widget>[
+                getWidgetImageLogo(),
+                getWidgetRegistrationCard(),
+              ],
+            )),
+      ),
+    );
+  }
 
-Widget getWidgetImageLogo() {
-return Container(
-    alignment: Alignment.center,
-    child: Padding(
-      padding: const EdgeInsets.only(top: 32, bottom: 32),
-      child: Icon(Icons.ac_unit),
-    ));
- }
+  Widget getWidgetImageLogo() {
+    return Container(
+        alignment: Alignment.center,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 0, bottom: 0),
+          child: Image.asset(
+            "images/logo.PNG",
+            height: 100,
+          ),
+        ));
+  }
 
-Widget getWidgetRegistrationCard() {
-final FocusNode _passwordEmail = FocusNode();
-final FocusNode _passwordFocus = FocusNode();
-final FocusNode _passwordConfirmFocus = FocusNode();
+  Widget getWidgetRegistrationCard() {
+    // final FocusNode _passwordEmail = FocusNode();
+    // final FocusNode _passwordFocus = FocusNode();
+    // final FocusNode _passwordConfirmFocus = FocusNode();
 
-return Padding(
-  padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-  child: Card(
-    color: Colors.white,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(12.0),
-    ),
-    elevation: 10.0,
-    child: Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Form(
-        key: _keyValidationForm,
-        child: Column(
-          children: <Widget>[
-            Container(
-              alignment: Alignment.center,
-              width: double.infinity,
-              child: Text(
-                'Register',
-                // style: TextStyle(
-                //     fontSize: 18.0, color: AppColors.colorBlack),
-              ),
-            ), // title: login
-            Container(
-              child: TextFormField(
-                controller: _textEditConName,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                // validator: _validateUserName,
-                onFieldSubmitted: (String value) {
-                  FocusScope.of(context).requestFocus(_passwordEmail);
-                },
-                decoration: InputDecoration(
-                    labelText: 'Full name',
-                    //prefixIcon: Icon(Icons.email),
-                    icon: Icon(Icons.perm_identity)),
-              ),
-            ), //text field : user name
-            Container(
-              child: TextFormField(
-                controller: _textEditConEmail,
-                focusNode: _passwordEmail,
-                keyboardType: TextInputType.emailAddress,
-                textInputAction: TextInputAction.next,
-                // validator: _validateEmail,
-                onFieldSubmitted: (String value) {
-                  FocusScope.of(context).requestFocus(_passwordFocus);
-                },
-                decoration: InputDecoration(
-                    labelText: 'Email',
-                    //prefixIcon: Icon(Icons.email),
-                    icon: Icon(Icons.email)),
-              ),
-            ), //text field: email
-            Container(
-              child: TextFormField(
-                controller: _textEditConPassword,
-                focusNode: _passwordFocus,
-                keyboardType: TextInputType.text,
-                textInputAction: TextInputAction.next,
-                // validator: _validatePassword,
-                onFieldSubmitted: (String value) {
-                  FocusScope.of(context)
-                      .requestFocus(_passwordConfirmFocus);
-                },
-                obscureText: !isPasswordVisible,
-                decoration: InputDecoration(
-                    labelText: 'Password',
-                    suffixIcon: IconButton(
-                      icon: Icon(isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off),
-                      onPressed: () {
-                        setState(() {
-                          isPasswordVisible = !isPasswordVisible;
-                        });
-                      },
-                    ),
-                    icon: Icon(Icons.vpn_key)),
-              ),
-            ), //text field: password
-            Container(
-              child: TextFormField(
-                  controller: _textEditConConfirmPassword,
-                  focusNode: _passwordConfirmFocus,
-                  keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.done,
-                  // validator: _validateConfirmPassword,
-                  obscureText: !isConfirmPasswordVisible,
-                  decoration: InputDecoration(
-                      labelText: 'Confirm Password',
-                      suffixIcon: IconButton(
-                        icon: Icon(isConfirmPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off),
-                        onPressed: () {
-                          setState(() {
-                            isConfirmPasswordVisible =
-                                !isConfirmPasswordVisible;
-                          });
-                        },
-                      ),
-                      icon: Icon(Icons.vpn_key))),
+    return Padding(
+      padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+      child: Card(
+        color: Colors.white,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        elevation: 10.0,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _keyValidationForm,
+            child: Column(
+              children: <Widget>[
+                Container(
+                  alignment: Alignment.center,
+                  width: double.infinity,
+                  child: Text(
+                    'ลงทะเบียน',
+                  ),
+                ), // title: login
+                Container(
+                  child: TextFormField(
+                    controller: _textEditName,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    // validator: _validateUserName,
+                    // onFieldSubmitted: (String value) {
+                    //   FocusScope.of(context).requestFocus(_passwordEmail);
+                    // },
+                    decoration: InputDecoration(
+                        labelText: 'ชื่อ สกุล',
+                        //prefixIcon: Icon(Icons.email),
+                        icon: Icon(Icons.text_fields_outlined)),
+                  ),
+                ),
+                Container(
+                  child: TextFormField(
+                    controller: _textEditUsername,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    // validator: _validateUserName,
+                    // onFieldSubmitted: (String value) {
+                    //   FocusScope.of(context).requestFocus(_passwordEmail);
+                    // },
+                    decoration: InputDecoration(
+                        labelText: 'ชื่อผู้ใช้',
+                        //prefixIcon: Icon(Icons.email),
+                        icon: Icon(Icons.person)),
+                  ),
+                ), //text field : user name //text field: email
+                Container(
+                  child: TextFormField(
+                    controller: _textEditPassword,
+                    // focusNode: _passwordFocus,
+                    keyboardType: TextInputType.text,
+                    textInputAction: TextInputAction.next,
+                    // validator: _validatePassword,
+                    // onFieldSubmitted: (String value) {
+                    //   FocusScope.of(context)
+                    //       .requestFocus(_passwordConfirmFocus);
+                    // },
+                    obscureText: !isPasswordVisible,
+                    decoration: InputDecoration(
+                        labelText: 'รหัสผ่าน',
+                        suffixIcon: IconButton(
+                          icon: Icon(isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off),
+                          onPressed: () {
+                            setState(() {
+                              isPasswordVisible = !isPasswordVisible;
+                            });
+                          },
+                        ),
+                        icon: Icon(Icons.vpn_key)),
+                  ),
+                ), //text field: password
+                Container(
+                  child: TextFormField(
+                      controller: _textEditConfirmPassword,
+                      // focusNode: _passwordConfirmFocus,
+                      keyboardType: TextInputType.text,
+                      textInputAction: TextInputAction.done,
+                      // validator: _validateConfirmPassword,
+                      obscureText: !isConfirmPasswordVisible,
+                      decoration: InputDecoration(
+                          labelText: 'ยืนยันรหัสผ่าน',
+                          suffixIcon: IconButton(
+                            icon: Icon(isConfirmPasswordVisible
+                                ? Icons.visibility
+                                : Icons.visibility_off),
+                            onPressed: () {
+                              setState(() {
+                                isConfirmPasswordVisible =
+                                    !isConfirmPasswordVisible;
+                              });
+                            },
+                          ),
+                          icon: Icon(Icons.vpn_key))),
+                ),
+                Container(
+                  child: TextFormField(
+                    controller: _textEditPhone,
+                    // focusNode: _passwordEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    // validator: _validateEmail,
+                    // onFieldSubmitted: (String value) {
+                    //   FocusScope.of(context).requestFocus(_passwordFocus);
+                    // },
+                    decoration: InputDecoration(
+                        labelText: 'เบอร์โทรศัพท์',
+                        //prefixIcon: Icon(Icons.email),
+                        icon: Icon(Icons.phone)),
+                  ),
+                ),
+                Container(
+                  child: TextFormField(
+                    controller: _textEditAddress,
+                    // focusNode: _passwordEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    // validator: _validateEmail,
+                    // onFieldSubmitted: (String value) {
+                    //   FocusScope.of(context).requestFocus(_passwordFocus);
+                    // },
+                    decoration: InputDecoration(
+                        labelText: 'ที่อยู่',
+                        // prefixIcon: Icon(Icons.email),
+                        icon: Icon(Icons.home)),
+                  ),
+                ),
+                Container(
+                    margin: EdgeInsets.only(top: 32.0),
+                    width: double.infinity,
+                    child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: Size(400, 40), // specify width, height
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                              10,
+                            ))),
+                        child: Text("ลงทะเบียน",
+                            style: TextStyle(fontSize: 20)))), //button: login
+                Container(
+                    margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        InkWell(
+                          splashColor: const Color(0xff795e35).withOpacity(0.5),
+                          // onTap: () {
+                          //   _onTappedTextlogin();
+                          // },
+                          onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MyApp()),
+                ),
+                          child: Text(
+                            ' Login',
+                            style: TextStyle(
+                                color: const Color(0xff795e35),
+                                fontWeight: FontWeight.bold),
+                          ),
+                        )
+                      ],
+                    ))
+              ],
             ),
-            Container(
-              margin: EdgeInsets.only(top: 32.0),
-              width: double.infinity,
-              // child: RaisedButton(
-              //   color: AppColors.colorAccent,
-              //   textColor: Colors.white,
-              //   elevation: 5.0,
-              //   padding: EdgeInsets.only(top: 16.0, bottom: 16.0),
-              //   child: Text(
-              //     'Register',
-              //     style: TextStyle(fontSize: 16.0),
-              //   ),
-              //   onPressed: () {
-              //     if (_keyValidationForm.currentState.validate()) {
-              //       _onTappedButtonRegister();
-              //     }
-              //   },
-              //   shape: RoundedRectangleBorder(
-              //       borderRadius: BorderRadius.circular(25.0)),
-              // ),
-            ), //button: login
-            Container(
-                margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Already Register? ',
-                    ),
-                    InkWell(
-                      // splashColor: AppColors.colorAccent.withOpacity(0.5),
-                      onTap: () {
-                        _onTappedTextlogin();
-                      },
-                      child: Text(
-                        ' Login',
-                        style: TextStyle(
-                            // color: AppColors.colorAccent,
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )
-                  ],
-                ))
-          ],
+          ),
         ),
       ),
-    ),
-  ),
-);
-}
+    );
+  }
 
 // String _validateUserName(String value) {
 // return value.trim().isEmpty ? "Name can't be empty" : null;
@@ -231,8 +259,7 @@ return Padding(
 // return value.length < 5 ? 'Min 5 char required' : null;
 // }
 
-void _onTappedButtonRegister() {}
+  void _onTappedButtonRegister() {}
 
-void _onTappedTextlogin() {}
+  void _onTappedTextlogin() {}
 }
- 

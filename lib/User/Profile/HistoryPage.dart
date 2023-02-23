@@ -1,21 +1,44 @@
 import 'package:flutter/material.dart';
 
-class PostPage extends StatefulWidget {
-  const PostPage({super.key});
+class HistoryPage extends StatefulWidget {
+  const HistoryPage({super.key});
 
   @override
-  State<PostPage> createState() => _PostPageState();
+  State<HistoryPage> createState() => _HistoryPageState();
 }
 
-class _PostPageState extends State<PostPage> {
+class _HistoryPageState extends State<HistoryPage> {
   TextEditingController textarea = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: const Text('ประวัติการซื้อขาย'),
-        ),
-        body: Container());
+      appBar: AppBar(
+        title: const Text('ประวัติการซื้อขาย'),
+      ),
+      body: ListView.builder(
+          itemCount: 15,
+          itemBuilder: (BuildContext context, int index) {
+            return ListTile(
+              title: Text(
+                "หมายเลขคำสั่งซื้อ $index",
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+              subtitle: Text(
+                "\tชื่อหนังสือ",
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
+              trailing:
+                  Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+                const Text("วันเดือนปีที่ทำรายการ",
+                    style: TextStyle(color: Colors.grey, fontSize: 15)),
+                const Text("ยอดรวม .... บาท",
+                    style: TextStyle(color: Colors.grey, fontSize: 15)),
+              ]),
+            );
+          }),
+    );
   }
 }
