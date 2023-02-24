@@ -19,6 +19,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     return Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           centerTitle: false,
           title: Text(
             "My Book",

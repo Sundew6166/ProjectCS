@@ -4,7 +4,8 @@ import 'package:my_book/User/Profile/EditAddressPage.dart';
 import 'package:my_book/User/Profile/EditProfilePage.dart';
 import 'package:my_book/User/Profile/HistoryPage.dart';
 
-import 'package:my_book/User/RegisterPage.dart';
+// import 'package:my_book/RegisterPage.dart';
+import 'package:my_book/LogInPage.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -91,7 +92,7 @@ class SettingPage extends StatelessWidget {
                   onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => RegisterScreen()),
+                            builder: (context) => LogInPage()),
                       ),
                   child: Card(
                       child: ListTile(

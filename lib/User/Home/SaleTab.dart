@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/User/Profile/ChangePasswordPage.dart';
+import 'package:my_book/User/Hub/SellPage.dart';
+
 
 class SaleTab extends StatefulWidget {
   const SaleTab({super.key});
@@ -27,47 +30,54 @@ class BookCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 5),
         itemCount: 6,
         itemBuilder: (BuildContext context, index) {
-          return Card(
-            child: Container(
-              padding: EdgeInsets.all(5),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Expanded(
-                  //   child: Image.asset(
-                  //     "images/Conan.jpg",
-                  //     fit: BoxFit.fill,
-                  //   ),
-                  // ),
-                  Expanded(
-                      child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10), // Image border
-                    child: Image.asset(
-                      'images/Conan.jpg',
-                      fit: BoxFit.fill,
-                    ),
-                  )),
-                  Padding(
-                      padding: EdgeInsets.all(2),
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text("ชื่อหนังสือชื่อว่าอะไรนะต้องไปหาอาแล้ว",
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 18)),
-                            SizedBox(
-                              height: 5,
-                            ),
-                            Text(
-                              '200฿',
-                              style: TextStyle(fontSize: 18, color: Colors.red),
-                            ),
-                          ]))
-                ],
-              ),
-            ),
-          );
+          return GestureDetector(
+              onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => SellPage()),
+                  ),
+              child: Card(
+                child: Container(
+                  padding: EdgeInsets.all(5),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // Expanded(
+                      //   child: Image.asset(
+                      //     "images/Conan.jpg",
+                      //     fit: BoxFit.fill,
+                      //   ),
+                      // ),
+                      Expanded(
+                          child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10), // Image border
+                        child: Image.asset(
+                          'images/Conan.jpg',
+                          fit: BoxFit.fill,
+                        ),
+                      )),
+                      Padding(
+                          padding: EdgeInsets.all(2),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("ชื่อหนังสือชื่อว่าอะไรนะต้องไปหาอาแล้ว",
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 18)),
+                                SizedBox(
+                                  height: 5,
+                                ),
+                                Text(
+                                  '200฿',
+                                  style: TextStyle(
+                                      fontSize: 18, color: Colors.red),
+                                ),
+                              ]))
+                    ],
+                  ),
+                ),
+              ));
         },
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,

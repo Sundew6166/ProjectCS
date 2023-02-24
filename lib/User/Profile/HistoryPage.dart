@@ -17,7 +17,7 @@ class _HistoryPageState extends State<HistoryPage> {
         title: const Text('ประวัติการซื้อขาย'),
       ),
       body: ListView.builder(
-          itemCount: 15,
+          itemCount: 6,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
               title: Text(

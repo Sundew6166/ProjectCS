@@ -1,27 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/main.dart';
-// import 'package:thought_factory/utils/colors.dart';
+// import 'package:my_book/main.dart';
+import 'package:my_book/RegisterPage.dart';
+import 'package:my_book/BottomBar.dart';
 
-class RegisterScreen extends StatefulWidget {
+class LogInPage extends StatefulWidget {
+  const LogInPage({super.key});
+
   @override
-  _RegisterScreenState createState() => _RegisterScreenState();
+  State<LogInPage> createState() => _LogInPageState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _LogInPageState extends State<LogInPage> {
   static var _keyValidationForm = GlobalKey<FormState>();
-  TextEditingController _textEditName = TextEditingController();
   TextEditingController _textEditUsername = TextEditingController();
   TextEditingController _textEditPassword = TextEditingController();
-  TextEditingController _textEditConfirmPassword = TextEditingController();
-  TextEditingController _textEditPhone = TextEditingController();
-  TextEditingController _textEditAddress = TextEditingController();
   bool isPasswordVisible = false;
-  bool isConfirmPasswordVisible = false;
 
   @override
   void initState() {
     isPasswordVisible = false;
-    isConfirmPasswordVisible = false;
     super.initState();
   }
 
@@ -55,10 +52,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget getWidgetRegistrationCard() {
-    // final FocusNode _passwordEmail = FocusNode();
-    // final FocusNode _passwordFocus = FocusNode();
-    // final FocusNode _passwordConfirmFocus = FocusNode();
-
     return Padding(
       padding: const EdgeInsets.only(left: 16.0, right: 16.0),
       child: Card(
@@ -77,24 +70,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   alignment: Alignment.center,
                   width: double.infinity,
                   child: Text(
-                    'ลงทะเบียน',
+                    'เข้าสู่ระบบ',
                   ),
                 ), // title: login
-                Container(
-                  child: TextFormField(
-                    controller: _textEditName,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    // validator: _validateUserName,
-                    // onFieldSubmitted: (String value) {
-                    //   FocusScope.of(context).requestFocus(_passwordEmail);
-                    // },
-                    decoration: InputDecoration(
-                        labelText: 'ชื่อ สกุล',
-                        //prefixIcon: Icon(Icons.email),
-                        icon: Icon(Icons.text_fields_outlined)),
-                  ),
-                ),
                 Container(
                   child: TextFormField(
                     controller: _textEditUsername,
@@ -138,72 +116,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ), //text field: password
                 Container(
-                  child: TextFormField(
-                      controller: _textEditConfirmPassword,
-                      // focusNode: _passwordConfirmFocus,
-                      keyboardType: TextInputType.text,
-                      textInputAction: TextInputAction.done,
-                      // validator: _validateConfirmPassword,
-                      obscureText: !isConfirmPasswordVisible,
-                      decoration: InputDecoration(
-                          labelText: 'ยืนยันรหัสผ่าน',
-                          suffixIcon: IconButton(
-                            icon: Icon(isConfirmPasswordVisible
-                                ? Icons.visibility
-                                : Icons.visibility_off),
-                            onPressed: () {
-                              setState(() {
-                                isConfirmPasswordVisible =
-                                    !isConfirmPasswordVisible;
-                              });
-                            },
-                          ),
-                          icon: Icon(Icons.vpn_key))),
-                ),
-                Container(
-                  child: TextFormField(
-                    controller: _textEditPhone,
-                    // focusNode: _passwordEmail,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    // validator: _validateEmail,
-                    // onFieldSubmitted: (String value) {
-                    //   FocusScope.of(context).requestFocus(_passwordFocus);
-                    // },
-                    decoration: InputDecoration(
-                        labelText: 'เบอร์โทรศัพท์',
-                        //prefixIcon: Icon(Icons.email),
-                        icon: Icon(Icons.phone)),
-                  ),
-                ),
-                Container(
-                  child: TextFormField(
-                    controller: _textEditAddress,
-                    // focusNode: _passwordEmail,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    // validator: _validateEmail,
-                    // onFieldSubmitted: (String value) {
-                    //   FocusScope.of(context).requestFocus(_passwordFocus);
-                    // },
-                    decoration: InputDecoration(
-                        labelText: 'ที่อยู่',
-                        // prefixIcon: Icon(Icons.email),
-                        icon: Icon(Icons.home)),
-                  ),
-                ),
-                Container(
                     margin: EdgeInsets.only(top: 32.0),
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BottomBar()),
+                          ),
                         style: ElevatedButton.styleFrom(
                             fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                               10,
                             ))),
-                        child: Text("ลงทะเบียน",
+                        child: Text("เข้าสู่ระบบ",
                             style: TextStyle(fontSize: 20)))), //button: login
                 Container(
                     margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
@@ -216,11 +143,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           //   _onTappedTextlogin();
                           // },
                           onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => MyApp()),
-                ),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => RegisterScreen()),
+                          ),
                           child: Text(
-                            ' Login',
+                            ' ลงทะเบียน',
                             style: TextStyle(
                                 color: const Color(0xff795e35),
                                 fontWeight: FontWeight.bold),
@@ -235,31 +163,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       ),
     );
   }
-
-// String _validateUserName(String value) {
-// return value.trim().isEmpty ? "Name can't be empty" : null;
-// }
-
-// String _validateEmail(String value) {
-// Pattern pattern =
-//     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-// RegExp regex = new RegExp(pattern);
-// if (!regex.hasMatch(value)) {
-//   return 'Invalid Email';
-// } else {
-//   return null;
-// }
-// }
-
-// String _validatePassword(String value) {
-// return value.length < 5 ? 'Min 5 char required' : null;
-// }
-
-// String _validateConfirmPassword(String value) {
-// return value.length < 5 ? 'Min 5 char required' : null;
-// }
-
-  void _onTappedButtonRegister() {}
-
-  void _onTappedTextlogin() {}
 }
