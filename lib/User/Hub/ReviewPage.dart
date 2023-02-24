@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/BottomBar.dart';
-// import 'package:my_book/User/Profile/ProfilePage.dart';
 
-class SellPage extends StatefulWidget {
-  const SellPage({super.key});
+// มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
+class ReviewPage extends StatefulWidget {
+  const ReviewPage({super.key});
 
   @override
-  State<SellPage> createState() => _SellPageState();
+  State<ReviewPage> createState() => _ReviewPageState();
 }
 
-class _SellPageState extends State<SellPage> {
-  // bool buttonenabled = false;
+class _ReviewPageState extends State<ReviewPage> {
+  Color _iconColor = Colors.black;
 
   @override
   Widget build(BuildContext context) {
@@ -27,56 +26,80 @@ class _SellPageState extends State<SellPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(height: 20),
-                    ImageProduct(),
+                    Row(
+                      // mainAxisSize: MainAxisSize.min,
+
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          width: 50,
+                          // height: 300,
+                          color: Colors.black,
+                        ),
+                        ImageProduct(),
+                        Column(
+                          children: [
+                            // TODO: change color button
+                            IconButton(
+                              icon: const Icon(
+                                Icons.book, size: 45,
+                              ),
+
+                              color: _iconColor,
+                              onPressed: (() {
+                                setState(() {
+                                  _iconColor = Colors.green;
+                                });
+                              }),
+                              // size: 45,
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            Icon(
+                              Icons.shopping_cart,
+                              size: 45,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                    // ImageProduct(),
                     BookName(),
                     Author(),
                     Publisher(),
                     Type(),
                     Price(),
-                    Selling_Price(),
-                    DeliveryFee(),
                     Synopsys(),
-                    Detail(),
                     Container(
                         margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: ElevatedButton(
-                          // TODO: เงื่อนไขการ disable ปุ่มซื้อในกรณีผู้ใช้มีหนังสือเล่มนั้นแล้ว
-                            // onPressed: () {
-                            //   setState(() {
-                            //     //setState to refresh UI
-                            //     if (buttonenabled) {
-                            //       buttonenabled = false;
-                            //       //if buttonenabled == true, then make buttonenabled = false
-                            //     } else {
-                            //       buttonenabled = true;
-                            //       //if buttonenabled == false, then make buttonenabled = true
-                            //     }
-                            //   });
-                            // },
-                            onPressed: (() => showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                      title: const Text("ยืนยันการซื้อหนังสือ"),
-                                      content: Text(
-                                          'ชื่อหนังสือ\nราคารวม XXXX บาท'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'ยกเลิก'),
-                                          child: const Text('ยกเลิก'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomBar())),
-                                          child: const Text('ตกลง'),
-                                        ),
+                            onPressed: () {},
+                            // onPressed: (() => showDialog(
+                            //     context: context,
+                            //     builder: (_) => AlertDialog(
+                            //           title: const Text("ยืนยันการซื้อหนังสือ"),
+                            //           content: Text(
+                            //               'ชื่อหนังสือ\nราคารวม XXXX บาท'),
+                            //           actions: <Widget>[
+                            //             TextButton(
+                            //               onPressed: () =>
+                            //                   Navigator.pop(context, 'ยกเลิก'),
+                            //               child: const Text('ยกเลิก'),
+                            //             ),
+                            //             TextButton(
+                            //               onPressed: () =>
+                            //                   Navigator.push(
+                            //                 context,
+                            //                 MaterialPageRoute(
+                            //                     builder: (context) =>
+                            //                         BottomBar())),
+                            //               child: const Text('ตกลง'),
+                            //             ),
 
-                                      ],
-                                    ))),
+                            //           ],
+                            //         ))),
                             style: ElevatedButton.styleFrom(
                                 fixedSize:
                                     Size(100, 40), // specify width, height
@@ -114,36 +137,6 @@ class BookName extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Center(
         child: Text('ชื่อหนังสือ', style: TextStyle(fontSize: 20)),
-      ),
-    );
-  }
-}
-
-class Selling_Price extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ราคาขาย : ', style: TextStyle(fontSize: 16)),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('XXXX บาท',
-                    style: TextStyle(fontSize: 16, color: Colors.red)),
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -245,38 +238,6 @@ class Price extends StatelessWidget {
   }
 }
 
-class DeliveryFee extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ค่าจัดส่ง : ', style: TextStyle(fontSize: 16)),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('XXXX บาท',
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class Type extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -321,38 +282,6 @@ class Synopsys extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Container(
                 child: Text('เรื่องย่อ : ', style: TextStyle(fontSize: 16)),
-              ),
-            ),
-          ),
-          Container(
-            margin: const EdgeInsets.only(top: 10.0),
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('\t\t\t\tXXXXXXXXXXXXXX',
-                    style: TextStyle(fontSize: 16)),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class Detail extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      child: Column(
-        children: <Widget>[
-          Container(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child:
-                    Text('รายละเอียดอื่น ๆ : ', style: TextStyle(fontSize: 16)),
               ),
             ),
           ),

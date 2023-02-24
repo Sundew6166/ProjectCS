@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/User/Profile/ChangePasswordPage.dart';
+import 'package:my_book/User/Hub/ReviewPage.dart';
+
 
 class StockTab extends StatefulWidget {
   const StockTab({super.key});
@@ -23,7 +25,7 @@ class _StockTabState extends State<StockTab> {
                   onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => ChangePasswordPage()),
+                            builder: (context) => ReviewPage()),
                       ),
                   child: Container(
                       height: 100,

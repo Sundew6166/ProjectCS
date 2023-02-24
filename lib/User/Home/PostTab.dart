@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/User/Home/PostPage.dart';
+import 'package:my_book/User/Hub/ReviewPage.dart';
 
 import 'package:my_book/User/Profile/ChangePasswordPage.dart';
 
@@ -133,7 +134,7 @@ class RecommendCard extends StatelessWidget {
     return GestureDetector(
         onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ChangePasswordPage()),
+              MaterialPageRoute(builder: (context) => ReviewPage()),
             ),
         child: Container(
             height: 90,
