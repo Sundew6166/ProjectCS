@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+// import 'package:firebase_auth/firebase_auth.dart';
+// import '../auth.dart';
 // import 'package:my_book/main.dart';
 import 'package:my_book/RegisterPage.dart';
 import 'package:my_book/BottomBar.dart';
@@ -11,6 +13,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
+
   static var _keyValidationForm = GlobalKey<FormState>();
   TextEditingController _textEditUsername = TextEditingController();
   TextEditingController _textEditPassword = TextEditingController();
@@ -120,10 +123,11 @@ class _LogInPageState extends State<LogInPage> {
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BottomBar()),
-                          ),
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomBar()),
+                            ),
+                        // onPressed: isLogin ? signInWithEmailAndPassword : cre,
                         style: ElevatedButton.styleFrom(
                             fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(

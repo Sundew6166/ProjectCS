@@ -196,7 +196,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     margin: EdgeInsets.only(top: 32.0),
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          
+                        },
                         style: ElevatedButton.styleFrom(
                             fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(
