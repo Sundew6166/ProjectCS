@@ -49,8 +49,7 @@ dependencies:
 flutter_icons:
   ios: true
   android: true
-  image_path: "images/logo.PNG"
-  adaptive_icon_background: "#795e35"
+  image_path: "images/mybook.png"
 
 dev_dependencies:
   flutter_test:
