@@ -28,18 +28,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff795e35),
-      body: SingleChildScrollView(
-        child: Padding(
-            padding: EdgeInsets.only(top: 32.0),
-            child: Column(
-              children: <Widget>[
-                getWidgetImageLogo(),
-                getWidgetRegistrationCard(),
-              ],
-            )),
-      ),
-    );
+        backgroundColor: const Color(0xff795e35),
+        body: SingleChildScrollView(
+          child: new WillPopScope(
+            onWillPop: () async => false,
+            child: Padding(
+                padding: EdgeInsets.only(top: 32.0),
+                child: Column(
+                  children: <Widget>[
+                    getWidgetImageLogo(),
+                    getWidgetRegistrationCard(),
+                  ],
+                )),
+          ),
+        ));
   }
 
   Widget getWidgetImageLogo() {
@@ -196,9 +198,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     margin: EdgeInsets.only(top: 32.0),
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () {
-                          
-                        },
+                        onPressed: () {},
                         style: ElevatedButton.styleFrom(
                             fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(
@@ -215,9 +215,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         InkWell(
                           splashColor: const Color(0xff795e35).withOpacity(0.5),
                           onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => LogInPage()),
-                ),
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LogInPage()),
+                          ),
                           child: Text(
                             'เข้าสู่ระบบ',
                             style: TextStyle(

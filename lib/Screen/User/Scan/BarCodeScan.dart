@@ -47,6 +47,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           if (result != null)
+                          // TODO: 
                             Text(
                                 'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
                           else

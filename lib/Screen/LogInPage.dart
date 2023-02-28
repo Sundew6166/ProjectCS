@@ -13,7 +13,6 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-
   static var _keyValidationForm = GlobalKey<FormState>();
   TextEditingController _textEditUsername = TextEditingController();
   TextEditingController _textEditPassword = TextEditingController();
@@ -28,18 +27,20 @@ class _LogInPageState extends State<LogInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xff795e35),
-      body: SingleChildScrollView(
-        child: Padding(
-            padding: EdgeInsets.only(top: 32.0),
-            child: Column(
-              children: <Widget>[
-                getWidgetImageLogo(),
-                getWidgetRegistrationCard(),
-              ],
-            )),
-      ),
-    );
+        backgroundColor: const Color(0xff795e35),
+        body: SingleChildScrollView(
+          child: new WillPopScope(
+            onWillPop: () async => false,
+            child: Padding(
+                padding: EdgeInsets.only(top: 32.0),
+                child: Column(
+                  children: <Widget>[
+                    getWidgetImageLogo(),
+                    getWidgetRegistrationCard(),
+                  ],
+                )),
+          ),
+        ));
   }
 
   Widget getWidgetImageLogo() {
