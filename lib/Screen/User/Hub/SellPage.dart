@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/BottomBar.dart';
+import 'package:my_book/Screen/BottomBar.dart';
 // import 'package:my_book/User/Profile/ProfilePage.dart';
 
 class SellPage extends StatefulWidget {
@@ -15,79 +15,78 @@ class _SellPageState extends State<SellPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-            // title: const Text('ชื่อหนังสือ'),
-            ),
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-            child: Container(
-                color: Color(0xfff5f3e8),
-                alignment: Alignment.topCenter,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 20),
-                    ImageProduct(),
-                    BookName(),
-                    Author(),
-                    Publisher(),
-                    Type(),
-                    Price(),
-                    Selling_Price(),
-                    DeliveryFee(),
-                    Synopsys(),
-                    Detail(),
-                    Container(
-                        margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: ElevatedButton(
-                          // TODO: เงื่อนไขการ disable ปุ่มซื้อในกรณีผู้ใช้มีหนังสือเล่มนั้นแล้ว
-                            // onPressed: () {
-                            //   setState(() {
-                            //     //setState to refresh UI
-                            //     if (buttonenabled) {
-                            //       buttonenabled = false;
-                            //       //if buttonenabled == true, then make buttonenabled = false
-                            //     } else {
-                            //       buttonenabled = true;
-                            //       //if buttonenabled == false, then make buttonenabled = true
-                            //     }
-                            //   });
-                            // },
-                            onPressed: (() => showDialog(
-                                context: context,
-                                builder: (_) => AlertDialog(
-                                      title: const Text("ยืนยันการซื้อหนังสือ"),
-                                      content: Text(
-                                          'ชื่อหนังสือ\nราคารวม XXXX บาท'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'ยกเลิก'),
-                                          child: const Text('ยกเลิก'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    BottomBar())),
-                                          child: const Text('ตกลง'),
-                                        ),
-
-                                      ],
+            appBar: AppBar(
+                // title: const Text('ชื่อหนังสือ'),
+                ),
+            resizeToAvoidBottomInset: false,
+            body: SingleChildScrollView(
+                child: Container(
+                    color: Color(0xfff5f3e8),
+                    alignment: Alignment.topCenter,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SizedBox(height: 20),
+                        ImageProduct(),
+                        BookName(),
+                        Author(),
+                        Publisher(),
+                        Type(),
+                        Price(),
+                        Selling_Price(),
+                        DeliveryFee(),
+                        Synopsys(),
+                        Detail(),
+                        Container(
+                            margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                            child: ElevatedButton(
+                                // TODO: เงื่อนไขการ disable ปุ่มซื้อในกรณีผู้ใช้มีหนังสือเล่มนั้นแล้ว
+                                // onPressed: () {
+                                //   setState(() {
+                                //     //setState to refresh UI
+                                //     if (buttonenabled) {
+                                //       buttonenabled = false;
+                                //       //if buttonenabled == true, then make buttonenabled = false
+                                //     } else {
+                                //       buttonenabled = true;
+                                //       //if buttonenabled == false, then make buttonenabled = true
+                                //     }
+                                //   });
+                                // },
+                                onPressed: (() => showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                          title: const Text(
+                                              "ยืนยันการซื้อหนังสือ"),
+                                          content: Text(
+                                              'ชื่อหนังสือ\nราคารวม XXXX บาท'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, 'ยกเลิก'),
+                                              child: const Text('ยกเลิก'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () => Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          BottomBar())),
+                                              child: const Text('ตกลง'),
+                                            ),
+                                          ],
+                                        ))),
+                                style: ElevatedButton.styleFrom(
+                                    fixedSize:
+                                        Size(100, 40), // specify width, height
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                      10,
                                     ))),
-                            style: ElevatedButton.styleFrom(
-                                fixedSize:
-                                    Size(100, 40), // specify width, height
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                  10,
-                                ))),
-                            child:
-                                Text("ซื้อ", style: TextStyle(fontSize: 20)))),
-                  ],
-                ))));
+                                child: Text("ซื้อ",
+                                    style: TextStyle(fontSize: 20)))),
+                      ],
+                    ))));
   }
 }
 

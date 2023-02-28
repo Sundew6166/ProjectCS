@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import '../auth.dart';
 // import 'package:my_book/main.dart';
-import 'package:my_book/RegisterPage.dart';
-import 'package:my_book/BottomBar.dart';
+import 'package:my_book/Screen/RegisterPage.dart';
+import 'package:my_book/Screen/BottomBar.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});

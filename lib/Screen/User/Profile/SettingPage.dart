@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Profile/ChangePasswordPage.dart';
-import 'package:my_book/User/Profile/EditAddressPage.dart';
-import 'package:my_book/User/Profile/EditProfilePage.dart';
-import 'package:my_book/User/Profile/HistoryPage.dart';
+import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
+import 'package:my_book/Screen/User/Profile/EditAddressPage.dart';
+import 'package:my_book/Screen/User/Profile/EditProfilePage.dart';
+import 'package:my_book/Screen/User/Profile/HistoryPage.dart';
 
 // import 'package:my_book/RegisterPage.dart';
-import 'package:my_book/LogInPage.dart';
+import 'package:my_book/Screen/LogInPage.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});

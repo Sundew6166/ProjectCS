@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Home/PostTab.dart';
-import 'package:my_book/User/Home/SaleTab.dart';
-import 'package:my_book/User/Home/SearchPage.dart';
-import 'package:my_book/User/Home/NotiPage.dart';
+import 'package:my_book/Screen/User/Home/PostTab.dart';
+import 'package:my_book/Screen/User/Home/SaleTab.dart';
+import 'package:my_book/Screen/User/Home/SearchPage.dart';
+import 'package:my_book/Screen/User/Home/NotiPage.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -12,12 +12,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
       length: 2,
-      child: Scaffold(
+      child: new WillPopScope(
+        onWillPop: () async => false,
+        child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
           centerTitle: false,
@@ -61,5 +62,5 @@ class _HomePageState extends State<HomePage> {
             SaleTab(),
           ],
         ),
-      ));
+      )));
 }

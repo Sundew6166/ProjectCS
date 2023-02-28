@@ -156,6 +156,14 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                                             onPressed: () =>
                                                                 Navigator.pop(
                                                                     context,
+                                                                    'ยกเลิก'),
+                                                            child: const Text(
+                                                                'ยกเลิก'),
+                                                          ),
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context,
                                                                     'ตกลง'),
                                                             child: const Text(
                                                                 'ตกลง'),

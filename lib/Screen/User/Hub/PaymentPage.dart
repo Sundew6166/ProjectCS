@@ -6,6 +6,8 @@ import 'dart:io';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
 
+import 'package:my_book/Screen/BottomBar.dart';
+
 class PaymentPage extends StatefulWidget {
   const PaymentPage({super.key});
 
@@ -33,6 +35,7 @@ class _PaymentPageState extends State<PaymentPage> {
                 PaymentSlip(),
                 SizedBox(height: 20),
                 UploadSlip(),
+                SizedBox(height: 40),
                 Container(
                     // margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
                     child: ElevatedButton(

@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Home/PostPage.dart';
-import 'package:my_book/User/Hub/ReviewPage.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-import 'package:my_book/User/Profile/ChangePasswordPage.dart';
+// screen
+import 'package:my_book/Screen/User/Home/PostPage.dart';
+import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
+
+import 'package:my_book/Screen/User/Hub/AddBook.dart';
+import 'package:my_book/Screen/User/Scan/AddSale.dart';
+
+// model
+import 'package:my_book/Model/Post.dart';
 
 class PostTab extends StatefulWidget {
   const PostTab({super.key});
@@ -12,10 +20,38 @@ class PostTab extends StatefulWidget {
 }
 
 class _PostTabState extends State<PostTab> {
+  late Map<String, dynamic> dataPost;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // dataPost = fetchData();
+    fetchData();
+    // dataPost;
+  }
+
+  Future<Map<String, dynamic>> fetchData() async {
+    final response = await http.get(Uri.parse(
+        'https://22627f01-674e-48ad-a206-83b9f0aa9eb9.mock.pstmn.io/users/1'));
+    // var data = json.decode(response.body);
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+      dataPost = data;
+
+      print('=> $data');
+      print('$dataPost');
+      return data;
+    } else {
+      throw Exception('การโหลดข้อมูลผิดพลาด');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
           child: Container(
               color: Color(0xfff5f3e8),
@@ -55,8 +91,8 @@ class RecommendSection extends StatelessWidget {
           child: Text(
             "แนะนำสำหรับคุณ",
             style: TextStyle(
-              // color: const Color(0xff795e35),
-            fontSize: 25),
+                // color: const Color(0xff795e35),
+                fontSize: 25),
           ),
         ),
         SizedBox(
@@ -76,11 +112,7 @@ class RecommendSection extends StatelessWidget {
                     RecommendCard(),
                     RecommendCard(),
                     RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
+                    RecommendCard(),
                   ],
                 ),
                 Wrap(
@@ -89,37 +121,10 @@ class RecommendSection extends StatelessWidget {
                     RecommendCard(),
                     RecommendCard(),
                     RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
-                    // RecommendCard(),
+                    RecommendCard(),
                   ],
                 )
               ]),
-              // child: Column(
-              //   mainAxisAlignment: MainAxisAlignment.start,
-              //   children: [
-              //     Row(
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       children: [
-              //         RecommendCard(),
-              //         RecommendCard(),
-              //         RecommendCard(),
-              //         RecommendCard(),
-              //       ],
-              //     ),
-              //     Row(
-              //       mainAxisAlignment: MainAxisAlignment.start,
-              //       children: [
-              //         RecommendCard(),
-              //         RecommendCard(),
-              //         RecommendCard(),
-              //         RecommendCard(),
-              //       ],
-              //     )
-              //   ],
-              // )
             )),
       ],
     );
@@ -173,19 +178,23 @@ class RecommendCard extends StatelessWidget {
   }
 }
 
-class PostSection extends StatelessWidget {
+class PostSection extends StatefulWidget {
   const PostSection({super.key});
 
   @override
+  State<PostSection> createState() => _PostSectionState();
+}
+
+class _PostSectionState extends State<PostSection> {
+  @override
   Widget build(BuildContext context) {
     return new ListView.builder(
-      // padding: const EdgeInsets.all(5),
       itemCount: 5,
       itemBuilder: (context, i) {
         return GestureDetector(
             onTap: () => Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => ChangePasswordPage()),
+                  MaterialPageRoute(builder: (context) => AddSale()),
                 ),
             child: Container(
                 height: 90,

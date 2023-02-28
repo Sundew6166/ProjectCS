@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Profile/ChangePasswordPage.dart';
-import 'package:my_book/User/Hub/SellPage.dart';
+import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
+import 'package:my_book/Screen/User/Hub/SellPage.dart';
 
 
 class SaleTab extends StatefulWidget {

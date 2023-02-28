@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Profile/ChangePasswordPage.dart';
-import 'package:my_book/User/Hub/ReviewPage.dart';
+import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
+import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 
 
 class StockTab extends StatefulWidget {
@@ -14,7 +14,7 @@ class _StockTabState extends State<StockTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        resizeToAvoidBottomInset: false,
+        // resizeToAvoidBottomInset: false,
         body: Container(
           color: Color(0xfff5f3e8),
           child: new ListView.builder(

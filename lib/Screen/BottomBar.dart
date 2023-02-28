@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Home/HomePage.dart';
-import 'package:my_book/User/Scan/BarCodeScan.dart';
-import 'package:my_book/User/Profile/ProfilePage.dart';
+import 'package:my_book/Screen/User/Home/HomePage.dart';
+import 'package:my_book/Screen/User/Scan/BarCodeScan.dart';
+import 'package:my_book/Screen/User/Profile/ProfilePage.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});

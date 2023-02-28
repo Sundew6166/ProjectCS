@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/LogInPage.dart';
+import 'package:my_book/Screen/LogInPage.dart';
 // import 'package:thought_factory/utils/colors.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -214,9 +214,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: <Widget>[
                         InkWell(
                           splashColor: const Color(0xff795e35).withOpacity(0.5),
-                          // onTap: () {
-                          //   _onTappedTextlogin();
-                          // },
                           onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => LogInPage()),

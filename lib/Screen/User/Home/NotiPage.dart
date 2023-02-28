@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Hub/PaymentPage.dart';
+import 'package:my_book/Screen/User/Hub/PaymentPage.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});

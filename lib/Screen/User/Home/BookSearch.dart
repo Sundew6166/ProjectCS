@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/User/Profile/ChangePasswordPage.dart';
-import 'package:my_book/User/Hub/SellPage.dart';
+import 'package:my_book/Screen/User/Hub/SellPage.dart';
 
-
-class SaleTab extends StatefulWidget {
-  const SaleTab({super.key});
+class BookSearch extends StatefulWidget {
+  const BookSearch({super.key});
 
   @override
-  State<SaleTab> createState() => _SaleTabState();
+  State<BookSearch> createState() => _BookSearchState();
 }
 
-class _SaleTabState extends State<SaleTab> {
+class _BookSearchState extends State<BookSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,8 +31,7 @@ class BookCard extends StatelessWidget {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => SellPage()),
+                    MaterialPageRoute(builder: (context) => SellPage()),
                   ),
               child: Card(
                 child: Container(
@@ -42,12 +39,6 @@ class BookCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // Expanded(
-                      //   child: Image.asset(
-                      //     "images/Conan.jpg",
-                      //     fit: BoxFit.fill,
-                      //   ),
-                      // ),
                       Expanded(
                           child: ClipRRect(
                         borderRadius: BorderRadius.circular(10), // Image border
