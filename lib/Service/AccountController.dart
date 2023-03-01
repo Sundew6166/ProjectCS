@@ -12,8 +12,8 @@ class AccountController {
   }
 
   void postAccountDetails(String username, String name, String address, String phone) async {
-    var db = FirebaseFirestore.instance;
-    var user = FirebaseAuth.instance.currentUser;
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
     final data = {
       "username" : username,
       "type" : "USER",
@@ -34,5 +34,15 @@ class AccountController {
   Future<void> logout() async {
     FirebaseAuth.instance
       .signOut();
+  }
+
+  Future<void> changePassword(String currentPassword, String newPassword) async {
+    final user = await FirebaseAuth.instance.currentUser;
+    final cred = EmailAuthProvider.credential(email: user?.email ?? "", password: currentPassword);
+
+    await user?.reauthenticateWithCredential(cred)
+      .then((value) async {
+        await user.updatePassword(newPassword);
+      });
   }
 }

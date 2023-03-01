@@ -1,4 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:my_book/Screen/User/Profile/SettingPage.dart';
+
+import '../../../Service/AccountController.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -8,7 +13,7 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
-  static var _keyValidationForm = GlobalKey<FormState>();
+  static var _changePasswordFormKey = GlobalKey<FormState>();
 
   TextEditingController _textEditCurPassword = TextEditingController();
   TextEditingController _textEditConPassword = TextEditingController();
@@ -35,7 +40,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Form(
-                key: _keyValidationForm,
+                key: _changePasswordFormKey,
                 child: Column(
                   children: [
                     Container(
@@ -57,11 +62,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
                                       obscureText: !isCurPasswordVisible,
-                                      validator: (value) {
-                                        return value!.length < 8
-                                            ? 'ใส่รหัสผ่านอย่างน้อย 8 ตัว'
-                                            : null;
-                                      },
+                                      validator: MinLengthValidator(8, errorText: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"),
                                       decoration: InputDecoration(
                                           labelText: 'รหัสผ่านปัจจุบัน',
                                           suffixIcon: IconButton(
@@ -86,11 +87,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
                                       obscureText: !isConPasswordVisible,
-                                      validator: (value) {
-                                        return value!.length < 8
-                                            ? 'ใส่รหัสผ่านอย่างน้อย 8 ตัว'
-                                            : null;
-                                      },
+                                      validator: MinLengthValidator(8, errorText: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"),
                                       decoration: InputDecoration(
                                           labelText: 'รหัสผ่านใหม่',
                                           suffixIcon: IconButton(
@@ -115,11 +112,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
                                       obscureText: !isConfirmPasswordVisible,
-                                      validator: (value) {
-                                        return value!.length < 8
-                                            ? 'ใส่รหัสผ่านอย่างน้อย 8 ตัว'
-                                            : null;
-                                      },
+                                      validator: (value) => MatchValidator(errorText: "รหัสผ่านไม่ตรงกัน").validateMatch(value ?? "", _textEditConPassword.text),
                                       decoration: InputDecoration(
                                           labelText: 'ยืนยันรหัสผ่านใหม่',
                                           suffixIcon: IconButton(
@@ -141,37 +134,45 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       margin: EdgeInsets.only(
                                           top: 16.0, bottom: 16.0),
                                       child: ElevatedButton(
-                                          onPressed: () {
-                                            if (_keyValidationForm.currentState!
-                                                .validate()) {
-                                              showDialog(
+                                          onPressed: () async{
+                                            if (_changePasswordFormKey.currentState!.validate()) {
+                                              try {
+                                                await AccountController().changePassword(_textEditCurPassword.text, _textEditConPassword.text)
+                                                  .then((value) => showDialog(
+                                                    context: context,
+                                                    builder: (_) => AlertDialog(
+                                                      title: Text("เสร็จสิ้น"),
+                                                      content: Text('การเปลี่ยนรหัสผ่านของคุณเสร็จสิ้น'),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SettingPage())),
+                                                          child: const Text('ตกลง'),
+                                                        )
+                                                      ]
+                                                    )
+                                                  ));
+                                              } on FirebaseAuthException catch (e) {
+                                                print(e.code);
+                                                String? message;
+                                                if (e.code == 'wrong-password') {
+                                                  message = "รหัสผ่านปัจจุบันไม่ถูกต้อง";
+                                                } else {
+                                                  message = e.message;
+                                                }
+                                                showDialog(
                                                   context: context,
                                                   builder: (_) => AlertDialog(
-                                                        title: const Text(
-                                                            "เสร็จสิ้น"),
-                                                        content: Text(
-                                                            'การเปลี่ยนรหัสผ่านของคุณเสร็จสิ้น'),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.pop(
-                                                                    context,
-                                                                    'ยกเลิก'),
-                                                            child: const Text(
-                                                                'ยกเลิก'),
-                                                          ),
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.pop(
-                                                                    context,
-                                                                    'ตกลง'),
-                                                            child: const Text(
-                                                                'ตกลง'),
-                                                          ),
-                                                        ],
-                                                      ));
-                                              _keyValidationForm.currentState
-                                                  ?.reset();
+                                                    title: Text(message.toString()),
+                                                    content: Text("เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน กรุณาลองใหม่"),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(context),
+                                                        child: const Text('ตกลง'),
+                                                      )
+                                                    ]
+                                                  )
+                                                );
+                                              }
                                             }
                                             // print(_textEditCurPassword.text);
                                             // print(_textEditConPassword.text);
