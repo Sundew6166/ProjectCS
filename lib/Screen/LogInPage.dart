@@ -1,9 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 // import 'package:firebase_auth/firebase_auth.dart';
 // import '../auth.dart';
 // import 'package:my_book/main.dart';
 import 'package:my_book/Screen/RegisterPage.dart';
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Screen/User/Home/HomePage.dart';
+
+import '../Service/AccountController.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -13,10 +18,11 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  static var _keyValidationForm = GlobalKey<FormState>();
+  static var _loginFormKey = GlobalKey<FormState>();
   TextEditingController _textEditUsername = TextEditingController();
   TextEditingController _textEditPassword = TextEditingController();
   bool isPasswordVisible = false;
+  String? _errorFromFirebase;
 
   @override
   void initState() {
@@ -67,7 +73,7 @@ class _LogInPageState extends State<LogInPage> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
-            key: _keyValidationForm,
+            key: _loginFormKey,
             child: Column(
               children: <Widget>[
                 Container(
@@ -82,7 +88,7 @@ class _LogInPageState extends State<LogInPage> {
                     controller: _textEditUsername,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    // validator: _validateUserName,
+                    validator: RequiredValidator(errorText: "กรุณากรอกชื่อผู้ใช้"),
                     // onFieldSubmitted: (String value) {
                     //   FocusScope.of(context).requestFocus(_passwordEmail);
                     // },
@@ -98,7 +104,7 @@ class _LogInPageState extends State<LogInPage> {
                     // focusNode: _passwordFocus,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    // validator: _validatePassword,
+                    validator: RequiredValidator(errorText: "กรุณากรอกรหัสผ่าน"),
                     // onFieldSubmitted: (String value) {
                     //   FocusScope.of(context)
                     //       .requestFocus(_passwordConfirmFocus);
@@ -119,16 +125,30 @@ class _LogInPageState extends State<LogInPage> {
                         icon: Icon(Icons.vpn_key)),
                   ),
                 ), //text field: password
+                Text(
+                  _errorFromFirebase == null ? "" : _errorFromFirebase.toString(),
+                  style: TextStyle(color: Color(0xFFFF0000)),
+                ),
                 Container(
                     margin: EdgeInsets.only(top: 32.0),
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BottomBar()),
-                            ),
-                        // onPressed: isLogin ? signInWithEmailAndPassword : cre,
+                        onPressed: () async{
+                          setState(() {
+                            _errorFromFirebase = null;
+                          });
+                          if (_loginFormKey.currentState!.validate()) {
+                            try {
+                              await AccountController().login(_textEditUsername.text, _textEditPassword.text)
+                                .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomBar())));
+                            } on FirebaseAuthException catch (e) {
+                              print(e.code);
+                              setState(() {
+                                _errorFromFirebase = "ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง";
+                              });
+                            }
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                             fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(

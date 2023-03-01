@@ -6,9 +6,8 @@ import 'package:my_book/Screen/LogInPage.dart';
 
 class AccountController {
   Future<void> register(String username, String password, String name, String address, String phone) async {
-    String email = username + "@mybook.com";
     await FirebaseAuth.instance
-      .createUserWithEmailAndPassword(email: email, password: password)
+      .createUserWithEmailAndPassword(email: username + "@mybook.com", password: password)
       .then((value) => postAccountDetails(username, name, address, phone));
   }
 
@@ -25,5 +24,10 @@ class AccountController {
     };
 
     db.collection('accounts').doc(user!.uid).set(data);
+  }
+
+  Future<void> login(String username, String password) async {
+    await FirebaseAuth.instance
+      .signInWithEmailAndPassword(email: username + "@mybook.com", password: password);
   }
 }

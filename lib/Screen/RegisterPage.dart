@@ -2,7 +2,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:my_book/Screen/BottomBar.dart';
 import 'package:my_book/Screen/LogInPage.dart';
+import 'package:my_book/Screen/User/Home/HomePage.dart';
 import 'package:my_book/Service/AccountController.dart';
 // import 'package:thought_factory/utils/colors.dart';
 
@@ -229,7 +231,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (_registerFormKey.currentState!.validate()) {
                             try {
                               await AccountController().register(_textEditUsername.text, _textEditPassword.text, _textEditName.text, _textEditAddress.text, _textEditPhone.text)
-                                .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage())));
+                                .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomBar())));
                             } on FirebaseAuthException catch (e) {
                               print(e.code);
                               setState(() {
