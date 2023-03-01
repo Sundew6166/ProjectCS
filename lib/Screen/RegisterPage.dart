@@ -1,5 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:my_book/Screen/LogInPage.dart';
+import 'package:my_book/Service/AccountController.dart';
 // import 'package:thought_factory/utils/colors.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -8,7 +12,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  static var _keyValidationForm = GlobalKey<FormState>();
+  static var _registerFormKey = GlobalKey<FormState>();
   TextEditingController _textEditName = TextEditingController();
   TextEditingController _textEditUsername = TextEditingController();
   TextEditingController _textEditPassword = TextEditingController();
@@ -25,23 +29,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.initState();
   }
 
+  final Future<FirebaseApp> firebase = Firebase.initializeApp();
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: const Color(0xff795e35),
-        body: SingleChildScrollView(
-          child: new WillPopScope(
-            onWillPop: () async => false,
-            child: Padding(
-                padding: EdgeInsets.only(top: 32.0),
-                child: Column(
-                  children: <Widget>[
-                    getWidgetImageLogo(),
-                    getWidgetRegistrationCard(),
-                  ],
-                )),
-          ),
-        ));
+    return FutureBuilder(
+        future: firebase,
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Scaffold(
+              appBar: AppBar(title: Text("Error")),
+              body: Center(child: Text("${snapshot.error}")),
+            );
+          }
+          if (snapshot.connectionState == ConnectionState.done) {
+            return Scaffold(
+                backgroundColor: const Color(0xff795e35),
+                body: SingleChildScrollView(
+                  child: new WillPopScope(
+                    onWillPop: () async => false,
+                    child: Padding(
+                        padding: EdgeInsets.only(top: 32.0),
+                        child: Column(
+                          children: <Widget>[
+                            getWidgetImageLogo(),
+                            getWidgetRegistrationCard(),
+                          ],
+                        )),
+                  ),
+                ));
+          }
+          return Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        });
   }
 
   Widget getWidgetImageLogo() {
@@ -72,7 +93,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
-            key: _keyValidationForm,
+            key: _registerFormKey,
             child: Column(
               children: <Widget>[
                 Container(
@@ -84,25 +105,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ), // title: login
                 Container(
                   child: TextFormField(
-                    controller: _textEditName,
-                    keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.next,
-                    // validator: _validateUserName,
-                    // onFieldSubmitted: (String value) {
-                    //   FocusScope.of(context).requestFocus(_passwordEmail);
-                    // },
-                    decoration: InputDecoration(
-                        labelText: 'ชื่อ สกุล',
-                        //prefixIcon: Icon(Icons.email),
-                        icon: Icon(Icons.text_fields_outlined)),
-                  ),
-                ),
-                Container(
-                  child: TextFormField(
                     controller: _textEditUsername,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    // validator: _validateUserName,
+                    validator: RequiredValidator(errorText: "กรุณากรอกชื่อผู้ใช้"),
                     // onFieldSubmitted: (String value) {
                     //   FocusScope.of(context).requestFocus(_passwordEmail);
                     // },
@@ -118,7 +124,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     // focusNode: _passwordFocus,
                     keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    // validator: _validatePassword,
+                    validator: MinLengthValidator(8, errorText: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"),
                     // onFieldSubmitted: (String value) {
                     //   FocusScope.of(context)
                     //       .requestFocus(_passwordConfirmFocus);
@@ -145,7 +151,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       // focusNode: _passwordConfirmFocus,
                       keyboardType: TextInputType.text,
                       textInputAction: TextInputAction.done,
-                      // validator: _validateConfirmPassword,
+                      validator: (value) => MatchValidator(errorText: "รหัสผ่านไม่ตรงกัน").validateMatch(value ?? "", _textEditPassword.text),
                       obscureText: !isConfirmPasswordVisible,
                       decoration: InputDecoration(
                           labelText: 'ยืนยันรหัสผ่าน',
@@ -164,18 +170,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 Container(
                   child: TextFormField(
-                    controller: _textEditPhone,
-                    // focusNode: _passwordEmail,
-                    keyboardType: TextInputType.emailAddress,
+                    controller: _textEditName,
+                    keyboardType: TextInputType.text,
                     textInputAction: TextInputAction.next,
-                    // validator: _validateEmail,
+                    // validator: _validateUserName,
                     // onFieldSubmitted: (String value) {
-                    //   FocusScope.of(context).requestFocus(_passwordFocus);
+                    //   FocusScope.of(context).requestFocus(_passwordEmail);
                     // },
                     decoration: InputDecoration(
-                        labelText: 'เบอร์โทรศัพท์',
+                        labelText: 'ชื่อ สกุล',
                         //prefixIcon: Icon(Icons.email),
-                        icon: Icon(Icons.phone)),
+                        icon: Icon(Icons.text_fields_outlined)),
                   ),
                 ),
                 Container(
@@ -195,10 +200,35 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 Container(
+                  child: TextFormField(
+                    controller: _textEditPhone,
+                    // focusNode: _passwordEmail,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.next,
+                    // validator: _validateEmail,
+                    // onFieldSubmitted: (String value) {
+                    //   FocusScope.of(context).requestFocus(_passwordFocus);
+                    // },
+                    decoration: InputDecoration(
+                        labelText: 'เบอร์โทรศัพท์',
+                        //prefixIcon: Icon(Icons.email),
+                        icon: Icon(Icons.phone)),
+                  ),
+                ),
+                Container(
                     margin: EdgeInsets.only(top: 32.0),
                     width: double.infinity,
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () async{
+                          if (_registerFormKey.currentState!.validate()) {
+                            try {
+                              await AccountController().register(_textEditUsername.text, _textEditPassword.text, _textEditName.text, _textEditAddress.text, _textEditPhone.text);
+                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage()));
+                            } on FirebaseAuthException catch (e) {
+                              print(e.message);
+                            }
+                          }
+                        },
                         style: ElevatedButton.styleFrom(
                             fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(
