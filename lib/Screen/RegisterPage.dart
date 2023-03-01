@@ -21,6 +21,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController _textEditAddress = TextEditingController();
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
+  String? _errorFromFirebase;
 
   @override
   void initState() {
@@ -115,7 +116,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     decoration: InputDecoration(
                         labelText: 'ชื่อผู้ใช้',
                         //prefixIcon: Icon(Icons.email),
-                        icon: Icon(Icons.person)),
+                        icon: Icon(Icons.person),
+                        errorText: _errorFromFirebase
+                    ),
                   ),
                 ), //text field : user name //text field: email
                 Container(
@@ -220,12 +223,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     width: double.infinity,
                     child: ElevatedButton(
                         onPressed: () async{
+                          setState(() {
+                            _errorFromFirebase = null;
+                          });
                           if (_registerFormKey.currentState!.validate()) {
                             try {
-                              await AccountController().register(_textEditUsername.text, _textEditPassword.text, _textEditName.text, _textEditAddress.text, _textEditPhone.text);
-                              Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage()));
+                              await AccountController().register(_textEditUsername.text, _textEditPassword.text, _textEditName.text, _textEditAddress.text, _textEditPhone.text)
+                                .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage())));
                             } on FirebaseAuthException catch (e) {
-                              print(e.message);
+                              print(e.code);
+                              setState(() {
+                                if(e.code == 'email-already-in-use'){
+                                  _errorFromFirebase = "ชื่อผู้ใช้นี้ถูกใช้ไปแล้ว";
+                                }else{
+                                  _errorFromFirebase = e.message;
+                                }
+                              });
                             }
                           }
                         },
