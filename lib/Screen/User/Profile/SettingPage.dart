@@ -6,6 +6,7 @@ import 'package:my_book/Screen/User/Profile/HistoryPage.dart';
 
 // import 'package:my_book/RegisterPage.dart';
 import 'package:my_book/Screen/LogInPage.dart';
+import 'package:my_book/Service/AccountController.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({super.key});
@@ -89,11 +90,10 @@ class SettingPage extends StatelessWidget {
                           trailing: Icon(Icons.navigate_next)))),
               // Log out
               GestureDetector(
-                  onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => LogInPage()),
-                      ),
+                  onTap: () {
+                    AccountController().logout()
+                      .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage())));
+                  },
                   child: Card(
                       child: ListTile(
                     title: Text("ออกจากระบบ"),

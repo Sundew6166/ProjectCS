@@ -30,4 +30,9 @@ class AccountController {
     await FirebaseAuth.instance
       .signInWithEmailAndPassword(email: username + "@mybook.com", password: password);
   }
+
+  Future<void> logout() async {
+    FirebaseAuth.instance
+      .signOut();
+  }
 }
