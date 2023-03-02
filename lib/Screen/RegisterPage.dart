@@ -183,7 +183,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //   FocusScope.of(context).requestFocus(_passwordEmail);
                     // },
                     decoration: InputDecoration(
-                        labelText: 'ชื่อ สกุล',
+                        labelText: 'ชื่อ สกุล (ข้อมูลการจัดส่ง)',
                         //prefixIcon: Icon(Icons.email),
                         icon: Icon(Icons.text_fields_outlined)),
                   ),
@@ -199,7 +199,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //   FocusScope.of(context).requestFocus(_passwordFocus);
                     // },
                     decoration: InputDecoration(
-                        labelText: 'ที่อยู่',
+                        labelText: 'ที่อยู่ (ข้อมูลการจัดส่ง)',
                         // prefixIcon: Icon(Icons.email),
                         icon: Icon(Icons.home)),
                   ),
@@ -215,7 +215,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     //   FocusScope.of(context).requestFocus(_passwordFocus);
                     // },
                     decoration: InputDecoration(
-                        labelText: 'เบอร์โทรศัพท์',
+                        labelText: 'เบอร์โทรศัพท์ (ข้อมูลการจัดส่ง)',
                         //prefixIcon: Icon(Icons.email),
                         icon: Icon(Icons.phone)),
                   ),

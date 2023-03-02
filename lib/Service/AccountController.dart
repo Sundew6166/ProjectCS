@@ -17,7 +17,7 @@ class AccountController {
     final data = {
       "username" : username,
       "type" : "USER",
-      "name" : (name == "") ? username : name,
+      "name" : name,
       "address" : address,
       "phone" : phone,
       "image" : "gs://mybook-f9b37.appspot.com/defaultProfilePic.svg"
