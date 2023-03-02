@@ -4,6 +4,11 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 
+import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
+import 'package:my_book/Screen/User/Hub/AddBook.dart';
+import 'package:my_book/Screen/User/Scan/AddSale.dart';
+import 'package:my_book/Screen/BottomBar.dart';
+
 class BarCodeScan extends StatefulWidget {
   const BarCodeScan({super.key});
 
@@ -12,7 +17,7 @@ class BarCodeScan extends StatefulWidget {
 }
 
 class _BarCodeScanState extends State<BarCodeScan> {
-  Barcode? result;
+  String? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -32,7 +37,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
         child: Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
-              title: const Text("Barcode Scanner"),
+              title: const Text("แสกนบาร์โค้ด"),
             ),
             body: Container(
               color: Color(0xfff5f3e8),
@@ -46,12 +51,43 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
+                          // TODO: ไม่มีหนังสือในคลัง => ReviewPage
+                          // if (result != null)
+                          //   ElevatedButton(
+                          //       onPressed: (() {
+                          // Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //             builder: (context) => ReviewPage()),
+                          //       );
+                          // }),
+                          //       child: Text('เพิ่มไปคลังหนังสือ')),
+
+                          // // TODO: มีหนังสือในคลัง => AddSale
+                          // if (result != null)
+                          //     ElevatedButton(
+                          //         onPressed: (() {
+                          // Navigator.push(
+                          //   context,
+                          //   MaterialPageRoute(
+                          //       builder: (context) => AddSale()),
+                          // );
+                          // }),
+                          //         child: Text('เพิ่มไปยังการขาย')),
+                          // TODO: ไม่มีข้อมูลใน database NewBook
                           if (result != null)
-                          // TODO: 
-                            Text(
-                                'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
+                            ElevatedButton(
+                                onPressed: (() {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddBook(isbn: result.toString())),
+                                  );
+                                }),
+                                child: Text('เพิ่มหนังสือใหม่'))
                           else
-                            const Text('Scan a code'),
+                            const Text('กรุณาสแกนบาร์โค้ด'),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +102,8 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                     child: FutureBuilder(
                                       future: controller?.getFlashStatus(),
                                       builder: (context, snapshot) {
-                                        return Text('Flash: ${snapshot.data}');
+                                        // return Text('Flash: ${snapshot.data}');
+                                        return Text('แฟลช');
                                       },
                                     )),
                               ),
@@ -81,10 +118,12 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                       future: controller?.getCameraInfo(),
                                       builder: (context, snapshot) {
                                         if (snapshot.data != null) {
+                                          // return Text(
+                                          //     'Camera facing ${describeEnum(snapshot.data!)}');
                                           return Text(
-                                              'Camera facing ${describeEnum(snapshot.data!)}');
+                                              'สลับกล้อง');
                                         } else {
-                                          return const Text('loading');
+                                          return const Text('กำลังโหลด');
                                         }
                                       },
                                     )),
@@ -150,7 +189,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
     });
     controller.scannedDataStream.listen((scanData) {
       setState(() {
-        result = scanData;
+        result = scanData.code;
       });
     });
   }
@@ -159,7 +198,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
     log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
     if (!p) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
+        const SnackBar(content: Text('ไม่ได้รับอนุญาต')),
       );
     }
   }
@@ -168,5 +207,156 @@ class _BarCodeScanState extends State<BarCodeScan> {
   void dispose() {
     controller?.dispose();
     super.dispose();
+  }
+
+  void ToStock(String? result) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              // title: const Text("ยืนยันการซื้อหนังสือ"),
+              // content: Text('ชื่อหนังสือ\nราคารวม XXXX บาท'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5), // Image border
+                      child: Image.asset('images/Conan.jpg'),
+                    ),
+                    Expanded(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("ชื่อหนังสือ",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 16)),
+                                Expanded(
+                                    child: Text(
+                                  "ISBN",
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                                InkWell(
+                                  splashColor:
+                                      const Color(0xff795e35).withOpacity(0.5),
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ReviewPage()),
+                                  ),
+                                  child: Text(
+                                    ' รายละเอียดเพิ่มเติม',
+                                    style: TextStyle(
+                                        color: const Color(0xff795e35),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ])),
+                    ),
+                  ])
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text('หนังสือถูกเพิ่มไปยังคลังแล้ว')));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => BottomBar()));
+                  },
+                  // onPressed: () => Navigator.push(context,
+                  //     MaterialPageRoute(builder: (context) => BottomBar())),
+                  child: const Text('เพิ่มไปยังคลังหนังสือ'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'ยกเลิก'),
+                  child: const Text('ยกเลิก'),
+                ),
+              ],
+            ));
+  }
+
+  void ToSale(String? result) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              // title: const Text("ยืนยันการซื้อหนังสือ"),
+              // content: Text('ชื่อหนังสือ\nราคารวม XXXX บาท'),
+              content: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(5), // Image border
+                      child: Image.asset('images/Conan.jpg'),
+                    ),
+                    Expanded(
+                      child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16),
+                          child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("ชื่อหนังสือ",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(fontSize: 16)),
+                                Expanded(
+                                    child: Text(
+                                  "ISBN",
+                                  overflow: TextOverflow.ellipsis,
+                                )),
+                                InkWell(
+                                  splashColor:
+                                      const Color(0xff795e35).withOpacity(0.5),
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => AddSale()),
+                                  ),
+                                  child: Text(
+                                    ' รายละเอียดเพิ่มเติม',
+                                    style: TextStyle(
+                                        color: const Color(0xff795e35),
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                )
+                              ])),
+                    ),
+                  ])
+                ],
+              ),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => AddSale())),
+                  child: const Text('ขาย'),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'ยกเลิก'),
+                  child: const Text('ยกเลิก'),
+                ),
+              ],
+            ));
+  }
+
+  void NewBook(String? result) {
+    showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: const Text("ไม่มีข้อมูลหนังสือในระบบ"),
+              content: Text(
+                  'ยังไม่มีข้อมูลของหนักงสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
+              actions: <Widget>[
+                // TextButton(
+                //   onPressed: () => Navigator.push(context,
+                //       MaterialPageRoute(builder: (context) => AddBook())),
+                //   child: const Text('เพิ่มข้อมูล'),
+                // ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context, 'ไว้ทีหลัง'),
+                  child: const Text('ไว้ทีหลัง'),
+                ),
+              ],
+            ));
   }
 }

@@ -16,7 +16,7 @@ class _SellPageState extends State<SellPage> {
   Widget build(BuildContext context) {
     return Scaffold(
             appBar: AppBar(
-                // title: const Text('ชื่อหนังสือ'),
+                title: const Text('ซื้อ'),
                 ),
             resizeToAvoidBottomInset: false,
             body: SingleChildScrollView(

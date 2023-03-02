@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_book/Screen/User/Home/BookSearch.dart';
-import 'package:my_book/Screen/User/Home/SaleSearch.dart';
-import 'package:my_book/Screen/User/Home/PostSearch.dart';
+import 'package:my_book/Screen/User/Home/RecPostTab.dart';
+
+import 'package:my_book/Screen/User/Home/SaleTab.dart';
+import 'package:my_book/Screen/User/Profile/PostTab.dart';
 
 class TabSearch extends StatefulWidget {
   TabSearch({Key? key, required this.data}) : super(key: key);
 
-   String data;
+  String data;
 
   @override
   State<TabSearch> createState() => _TabSearchState();
@@ -76,8 +78,8 @@ class _TabSearchState extends State<TabSearch> {
         body: TabBarView(
           children: [
             BookSearch(),
-            PostSearch(),
-            SaleSearch(),
+            PostSection(),
+            SaleTab(),
           ],
         ),
       ));

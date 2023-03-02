@@ -5,8 +5,8 @@ import 'dart:convert';
 // screen
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
-
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
+import 'package:my_book/Screen/User/Hub/Social.dart';
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
 
 // model
@@ -51,7 +51,7 @@ class _PostTabState extends State<PostTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
           child: Container(
               color: Color(0xfff5f3e8),
@@ -59,10 +59,11 @@ class _PostTabState extends State<PostTab> {
               child: Column(
                 children: [
                   RecommendSection(),
-                  Container(
-                    height: 370,
-                    child: PostSection(),
-                  )
+                  PostSection(),
+                  // Container(
+                  //   height: 370,
+                  //   child: PostSection(),
+                  // )
                 ],
               ))),
       floatingActionButton: FloatingActionButton(
@@ -188,48 +189,54 @@ class PostSection extends StatefulWidget {
 class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
-    return new ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, i) {
-        return GestureDetector(
-            onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddSale()),
-                ),
-            child: Container(
-                height: 90,
-                child: Card(
-                    child: Padding(
-                        padding: EdgeInsets.all(7),
-                        child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CircleAvatar(
-                                backgroundImage:
-                                    const AssetImage("images/rambo.jpg"),
-                                backgroundColor: Color(0xffadd1dc),
-                                radius: 30,
-                              ),
-                              Expanded(
-                                child: Padding(
-                                    padding:
-                                        EdgeInsets.symmetric(horizontal: 16),
-                                    child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text("Username",
-                                              maxLines: 1,
-                                              style: TextStyle(fontSize: 18)),
-                                          Text(
-                                            "รายละเอียดโพสต์",
-                                            overflow: TextOverflow.ellipsis,
-                                          )
-                                        ])),
-                              ),
-                              Text("03.03.2020"),
-                            ])))));
-      },
-    );
+    return Container(
+      color: Color(0xfff5f3e8),
+        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        // width: 280,
+        child: ListView.builder(
+          itemCount: 5,
+          shrinkWrap: true,
+          itemBuilder: (context, i) {
+            return GestureDetector(
+                onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => SocialPage()),
+                    ),
+                child: Container(
+                    height: 90,
+                    child: Card(
+                        child: Padding(
+                            padding: EdgeInsets.all(7),
+                            child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  CircleAvatar(
+                                    backgroundImage:
+                                        const AssetImage("images/rambo.jpg"),
+                                    backgroundColor: Color(0xffadd1dc),
+                                    radius: 30,
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text("ชื่อคนอื่น",
+                                                  maxLines: 1,
+                                                  style:
+                                                      TextStyle(fontSize: 18)),
+                                              Text(
+                                                "รายละเอียดโพสต์",
+                                                overflow: TextOverflow.ellipsis,
+                                              )
+                                            ])),
+                                  ),
+                                  Text("03.03.2020"),
+                                ])))));
+          },
+        ));
   }
 }
