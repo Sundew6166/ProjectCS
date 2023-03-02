@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/Screen/BottomBar.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class AddBook extends StatefulWidget {
@@ -189,9 +190,12 @@ class _AddBookState extends State<AddBook> {
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
-                                                            Navigator.pop(
-                                                                context,
-                                                                'ตกลง'),
+                                                            Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  BottomBar()),
+                                                        ),
                                                         child:
                                                             const Text('ตกลง'),
                                                       ),

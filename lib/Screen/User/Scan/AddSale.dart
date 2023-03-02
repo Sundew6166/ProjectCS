@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/Screen/BottomBar.dart';
 
 class AddSale extends StatefulWidget {
   const AddSale({super.key});
@@ -197,9 +198,12 @@ class _AddSaleState extends State<AddSale> {
                                                       ),
                                                       TextButton(
                                                         onPressed: () =>
-                                                            Navigator.pop(
-                                                                context,
-                                                                'ตกลง'),
+                                                            Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  BottomBar()),
+                                                        ),
                                                         child:
                                                             const Text('ตกลง'),
                                                       ),

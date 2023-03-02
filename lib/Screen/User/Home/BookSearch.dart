@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/Screen/User/Hub/BuyPage.dart';
+import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 
 class BookSearch extends StatefulWidget {
   const BookSearch({super.key});
@@ -31,7 +31,7 @@ class BookCard extends StatelessWidget {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SellPage()),
+                    MaterialPageRoute(builder: (context) => ReviewPage()),
                   ),
               child: Card(
                 child: Container(

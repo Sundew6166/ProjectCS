@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/Screen/User/Hub/Social.dart';
 import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
 
 class PostTab extends StatefulWidget {
@@ -13,7 +14,7 @@ class _PostTabState extends State<PostTab> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
-          height: MediaQuery.of(context).size.height,
+      height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       color: Color(0xfff5f3e8),
       child: new ListView.builder(
@@ -24,8 +25,7 @@ class _PostTabState extends State<PostTab> {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => ChangePasswordPage()),
+                    MaterialPageRoute(builder: (context) => SocialPage()),
                   ),
               child: Container(
                   height: 100,

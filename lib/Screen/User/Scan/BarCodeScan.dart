@@ -63,7 +63,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           // }),
                           //       child: Text('เพิ่มไปคลังหนังสือ')),
 
-                          // // TODO: มีหนังสือในคลัง => AddSale
+                          // // TODO: มีหนังสือในคลัง => AddSale หรือ form ขาย
                           // if (result != null)
                           //     ElevatedButton(
                           //         onPressed: (() {
@@ -74,7 +74,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           // );
                           // }),
                           //         child: Text('เพิ่มไปยังการขาย')),
-                          // TODO: ไม่มีข้อมูลใน database NewBook
+                          // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
                           if (result != null)
                             ElevatedButton(
                                 onPressed: (() {

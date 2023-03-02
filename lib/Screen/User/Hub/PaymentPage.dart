@@ -39,7 +39,11 @@ class _PaymentPageState extends State<PaymentPage> {
                 Container(
                     // margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: (() => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => BottomBar()),
+                          )),
                         style: ElevatedButton.styleFrom(
                             // fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(

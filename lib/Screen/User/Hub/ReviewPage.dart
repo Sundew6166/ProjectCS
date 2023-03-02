@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Screen/User/Scan/AddSale.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
@@ -36,10 +37,10 @@ class _ReviewPageState extends State<ReviewPage> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                        alignment: Alignment.center,
-                        width: 50,
-                        // height: 300,
-                        // color: Colors.black,
+                          alignment: Alignment.center,
+                          width: 50,
+                          // height: 300,
+                          // color: Colors.black,
                         ),
                         ImageProduct(),
                         Column(
@@ -52,6 +53,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               ),
                               onPressed: (() {
                                 setState(() {
+                                  // TODO: Alert before delete book from stock
                                   _isBookOn = !_isBookOn;
                                   print(_isBookOn);
                                 });
@@ -62,17 +64,16 @@ class _ReviewPageState extends State<ReviewPage> {
                             ),
                             if (_isBookOn)
                               IconButton(
-                                icon: const Icon(
-                                  Icons.shopping_cart,
-                                  size: 45,
-                                  color: Colors.red,
-                                ),
-                                onPressed: (() {
-                                  // setState(() {
-                                  //   _iconColor = Colors.green;
-                                  // });
-                                }),
-                              ),
+                                  icon: const Icon(
+                                    Icons.shopping_cart,
+                                    size: 45,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: (() => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AddSale()),
+                                      ))),
                           ],
                         )
                       ],
@@ -497,10 +498,10 @@ class _WriteReviewState extends State<WriteReview> {
               ElevatedButton(
                   onPressed: () {
                     if (_keyValidationForm.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomBar()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => BottomBar()),
+                      // );
                       // print(textarea.text);
                     }
                   },

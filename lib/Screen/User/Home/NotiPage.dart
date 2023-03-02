@@ -21,6 +21,9 @@ class _NotificationPageState extends State<NotificationPage> {
                 itemCount: 6,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
+                    // TODO: go to review page when noti of approve
+                    // TODO: noti of address
+                    // TODO: go to payment page
                       onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
