@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/User/Profile/SettingPage.dart';
 import 'package:my_book/Screen/User/Profile/StockTab.dart';
@@ -12,6 +13,8 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with TickerProviderStateMixin {
+  final user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
     TabController _tabController = TabController(length: 3, vsync: this);
@@ -61,7 +64,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   ),
                   Center(
                     child: Text(
-                      "Username 20 char (max)",
+                      user!.displayName.toString(),
                       style: TextStyle(fontSize: 18),
                     ),
                   ),

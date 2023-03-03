@@ -1,18 +1,33 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
+import 'package:my_book/Service/AccountController.dart';
 
 class EditAddressPage extends StatefulWidget {
-  const EditAddressPage({super.key});
+  const EditAddressPage({super.key, required this.deliInfo});
+  final Map<String, dynamic> deliInfo;
 
   @override
-  State<EditAddressPage> createState() => _EditAddressPageState();
+  State<EditAddressPage> createState() => _EditAddressPageState(this.deliInfo);
 }
 
 class _EditAddressPageState extends State<EditAddressPage> {
-  static var _addressValidationForm = GlobalKey<FormState>();
+  Map<String, dynamic> deliInfo;
+  _EditAddressPageState(this.deliInfo);
+
+  static var _addressFormKey = GlobalKey<FormState>();
 
   TextEditingController _textEditName = TextEditingController();
-  TextEditingController _textEditPhone = TextEditingController();
   TextEditingController _textEditAddress = TextEditingController();
+  TextEditingController _textEditPhone = TextEditingController();
+
+  @override
+  void initState() {
+    _textEditName.text = deliInfo['name'];
+    _textEditAddress.text = deliInfo['address'];
+    _textEditPhone.text = deliInfo['phone'];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +38,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Form(
-                key: _addressValidationForm,
+                key: _addressFormKey,
                 child: Column(
                   children: [
                     Container(
@@ -45,15 +60,22 @@ class _EditAddressPageState extends State<EditAddressPage> {
                                       controller: _textEditName,
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
-                                      validator: (value) {
-                                        return value!.trim().isEmpty
-                                            ? "กรอกชื่อ สกุลไม่ถูกต้อง"
-                                            : null;
-                                      },
+                                      // validator: RequiredValidator(errorText: "กรุณากรอกชื่อสำหรับจัดส่ง"),
                                       decoration: InputDecoration(
                                           labelText: 'ชื่อ สกุล',
                                           icon:
                                               Icon(Icons.text_fields_outlined)),
+                                    ),
+                                  ),
+                                  Container(
+                                    child: TextFormField(
+                                      controller: _textEditAddress,
+                                      keyboardType: TextInputType.text,
+                                      textInputAction: TextInputAction.next,
+                                      maxLines: 3,
+                                      decoration: InputDecoration(
+                                          labelText: 'ที่อยู่',
+                                          icon: Icon(Icons.home)),
                                     ),
                                   ),
                                   Container(
@@ -72,45 +94,47 @@ class _EditAddressPageState extends State<EditAddressPage> {
                                     ),
                                   ),
                                   Container(
-                                    child: TextFormField(
-                                      controller: _textEditAddress,
-                                      keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.next,
-                                      maxLines: 3,
-                                      decoration: InputDecoration(
-                                          labelText: 'ที่อยู่',
-                                          icon: Icon(Icons.home)),
-                                    ),
-                                  ),
-                                  Container(
                                       margin: EdgeInsets.only(
                                           top: 16.0, bottom: 16.0),
                                       child: ElevatedButton(
-                                          onPressed: () {
-                                            if (_addressValidationForm
-                                                .currentState!
-                                                .validate()) {
-                                              showDialog(
+                                          onPressed: () async {
+                                            if (_addressFormKey.currentState!.validate()) {
+                                              try {
+                                                await AccountController().updateDeliveryInformation({
+                                                  "name": _textEditName.text,
+                                                  "address": _textEditAddress.text,
+                                                  "phone": _textEditPhone.text
+                                                })
+                                                  .then((value) => showDialog(
+                                                    context: context,
+                                                    builder: (_) => AlertDialog(
+                                                      title: const Text("เสร็จสิ้น"),
+                                                      content: Text('การแก้ไขข้อมูลการจัดส่งของคุณเสร็จสิ้น'),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          onPressed: () =>
+                                                              Navigator.pop(context,'ตกลง'),
+                                                          child: const Text('ตกลง'),
+                                                        ),
+                                                      ],
+                                                    ))
+                                                  );
+                                              } on FirebaseException catch (e) {
+                                                print(e.code);
+                                                showDialog(
                                                   context: context,
                                                   builder: (_) => AlertDialog(
-                                                        title: const Text(
-                                                            "เสร็จสิ้น"),
-                                                        content: Text(
-                                                            'การแก้ไขข้อมูลการจัดส่งของคุณเสร็จสิ้น'),
-                                                        actions: <Widget>[
-                                                          TextButton(
-                                                            onPressed: () =>
-                                                                Navigator.pop(
-                                                                    context,
-                                                                    'ตกลง'),
-                                                            child: const Text(
-                                                                'ตกลง'),
-                                                          ),
-                                                        ],
-                                                      ));
-                                              // _addressValidationForm
-                                              //     .currentState
-                                              //     ?.reset();
+                                                    title: Text(e.message.toString()),
+                                                    content: Text("เกิดข้อผิดพลาดในการแก้ไขข้อมูลการจัดส่ง กรุณาลองใหม่"),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () => Navigator.pop(context),
+                                                        child: const Text('ตกลง'),
+                                                      )
+                                                    ]
+                                                  )
+                                                );
+                                              }
                                             }
                                           },
                                           style: ElevatedButton.styleFrom(

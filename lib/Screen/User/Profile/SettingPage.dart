@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/Model/DeliveryInformation.dart';
 import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
 import 'package:my_book/Screen/User/Profile/EditAddressPage.dart';
 import 'package:my_book/Screen/User/Profile/EditProfilePage.dart';
@@ -51,11 +52,14 @@ class SettingPage extends StatelessWidget {
               ),
               // Address
               GestureDetector(
-                  onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => EditAddressPage()),
-                      ),
+                  onTap: () async {
+                    Map<String, dynamic> deliInfo = await AccountController().getDeliveryInformation();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EditAddressPage(deliInfo: deliInfo)),
+                    );
+                  },
                   child: Card(
                       child: ListTile(
                           title: Text("แก้ไขข้อมูลการจัดส่ง"),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:my_book/Model/DeliveryInformation.dart';
 import 'package:my_book/Screen/LogInPage.dart';
 
 class AccountController {
@@ -24,11 +25,18 @@ class AccountController {
     };
 
     db.collection('accounts').doc(user!.uid).set(data);
+    user.updateDisplayName(username);
+    user.updatePhotoURL("gs://mybook-f9b37.appspot.com/defaultProfilePic.svg");
   }
 
-  Future<void> login(String username, String password) async {
+  Future<String> login(String username, String password) async {
     await FirebaseAuth.instance
       .signInWithEmailAndPassword(email: username + "@mybook.com", password: password);
+    
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    final docSnap = await db.collection('accounts').doc(user!.uid).get();
+    return docSnap.data()!['type'];
   }
 
   Future<void> logout() async {
@@ -43,6 +51,31 @@ class AccountController {
     await user?.reauthenticateWithCredential(cred)
       .then((value) async {
         await user.updatePassword(newPassword);
+      });
+  }
+
+  Future<Map<String, dynamic>> getDeliveryInformation() async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    final docSnap = await db.collection('accounts').doc(user!.uid).get();
+    final data = docSnap.data();
+    return {
+      "name": data!['name'],
+      "address": data['address'],
+      "phone": data['phone']
+    };
+  }
+
+  Future<void> updateDeliveryInformation(Map<String, dynamic> data) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    
+    await db.collection('accounts').doc(user!.uid)
+      .update({
+        "name": data['name'],
+        "address": data['address'],
+        "phone": data['phone']
       });
   }
 }
