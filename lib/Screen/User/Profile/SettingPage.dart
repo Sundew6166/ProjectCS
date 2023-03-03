@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/Model/DeliveryInformation.dart';
 import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
 import 'package:my_book/Screen/User/Profile/EditAddressPage.dart';
 import 'package:my_book/Screen/User/Profile/EditProfilePage.dart';
