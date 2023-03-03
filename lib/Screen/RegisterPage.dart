@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:my_book/Screen/BottomBar.dart';
 import 'package:my_book/Screen/LogInPage.dart';
-import 'package:my_book/Screen/User/Home/HomePage.dart';
 import 'package:my_book/Service/AccountController.dart';
 // import 'package:thought_factory/utils/colors.dart';
 

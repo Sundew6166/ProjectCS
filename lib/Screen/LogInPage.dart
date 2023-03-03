@@ -1,12 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import '../auth.dart';
-// import 'package:my_book/main.dart';
 import 'package:my_book/Screen/RegisterPage.dart';
 import 'package:my_book/Screen/BottomBar.dart';
-import 'package:my_book/Screen/User/Home/HomePage.dart';
 
 import '../Service/AccountController.dart';
 
