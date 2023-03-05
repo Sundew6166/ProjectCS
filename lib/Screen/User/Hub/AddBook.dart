@@ -215,6 +215,8 @@ class _AddBookState extends State<AddBook> {
                                                   BorderRadius.circular(
                                             10,
                                           ))),
+                                      // TODO: if isApprove == false ปุ่มจะเขีบยว่า อนุมัติ
+                                      // TODO: if isApprove == true ปุ่มจะเขีบยว่า บันทึก
                                       child: Text("บันทึก",
                                           style: TextStyle(
                                               fontSize: 20)))), //button: login

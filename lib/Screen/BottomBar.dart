@@ -38,7 +38,10 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
+        //TODO: if account type == user
         // child: _userOptions.elementAt(currentIndex),
+        
+        //TODO: if account type == admin
         child: _adminOptions.elementAt(currentIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
