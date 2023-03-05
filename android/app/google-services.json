@@ -31,10 +31,10 @@
               "client_type": 3
             },
             {
-              "client_id": "141487344823-qjdofbo9qa8sif6pk0jcgfejntvofjc0.apps.googleusercontent.com",
+              "client_id": "141487344823-30u1ok95dtkds5k4sivg61gu7eorjvin.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.myBookAuth"
+                "bundle_id": "com.example.mybook"
               }
             }
           ]
