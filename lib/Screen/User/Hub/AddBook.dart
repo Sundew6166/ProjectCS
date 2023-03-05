@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_book/Screen/BottomBar.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class AddBook extends StatefulWidget {
   AddBook({Key? key, required this.isbn}) : super(key: key);
+
 
   String isbn;
 
@@ -57,7 +58,7 @@ class _AddBookState extends State<AddBook> {
                               ),
                               Container(
                                 child: TextFormField(
-                                  enabled: false,
+                                  // enabled: false,
                                   controller: _textISBN,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,

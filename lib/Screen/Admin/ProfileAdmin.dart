@@ -1,19 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:my_book/Screen/User/Profile/SettingPage.dart';
+import 'package:my_book/Screen/Admin/SettingAdmin.dart';
 import 'package:my_book/Screen/User/Profile/StockTab.dart';
-import 'package:my_book/Screen/User/Profile/SaleTab.dart';
 import 'package:my_book/Screen/User/Profile/PostTab.dart';
+import 'package:my_book/Screen/Admin/ApproveTab.dart';
 
-class Profile extends StatefulWidget {
-  const Profile({super.key});
+class ProfileAdmin extends StatefulWidget {
+  const ProfileAdmin({super.key});
 
   @override
-  State<Profile> createState() => _ProfileState();
+  State<ProfileAdmin> createState() => _ProfileAdminState();
 }
 
-class _ProfileState extends State<Profile> with TickerProviderStateMixin {
+class _ProfileAdminState extends State<ProfileAdmin> with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
 
   @override
@@ -30,7 +30,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
               title: Text(
                 "My Book",
               ),
-              // leading: Image.asset("images/logo.PNG"),
               actions: [
                 IconButton(
                   icon: Icon(Icons.more_vert),
@@ -38,7 +37,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const SettingPage()),
+                          builder: (context) => const SettingAdmin()),
                     );
                   },
                 ),
@@ -46,8 +45,6 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             ),
             body: SingleChildScrollView(
                 child: Container(
-              // width: MediaQuery.of(context).size.width,
-              // height: MediaQuery.of(context).size.height,
               color: Color(0xfff5f3e8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -99,7 +96,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                           ),
                           Tab(
                             icon: Icon(
-                              Icons.shopping_cart,
+                              Icons.check_circle,
                               size: 30,
                             ),
                           )
@@ -114,7 +111,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     child: TabBarView(controller: _tabController, children: [
                       StockTab(),
                       PostTab(),
-                      SaleTab(),
+                      ApproveTab(),
                     ]),
                   ),
                 ],

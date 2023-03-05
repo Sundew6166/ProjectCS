@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
 import 'package:my_book/Screen/User/Hub/BuyPage.dart';
 
 class SaleTab extends StatefulWidget {
@@ -14,6 +13,7 @@ class _SaleTabState extends State<SaleTab> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+      height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       color: Color(0xfff5f3e8),
       child: new ListView.builder(
@@ -51,7 +51,7 @@ class _SaleTabState extends State<SaleTab> {
                                                 style: TextStyle(fontSize: 18)),
                                             Expanded(
                                                 child: Text(
-                                              "ราคา",
+                                              "ISBN",
                                               overflow: TextOverflow.ellipsis,
                                             ))
                                           ])),

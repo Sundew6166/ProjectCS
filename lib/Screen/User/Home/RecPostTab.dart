@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 // screen
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
-import 'package:my_book/Screen/User/Hub/AddBook.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
-import 'package:my_book/Screen/User/Scan/AddSale.dart';
-
-// model
-import 'package:my_book/Model/Post.dart';
 
 class PostTab extends StatefulWidget {
   const PostTab({super.key});
@@ -24,34 +17,13 @@ class _PostTabState extends State<PostTab> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // dataPost = fetchData();
-    fetchData();
-    // dataPost;
-  }
-
-  Future<Map<String, dynamic>> fetchData() async {
-    final response = await http.get(Uri.parse(
-        'https://22627f01-674e-48ad-a206-83b9f0aa9eb9.mock.pstmn.io/users/1'));
-    // var data = json.decode(response.body);
-
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = jsonDecode(response.body);
-      dataPost = data;
-
-      print('=> $data');
-      print('$dataPost');
-      return data;
-    } else {
-      throw Exception('การโหลดข้อมูลผิดพลาด');
-    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      // resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
           child: Container(
               color: Color(0xfff5f3e8),
@@ -60,10 +32,6 @@ class _PostTabState extends State<PostTab> {
                 children: [
                   RecommendSection(),
                   PostSection(),
-                  // Container(
-                  //   height: 370,
-                  //   child: PostSection(),
-                  // )
                 ],
               ))),
       floatingActionButton: FloatingActionButton(
@@ -191,6 +159,7 @@ class _PostSectionState extends State<PostSection> {
   Widget build(BuildContext context) {
     return Container(
       color: Color(0xfff5f3e8),
+      // height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         // width: 280,
         child: ListView.builder(

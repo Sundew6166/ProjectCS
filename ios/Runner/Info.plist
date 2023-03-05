@@ -53,5 +53,11 @@
 		<false />
 		<key>io.flutter.embedded_views_preview</key>
 		<true />
+		
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsLocalNetworking</key>
+			<true/>
+		</dict>
 	</dict>
 </plist>

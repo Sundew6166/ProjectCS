@@ -43,6 +43,7 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   form_field_validator: ^1.1.0
   comment_box: ^0.0.18
+  flutter_speed_dial: ^6.2.0
 
   http: ^0.13.5
   firebase_auth: ^4.2.9

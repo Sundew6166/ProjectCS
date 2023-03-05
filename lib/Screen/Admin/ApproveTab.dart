@@ -1,17 +1,15 @@
 import 'package:flutter/material.dart';
 
-import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
 
-class StockTab extends StatefulWidget {
-  const StockTab({super.key});
+class ApproveTab extends StatefulWidget {
+  const ApproveTab({super.key});
 
   @override
-  State<StockTab> createState() => _StockTabState();
+  State<ApproveTab> createState() => _ApproveTabState();
 }
 
-class _StockTabState extends State<StockTab> {
-  // TODO: admin and user
+class _ApproveTabState extends State<ApproveTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,23 +18,14 @@ class _StockTabState extends State<StockTab> {
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       color: Color(0xfff5f3e8),
       child: new ListView.builder(
-        // padding: const EdgeInsets.all(5),
         itemCount: 5,
         shrinkWrap: true,
         itemBuilder: (context, i) {
           return GestureDetector(
-              // TODO: if user => ReviewPage
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReviewPage()),
+                    MaterialPageRoute(builder: (context) => AddBook(isbn: '',)),
                   ),
-
-              // TODO: if admin => AddBook
-              // onTap: () => Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => AddBook()),
-              //     ),
-              
               child: Container(
                   height: 100,
                   child: Card(

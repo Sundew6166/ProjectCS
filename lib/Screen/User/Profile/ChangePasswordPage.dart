@@ -145,7 +145,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                                       content: Text('การเปลี่ยนรหัสผ่านของคุณเสร็จสิ้น'),
                                                       actions: <Widget>[
                                                         TextButton(
-                                                          onPressed: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SettingPage())),
+                                                          onPressed: () => Navigator.of(context)..pop()..pop(),
                                                           child: const Text('ตกลง'),
                                                         )
                                                       ]
