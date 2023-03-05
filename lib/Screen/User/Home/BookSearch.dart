@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/Screen/User/Hub/SellPage.dart';
+import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 
 class BookSearch extends StatefulWidget {
   const BookSearch({super.key});
@@ -31,7 +31,7 @@ class BookCard extends StatelessWidget {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SellPage()),
+                    MaterialPageRoute(builder: (context) => ReviewPage()),
                   ),
               child: Card(
                 child: Container(
@@ -52,7 +52,7 @@ class BookCard extends StatelessWidget {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("ชื่อหนังสือชื่อว่าอะไรนะต้องไปหาอาแล้ว",
+                                Text("ชื่อหนังสือ",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: 18)),
@@ -60,9 +60,9 @@ class BookCard extends StatelessWidget {
                                   height: 5,
                                 ),
                                 Text(
-                                  '200฿',
+                                  'รายละเอียด',
                                   style: TextStyle(
-                                      fontSize: 18, color: Colors.red),
+                                      fontSize: 18),
                                 ),
                               ]))
                     ],

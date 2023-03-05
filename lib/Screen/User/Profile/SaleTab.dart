@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
-import 'package:my_book/Screen/User/Hub/SellPage.dart';
-
+import 'package:my_book/Screen/User/Hub/BuyPage.dart';
 
 class SaleTab extends StatefulWidget {
   const SaleTab({super.key});
@@ -15,16 +14,17 @@ class _SaleTabState extends State<SaleTab> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: Container(
+      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       color: Color(0xfff5f3e8),
       child: new ListView.builder(
-        padding: const EdgeInsets.all(5),
+        // padding: const EdgeInsets.all(5),
         itemCount: 5,
+        shrinkWrap: true,
         itemBuilder: (context, i) {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(
-                        builder: (context) => SellPage()),
+                    MaterialPageRoute(builder: (context) => SellPage()),
                   ),
               child: Container(
                   height: 100,

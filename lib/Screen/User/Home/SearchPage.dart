@@ -40,7 +40,7 @@ class _SearchPageState extends State<SearchPage> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              print(data.text);
+              // print(data.text);
               Navigator.push(
                 context,
                 MaterialPageRoute(

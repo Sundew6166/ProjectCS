@@ -70,7 +70,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         child: _image != null
                             ? Image.file(_image!, fit: BoxFit.cover)
                             // : Icon(Icons.image_outlined, size: 200),
-                            : const Text('Please select an image'),
+                            : const Text('กรุณาเลือกรูป'),
                       )
                       //   ],
                       // ),

@@ -33,7 +33,7 @@ class _PostPageState extends State<PostPage> {
                       return value!.isEmpty ? 'ข้อมูลไม่ถูกต้อง' : null;
                     },
                     decoration: InputDecoration(
-                        hintText: "Write something here...",
+                        hintText: "พิมพ์ข้อความลงในนี้...",
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
                                 width: 2, color: const Color(0xff795e35)))),
@@ -55,7 +55,7 @@ class _PostPageState extends State<PostPage> {
                               borderRadius: BorderRadius.circular(
                             10,
                           ))),
-                      child: Text("Post", style: TextStyle(fontSize: 20)))
+                      child: Text("โพสต์", style: TextStyle(fontSize: 20)))
                 ],
               ),
             )));

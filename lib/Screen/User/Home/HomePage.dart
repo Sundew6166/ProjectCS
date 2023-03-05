@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/Screen/User/Home/PostTab.dart';
+import 'package:my_book/Screen/User/Home/RecPostTab.dart';
 import 'package:my_book/Screen/User/Home/SaleTab.dart';
 import 'package:my_book/Screen/User/Home/SearchPage.dart';
 import 'package:my_book/Screen/User/Home/NotiPage.dart';

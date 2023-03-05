@@ -41,9 +41,10 @@ dependencies:
   path_provider: ^2.0.12
   image_picker: ^0.8.6+2
   flutter_rating_bar: ^4.0.1
-  http: ^0.13.5
   form_field_validator: ^1.1.0
+  comment_box: ^0.0.18
 
+  http: ^0.13.5
   firebase_auth: ^4.2.9
   firebase_core: ^2.7.0
   firebase_storage: ^11.0.14

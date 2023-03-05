@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Screen/User/Scan/AddSale.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
@@ -12,12 +13,15 @@ class ReviewPage extends StatefulWidget {
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+  // TODO: ดึงหนังสือในคลังมาเช็ค
+  bool _isBookOn = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            // title: const Text('ชื่อหนังสือ'),
-            ),
+          title: const Text('รีวิวหนังสือ'),
+        ),
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Container(
@@ -28,52 +32,48 @@ class _ReviewPageState extends State<ReviewPage> {
                   children: [
                     SizedBox(height: 20),
                     Row(
-                      // mainAxisSize: MainAxisSize.min,
-
+                      mainAxisSize: MainAxisSize.min,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
                           alignment: Alignment.center,
                           width: 50,
                           // height: 300,
-                          color: Colors.black,
+                          // color: Colors.black,
                         ),
                         ImageProduct(),
                         Column(
                           children: [
-                            // TODO: change color button
                             IconButton(
-                              icon: const Icon(
+                              icon: Icon(
                                 Icons.book,
                                 size: 45,
+                                color: _isBookOn ? Colors.green : Colors.black,
                               ),
-
-                              // color: _iconColor,
                               onPressed: (() {
-                                // setState(() {
-                                //   _iconColor = Colors.green;
-                                // });
+                                setState(() {
+                                  // TODO: Alert before delete book from stock
+                                  _isBookOn = !_isBookOn;
+                                  print(_isBookOn);
+                                });
                               }),
-                              // size: 45,
                             ),
                             SizedBox(
                               height: 20,
                             ),
-
-                            IconButton(
-                              icon: const Icon(
-                                Icons.shopping_cart,
-                                size: 45,
-                              ),
-
-                              // color: _iconColor,
-                              onPressed: (() {
-                                // setState(() {
-                                //   _iconColor = Colors.green;
-                                // });
-                              }),
-                              // size: 45,
-                            ),
+                            if (_isBookOn)
+                              IconButton(
+                                  icon: const Icon(
+                                    Icons.shopping_cart,
+                                    size: 45,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: (() => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AddSale()),
+                                      ))),
                           ],
                         )
                       ],
@@ -490,7 +490,7 @@ class _WriteReviewState extends State<WriteReview> {
                 decoration: InputDecoration(
                     filled: true, //<-- SEE HERE
                     fillColor: Colors.white,
-                    hintText: "Write something here...",
+                    hintText: "พิมพ์ข้อความลงในนี้...",
                     focusedBorder: OutlineInputBorder(
                         borderSide: BorderSide(
                             width: 2, color: const Color(0xff795e35)))),
@@ -498,10 +498,10 @@ class _WriteReviewState extends State<WriteReview> {
               ElevatedButton(
                   onPressed: () {
                     if (_keyValidationForm.currentState!.validate()) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => BottomBar()),
-                      );
+                      // Navigator.push(
+                      //   context,
+                      //   MaterialPageRoute(builder: (context) => BottomBar()),
+                      // );
                       // print(textarea.text);
                     }
                   },
@@ -511,7 +511,7 @@ class _WriteReviewState extends State<WriteReview> {
                           borderRadius: BorderRadius.circular(
                         10,
                       ))),
-                  child: Text("Post", style: TextStyle(fontSize: 20)))
+                  child: Text("รีวิว", style: TextStyle(fontSize: 20)))
             ],
           ),
         ));

@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:my_book/Screen/BottomBar.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 class AddBook extends StatefulWidget {
-  const AddBook({super.key});
+  AddBook({Key? key, required this.isbn}) : super(key: key);
+
+  String isbn;
 
   @override
   State<AddBook> createState() => _AddBookState();
@@ -18,6 +22,13 @@ class _AddBookState extends State<AddBook> {
   TextEditingController _textType = TextEditingController();
   TextEditingController _textSynopsys = TextEditingController();
   TextEditingController _textEdition = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _textISBN = TextEditingController(text: widget.isbn);
+    print(widget.isbn);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -172,16 +183,19 @@ class _AddBookState extends State<AddBook> {
                                           showDialog(
                                               context: context,
                                               builder: (_) => AlertDialog(
-                                                    title:
-                                                        const Text("รอการยืนยันจากผู้ดูแล"),
+                                                    title: const Text(
+                                                        "รอการยืนยันจากผู้ดูแล"),
                                                     content: Text(
                                                         'รอการยืนยันจากผู้ดูแล'),
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
-                                                            Navigator.pop(
-                                                                context,
-                                                                'ตกลง'),
+                                                            Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  BottomBar()),
+                                                        ),
                                                         child:
                                                             const Text('ตกลง'),
                                                       ),

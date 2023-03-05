@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
-import 'package:my_book/Screen/User/Hub/SellPage.dart';
+import 'package:my_book/Screen/User/Hub/BuyPage.dart';
 
 
 class SaleTab extends StatefulWidget {
@@ -61,7 +60,7 @@ class BookCard extends StatelessWidget {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("ชื่อหนังสือชื่อว่าอะไรนะต้องไปหาอาแล้ว",
+                                Text("ชื่อหนังสือขาย",
                                     maxLines: 1,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: 18)),
