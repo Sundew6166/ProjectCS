@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:my_book/Service/AccountController.dart';
 import 'dart:io';
 import 'package:path/path.dart' as Path;
 import 'package:path_provider/path_provider.dart';
@@ -86,22 +88,40 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   Container(
                       margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
                       child: ElevatedButton(
-                          onPressed: () {
+                          onPressed: () async {
                             if (_image != null) {
-                              showDialog(
+                              try {
+                                await AccountController().updateProfilePic(_image!)
+                                  .then((value) => showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                      title: const Text("เสร็จสิ้น"),
+                                      content: Text('การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context)..pop()..pop(),
+                                          child: const Text('ตกลง'),
+                                        ),
+                                      ],
+                                    ))
+                                  );
+                              } on FirebaseException catch (e) {
+                                print(e.code);
+                                showDialog(
                                   context: context,
                                   builder: (_) => AlertDialog(
-                                        title: const Text("เสร็จสิ้น"),
-                                        content: Text(
-                                            'การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
-                                        actions: <Widget>[
-                                          TextButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context, 'ตกลง'),
-                                            child: const Text('ตกลง'),
-                                          ),
-                                        ],
-                                      ));
+                                    title: Text(e.message.toString()),
+                                    content: Text("เกิดข้อผิดพลาดในการแก้ไขโปรไฟล์ กรุณาลองใหม่"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('ตกลง'),
+                                      )
+                                    ]
+                                  )
+                                );
+                              }
                             } else {
                               // print("No image selected");
                               ScaffoldMessenger.of(context).showSnackBar(

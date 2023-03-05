@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:my_book/Service/ImageController.dart';
 
 class AccountController {
   Future<void> register(String username, String password, String name, String address, String phone) async {
@@ -41,7 +44,7 @@ class AccountController {
   }
 
   Future<void> changePassword(String currentPassword, String newPassword) async {
-    final user = await FirebaseAuth.instance.currentUser;
+    final user = FirebaseAuth.instance.currentUser;
     final cred = EmailAuthProvider.credential(email: user?.email ?? "", password: currentPassword);
 
     await user?.reauthenticateWithCredential(cred)
@@ -73,5 +76,18 @@ class AccountController {
         "address": data['address'],
         "phone": data['phone']
       });
+  }
+
+  Future<void> updateProfilePic(File file) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    String downloadURL = await ImageController().uploadToFireStorage(file);
+    print("downloadURL: " + downloadURL);
+    await db.collection('accounts').doc(user!.uid)
+      .update({
+        "image": downloadURL
+      });
+    user.updatePhotoURL(downloadURL);
   }
 }

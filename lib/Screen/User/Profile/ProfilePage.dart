@@ -13,7 +13,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> with TickerProviderStateMixin {
-  final user = FirebaseAuth.instance.currentUser;
+  User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +34,12 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                 IconButton(
                   icon: Icon(Icons.more_vert),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SettingPage()),
-                    );
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const SettingPage()))
+                      .then((_) {
+                        setState(() {
+                          user = FirebaseAuth.instance.currentUser;
+                        });
+                      });
                   },
                 ),
               ],
@@ -54,7 +55,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                   ),
                   Center(
                     child: CircleAvatar(
-                      backgroundImage: const AssetImage("images/rambo.jpg"),
+                      backgroundImage: NetworkImage(user!.photoURL.toString()),
                       backgroundColor: Color(0xffadd1dc),
                       radius: 40,
                     ),
