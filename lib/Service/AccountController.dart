@@ -20,12 +20,12 @@ class AccountController {
       "name" : name,
       "address" : address,
       "phone" : phone,
-      "image" : "gs://mybook-f9b37.appspot.com/defaultProfilePic.svg"
+      "image" : "https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346"
     };
 
     db.collection('accounts').doc(user!.uid).set(data);
     user.updateDisplayName(username);
-    user.updatePhotoURL("gs://mybook-f9b37.appspot.com/defaultProfilePic.svg");
+    user.updatePhotoURL("https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346");
   }
 
   Future<String> login(String username, String password) async {
