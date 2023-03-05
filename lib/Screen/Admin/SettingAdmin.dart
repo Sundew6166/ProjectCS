@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/User/Profile/ChangePasswordPage.dart';
-import 'package:my_book/Screen/User/Profile/EditAddressPage.dart';
 import 'package:my_book/Screen/User/Profile/EditProfilePage.dart';
-import 'package:my_book/Screen/User/Profile/HistoryPage.dart';
 
 import 'package:my_book/Screen/LogInPage.dart';
 import 'package:my_book/Service/AccountController.dart';
 
-class SettingPage extends StatelessWidget {
-  const SettingPage({super.key});
+class SettingAdmin extends StatelessWidget {
+  const SettingAdmin({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,22 +39,6 @@ class SettingPage extends StatelessWidget {
                         ),
                         trailing: Icon(Icons.navigate_next))),
               ),
-              // Address
-              GestureDetector(
-                  onTap: () async {
-                    Map<String, dynamic> deliInfo = await AccountController().getDeliveryInformation();
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => EditAddressPage(deliInfo: deliInfo)),
-                    );
-                  },
-                  child: Card(
-                      child: ListTile(
-                          title: Text("แก้ไขข้อมูลการจัดส่ง"),
-                          leading: Icon(Icons.edit_location_outlined,
-                              size: 40, color: Color(0xffcaa171)),
-                          trailing: Icon(Icons.navigate_next)))),
               // Profile
               GestureDetector(
                   onTap: () => Navigator.push(
@@ -70,24 +52,15 @@ class SettingPage extends StatelessWidget {
                           leading: Icon(Icons.account_circle_outlined,
                               size: 40, color: Color(0xffcaa171)),
                           trailing: Icon(Icons.navigate_next)))),
-              // History
-              GestureDetector(
-                  onTap: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HistoryPage()),
-                      ),
-                  child: Card(
-                      child: ListTile(
-                          title: Text("ประวัติการซื้อขาย"),
-                          leading: Icon(Icons.history,
-                              size: 40, color: Color(0xffcaa171)),
-                          trailing: Icon(Icons.navigate_next)))),
+
               // Log out
               GestureDetector(
                   onTap: () {
-                    AccountController().logout()
-                      .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LogInPage())));
+                    AccountController().logout().then((value) =>
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LogInPage())));
                   },
                   child: Card(
                       child: ListTile(

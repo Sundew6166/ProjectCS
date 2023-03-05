@@ -3,6 +3,9 @@ import 'package:my_book/Screen/User/Home/HomePage.dart';
 import 'package:my_book/Screen/User/Scan/BarCodeScan.dart';
 import 'package:my_book/Screen/User/Profile/ProfilePage.dart';
 
+import 'package:my_book/Screen/Admin/HomeAdmin.dart';
+import 'package:my_book/Screen/Admin/ProfileAdmin.dart';
+
 class BottomBar extends StatefulWidget {
   const BottomBar({super.key});
 
@@ -13,13 +16,16 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   int currentIndex = 0;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
-  static const List<Widget> _widgetOptions = <Widget>[
+  static const List<Widget> _userOptions = <Widget>[
     HomePage(),
     BarCodeScan(),
     Profile(),
+  ];
+
+  static const List<Widget> _adminOptions = <Widget>[
+    HomeAdmin(),
+    BarCodeScan(),
+    ProfileAdmin(),
   ];
 
   void _onItemTapped(int index) {
@@ -32,7 +38,11 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: _widgetOptions.elementAt(currentIndex),
+        //TODO: if account type == user
+        // child: _userOptions.elementAt(currentIndex),
+        
+        //TODO: if account type == admin
+        child: _adminOptions.elementAt(currentIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [
