@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
+import 'package:my_book/Service/BookController.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
-  const ReviewPage({super.key});
+  ReviewPage({super.key, required this.isbn, required this.edition});
+
+  String isbn;
+  String edition;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -14,6 +18,21 @@ class ReviewPage extends StatefulWidget {
 class _ReviewPageState extends State<ReviewPage> {
   // TODO: ดึงหนังสือในคลังมาเช็ค
   bool _isBookOn = false;
+  Map<String, dynamic>? bookInfo;
+
+  @override
+  void initState() {
+    setBookInfo();
+    super.initState();
+  }
+
+  setBookInfo() async {
+    await BookController().getBookInfo(widget.isbn, widget.edition).then((value) {
+      setState(() {
+        bookInfo = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +58,7 @@ class _ReviewPageState extends State<ReviewPage> {
                           alignment: Alignment.center,
                           width: 50,
                         ),
-                        ImageProduct(),
+                        ImageProduct(coverImageURL: bookInfo!['coverImage']),
                         Column(
                           children: [
                             IconButton(
@@ -109,13 +128,13 @@ class _ReviewPageState extends State<ReviewPage> {
                       color: Colors.white,
                       child: Column(
                         children: [
-                          BookName(),
-                          Author(),
-                          Publisher(),
-                          Edition(),
-                          Type(),
-                          Price(),
-                          Synopsys(),
+                          BookName(title: bookInfo!['title']),
+                          Author(author: bookInfo!['author']),
+                          Publisher(publisher: bookInfo!['publisher']),
+                          Edition(edition: bookInfo!['edition'].toString()),
+                          Price(price: bookInfo!['price'].toString()),
+                          Type(types: bookInfo!['types']),
+                          Synopsys(synopsys: bookInfo!['synopsys']),
                         ],
                       ),
                     ),
@@ -127,7 +146,8 @@ class _ReviewPageState extends State<ReviewPage> {
 }
 
 class ImageProduct extends StatelessWidget {
-  const ImageProduct({super.key});
+  ImageProduct({super.key, required this.coverImageURL});
+  String coverImageURL;
 
   @override
   Widget build(BuildContext context) {
@@ -135,26 +155,32 @@ class ImageProduct extends StatelessWidget {
       height: 300,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5), // Image border
-        child: Image.asset('images/Conan.jpg'),
+        child: Image.network(coverImageURL),
       ),
     );
   }
 }
 
 class BookName extends StatelessWidget {
+  BookName({super.key, required this.title});
+  String title;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       // margin: const EdgeInsets.only(top: 20.0),
       padding: const EdgeInsets.all(8),
       child: Center(
-        child: Text('ชื่อหนังสือ', style: TextStyle(fontSize: 20)),
+        child: Text(title, style: TextStyle(fontSize: 20)),
       ),
     );
   }
 }
 
 class Author extends StatelessWidget {
+  Author({super.key, required this.author});
+  String author;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -173,7 +199,7 @@ class Author extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Container(
-                child: Text('XXXXX XXXXX',
+                child: Text(author,
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -187,6 +213,9 @@ class Author extends StatelessWidget {
 }
 
 class Edition extends StatelessWidget {
+  Edition({super.key, required this.edition});
+  String edition;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -205,7 +234,7 @@ class Edition extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Container(
-                child: Text('X',
+                child: Text(edition,
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -219,6 +248,9 @@ class Edition extends StatelessWidget {
 }
 
 class Publisher extends StatelessWidget {
+  Publisher({super.key, required this.publisher});
+  String publisher;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -237,7 +269,7 @@ class Publisher extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Container(
-                child: Text('XXXXXXX',
+                child: Text(publisher,
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -251,6 +283,9 @@ class Publisher extends StatelessWidget {
 }
 
 class Price extends StatelessWidget {
+  Price({super.key, required this.price});
+  String price;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -269,7 +304,7 @@ class Price extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Container(
-                child: Text('XXXX บาท',
+                child: Text('${price} บาท',
                     style: TextStyle(
                       fontSize: 16,
                     )),
@@ -283,6 +318,9 @@ class Price extends StatelessWidget {
 }
 
 class Type extends StatelessWidget {
+  Type({super.key, required this.types});
+  List<String> types;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -297,24 +335,40 @@ class Type extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('XXX',
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
-            ),
-          ),
+          Wrap(
+            spacing: 6.0,
+            runSpacing: 6.0,
+            children: [
+              for (var type in types)
+                _buildChip(type)
+            ],
+          )
         ],
       ),
+    );
+  }
+
+  Widget _buildChip(String label) {
+    return Chip(
+      labelPadding: EdgeInsets.all(2.0),
+      label: Text(
+        label,
+        style: TextStyle(
+          color: Colors.black,
+        ),
+      ),
+      backgroundColor: Color(0xffadd1dc),
+      elevation: 6.0,
+      shadowColor: Colors.grey[60],
+      padding: EdgeInsets.all(8.0),
     );
   }
 }
 
 class Synopsys extends StatelessWidget {
+  Synopsys({super.key, required this.synopsys});
+  String synopsys;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -334,7 +388,7 @@ class Synopsys extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                child: Text('\t\t\t\tXXXXXXXXXXXXXX',
+                child: Text(synopsys,
                     style: TextStyle(fontSize: 16)),
               ),
             ),

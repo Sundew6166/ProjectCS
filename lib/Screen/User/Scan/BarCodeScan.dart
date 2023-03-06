@@ -67,7 +67,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           // Navigator.push(
                           //         context,
                           //         MaterialPageRoute(
-                          //             builder: (context) => ReviewPage()),
+                          //             builder: (context) => isbn: result.toString(), edition: "1"),
                           //       );
                           // }),
                           //       child: Text('เพิ่มไปคลังหนังสือ')),
@@ -95,7 +95,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                     onPressed: () async {
                                       await controller?.toggleFlash();
                                       setState(() {});
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
+                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(isbn: "9786162783807", edition: "1")));
                                     },
                                     child: FutureBuilder(
                                       future: controller?.getFlashStatus(),

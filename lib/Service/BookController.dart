@@ -68,4 +68,28 @@ class BookController {
         });
     }
   }
+
+  Future<Map<String, dynamic>?> getBookInfo(String isbn, String edition) async {
+    final db = FirebaseFirestore.instance;
+    final bookRef = db.collection('books').doc('${isbn}_${edition}');
+    
+    Map<String, dynamic>? bookInfo;
+    await bookRef.get().then((value) => bookInfo = value.data());
+    List<String> types = [];
+    await db.collection('b_has_bt').where("book", isEqualTo: bookRef).get()
+      .then((querySnapshot) async {
+        for (var docSnap in querySnapshot.docs) {
+          DocumentReference docRef = docSnap.data()['type'];
+          print(docRef.path);
+          await db.doc(docRef.path).get()
+            .then((value) {
+              types.add(value.data()!['name']);
+            });
+        }
+        bookInfo!.addAll({"types": types});
+      });
+    
+    print(bookInfo);
+    return bookInfo;
+  }
 }
