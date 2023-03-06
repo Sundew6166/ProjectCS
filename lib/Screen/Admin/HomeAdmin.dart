@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:my_book/Screen/User/Hub/Social.dart';
 import 'package:my_book/Screen/User/Home/PostPage.dart';
-
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
+import 'package:my_book/Service/PostController.dart';
 
 class HomeAdmin extends StatefulWidget {
   const HomeAdmin({super.key});
@@ -14,6 +15,23 @@ class HomeAdmin extends StatefulWidget {
 }
 
 class _HomeAdminState extends State<HomeAdmin> {
+  List<dynamic>? posts;
+
+  @override
+  void initState() {
+    setPosts();
+    super.initState();
+  }
+
+  setPosts() async {
+    await PostController().getPostAll().then((value) {
+      setState(() {
+        posts = value;
+        // print(posts!.length);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new WillPopScope(
@@ -32,10 +50,25 @@ class _HomeAdminState extends State<HomeAdmin> {
                     // width: MediaQuery.of(context).size.width,
                     // height: MediaQuery.of(context).size.height,
                     color: Color(0xfff5f3e8),
-                    padding: EdgeInsets.all(5),
+                    // padding: EdgeInsets.all(5),
                     child: Column(
-                      children: [
-                        PostSection(),
+                      children: <Widget>[
+                        if (posts != null)
+                          PostSection(posts: posts!,)
+                        else
+                          Container(
+                            width: MediaQuery.of(context).size.width,
+                            height: MediaQuery.of(context).size.height,
+                            color: Colors.black,
+                            child: Center(
+                              child: LoadingAnimationWidget.twistingDots(
+                                leftDotColor: const Color(0xFF1A1A3F),
+                                rightDotColor: const Color(0xFFEA3799),
+                                size: 50,
+                              ),
+                            ),
+                          )
+                        // Text('data')
                       ],
                     ))),
             floatingActionButton:
@@ -72,7 +105,10 @@ class _HomeAdminState extends State<HomeAdmin> {
 }
 
 class PostSection extends StatefulWidget {
-  const PostSection({super.key});
+  // const PostSection({super.key});
+  PostSection({Key? key, required this.posts}) : super(key: key);
+
+  List<dynamic> posts;
 
   @override
   State<PostSection> createState() => _PostSectionState();
@@ -85,9 +121,8 @@ class _PostSectionState extends State<PostSection> {
         color: Color(0xfff5f3e8),
         height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        // width: 280,
         child: ListView.builder(
-          itemCount: 25,
+          itemCount: widget.posts.length,
           shrinkWrap: true,
           itemBuilder: (context, i) {
             return GestureDetector(
@@ -117,13 +152,15 @@ class _PostSectionState extends State<PostSection> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text("ชื่อคนอื่น",
+                                              Text('${widget.posts[i]['CreateBy']}',
+                                              // Text("ชื่อคนอื่น",
                                                   maxLines: 1,
                                                   style:
                                                       TextStyle(fontSize: 18)),
                                               Text(
-                                                "รายละเอียดโพสต์",
-                                                overflow: TextOverflow.ellipsis,
+                                                '${widget.posts[i]['Detail_Post']}',
+                                                // "รายละเอียดโพสต์",
+                                                overflow: TextOverflow.clip,
                                               )
                                             ])),
                                   ),
