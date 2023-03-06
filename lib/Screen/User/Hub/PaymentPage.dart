@@ -12,6 +12,21 @@ class PaymentPage extends StatefulWidget {
 }
 
 class _PaymentPageState extends State<PaymentPage> {
+  File? _image;
+
+  final _picker = ImagePicker();
+
+  Future<void> _openImagePicker() async {
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+        print(_image);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +50,27 @@ class _PaymentPageState extends State<PaymentPage> {
                     ])),
                 PaymentSlip(),
                 SizedBox(height: 20),
-                UploadSlip(),
+                Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: 40,
+                    ),
+                    alignment: Alignment.center,
+                    width: double.infinity,
+                    height: 300,
+                    color: Colors.grey[300],
+                    child: Container(
+                      child: _image != null
+                          ? Image.file(_image!, fit: BoxFit.cover)
+                          : const Text('กรุณาเลือกรูป'),
+                    )),
+                // เลือกรูป
+                Center(
+                  child: ElevatedButton(
+                    onPressed: _openImagePicker,
+                    child: const Text('เลือกรูป'),
+                  ),
+                ),
+
                 SizedBox(height: 40),
                 Container(
                     child: ElevatedButton(
@@ -195,45 +230,6 @@ class PaymentSlip extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class UploadSlip extends StatefulWidget {
-  const UploadSlip({super.key});
-
-  @override
-  State<UploadSlip> createState() => _UploadSlipState();
-}
-
-class _UploadSlipState extends State<UploadSlip> {
-  File? _image;
-
-  final _picker = ImagePicker();
-
-  Future<void> _openImagePicker() async {
-    final XFile? pickedImage =
-        await _picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      setState(() {
-        _image = File(pickedImage.path);
-        print(_image);
-      });
-    } else {
-      // print("No image selected");
-      ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text('คุณยังไม่ได้เลือกรูป')));
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 150,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(5), // Image border
-        child: Image.asset('images/uploadImage.png'),
       ),
     );
   }

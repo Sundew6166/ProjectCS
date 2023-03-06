@@ -100,7 +100,6 @@ class _AddBookState extends State<AddBook> {
                                         ? Image.file(_image!, fit: BoxFit.cover)
                                         : const Text('กรุณาเลือกรูป'),
                                   )),
-                              const SizedBox(height: 20),
                               // เลือกรูป
                               Center(
                                 child: ElevatedButton(

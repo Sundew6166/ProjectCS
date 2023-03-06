@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 import 'package:my_book/Screen/BottomBar.dart';
 
 class AddSale extends StatefulWidget {
@@ -9,6 +12,9 @@ class AddSale extends StatefulWidget {
 }
 
 class _AddSaleState extends State<AddSale> {
+  File? _image;
+
+  final _picker = ImagePicker();
   static var _addressValidationForm = GlobalKey<FormState>();
 
   TextEditingController _textISBN = TextEditingController();
@@ -23,6 +29,17 @@ class _AddSaleState extends State<AddSale> {
   TextEditingController _textDeliveryFee = TextEditingController();
   TextEditingController _textNameBankAccount = TextEditingController();
   TextEditingController _textAccountNumber = TextEditingController();
+
+  Future<void> _openImagePicker() async {
+    final XFile? pickedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _image = File(pickedImage.path);
+        print(_image);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +63,24 @@ class _AddSaleState extends State<AddSale> {
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
+                              // แสดงรูป
+                              Container(
+                                  alignment: Alignment.center,
+                                  width: double.infinity,
+                                  height: 300,
+                                  color: Colors.grey[300],
+                                  child: Container(
+                                    child: _image != null
+                                        ? Image.file(_image!, fit: BoxFit.cover)
+                                        : const Text('กรุณาเลือกรูป'),
+                                  )),
+                              // เลือกรูป
+                              Center(
+                                child: ElevatedButton(
+                                  onPressed: _openImagePicker,
+                                  child: const Text('เลือกรูป'),
+                                ),
+                              ),
                               Container(
                                 margin: const EdgeInsets.only(left: 15),
                               ),
@@ -201,8 +236,12 @@ class _AddSaleState extends State<AddSale> {
                                                             Navigator.push(
                                                           context,
                                                           MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  BottomBar(accType: 'USER',)),
+                                                              builder:
+                                                                  (context) =>
+                                                                      BottomBar(
+                                                                        accType:
+                                                                            'USER',
+                                                                      )),
                                                         ),
                                                         child:
                                                             const Text('ตกลง'),

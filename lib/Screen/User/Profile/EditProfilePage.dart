@@ -53,7 +53,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             ? Image.file(_image!, fit: BoxFit.cover)
                             : const Text('กรุณาเลือกรูป'),
                       )),
-                  const SizedBox(height: 20),
                   Center(
                     child: ElevatedButton(
                       onPressed: _openImagePicker,
