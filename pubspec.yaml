@@ -45,6 +45,7 @@ dependencies:
   comment_box: ^0.0.18
   flutter_speed_dial: ^6.2.0
   flutter_autocomplete_label: ^1.0.0
+  loading_animation_widget: ^1.2.0+4
 
   http: ^0.13.5
   firebase_auth: ^4.2.9
