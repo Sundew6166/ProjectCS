@@ -33,6 +33,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           height: 100,
                           child: Card(
                             child: ListTile(
+                              leading: Icon(Icons.circle_notifications, size: 40,),
                               title: Text(
                                 "แจ้งเตือน $index",
                                 maxLines: 1,

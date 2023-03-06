@@ -50,9 +50,35 @@ class _ReviewPageState extends State<ReviewPage> {
                               ),
                               onPressed: (() {
                                 setState(() {
-                                  // TODO: Alert before delete book from stock
-                                  _isBookOn = !_isBookOn;
-                                  print(_isBookOn);
+                                  if (_isBookOn) {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: const Text(
+                                                  "ลบออกจากคลังหนังสือ"),
+                                              content: Text(
+                                                  'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, 'ยกเลิก'),
+                                                  child: const Text('ยกเลิก'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.pop(context);
+                                                    setState(() {
+                                                      _isBookOn = !_isBookOn;
+                                                    });
+                                                  },
+                                                  child: const Text('ตกลง'),
+                                                ),
+                                              ],
+                                            ));
+                                  } else
+                                    _isBookOn = !_isBookOn;
+                                  // print(_isBookOn);
                                 });
                               }),
                             ),
@@ -77,7 +103,9 @@ class _ReviewPageState extends State<ReviewPage> {
                     ),
                     SizedBox(height: 20),
                     Container(
-                      margin: EdgeInsets.symmetric(horizontal: 10,),
+                      margin: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
                       color: Colors.white,
                       child: Column(
                         children: [
@@ -365,7 +393,7 @@ class _RateReviewState extends State<RateReview> {
                           RatingBarIndicator(
                             itemSize: 20,
                             // TODO: ดึงค่า rating มาแสดง
-                            rating: 2.5,
+                            rating: 3,
                             itemCount: 5,
                             itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                             itemBuilder: (context, _) => Icon(
@@ -435,9 +463,9 @@ class _WriteReviewState extends State<WriteReview> {
                   RatingBar.builder(
                     itemSize: 30,
                     initialRating: 3,
-                    minRating: 0,
+                    minRating: 1,
                     direction: Axis.horizontal,
-                    allowHalfRating: true,
+                    // allowHalfRating: true,
                     itemCount: 5,
                     itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                     itemBuilder: (context, _) => Icon(
