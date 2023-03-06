@@ -44,11 +44,10 @@ class SettingPage extends StatelessWidget {
               // Address
               GestureDetector(
                   onTap: () async {
-                    Map<String, dynamic> deliInfo = await AccountController().getDeliveryInformation();
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => EditAddressPage(deliInfo: deliInfo)),
+                        builder: (context) => EditAddressPage()),
                     );
                   },
                   child: Card(

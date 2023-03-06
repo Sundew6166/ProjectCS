@@ -1,6 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_autocomplete_label/autocomplete_label.dart';
 
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Service/BookController.dart';
 
 class AddBook extends StatefulWidget {
   AddBook({Key? key, required this.isbn}) : super(key: key);
@@ -13,7 +17,8 @@ class AddBook extends StatefulWidget {
 }
 
 class _AddBookState extends State<AddBook> {
-  static var _addressValidationForm = GlobalKey<FormState>();
+  static var _newBookFormKey = GlobalKey<FormState>();
+  AutocompleteLabelController<String>? typeOption;
 
   TextEditingController _textISBN = TextEditingController();
   TextEditingController _textTitle = TextEditingController();
@@ -26,9 +31,19 @@ class _AddBookState extends State<AddBook> {
 
   @override
   void initState() {
-    super.initState();
-    _textISBN = TextEditingController(text: widget.isbn);
+    _textISBN.text = widget.isbn;
+    _textEdition.text = "1";
     print(widget.isbn);
+    setTypeOption();
+    super.initState();
+  }
+
+  setTypeOption() async {
+    await BookController().getBookTypes().then((value) {
+      setState(() {
+        typeOption = AutocompleteLabelController<String>(source: value);
+      });
+    });
   }
 
   @override
@@ -40,7 +55,7 @@ class _AddBookState extends State<AddBook> {
         // resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Form(
-                key: _addressValidationForm,
+                key: _newBookFormKey,
                 child: Column(
                   children: [
                     Container(
@@ -60,7 +75,7 @@ class _AddBookState extends State<AddBook> {
                                 child: TextFormField(
                                   // enabled: false,
                                   controller: _textISBN,
-                                  keyboardType: TextInputType.text,
+                                  keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
                                   decoration: InputDecoration(
                                     labelText: 'ISBN',
@@ -72,12 +87,7 @@ class _AddBookState extends State<AddBook> {
                                   controller: _textTitle,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: RequiredValidator(errorText: "กรุณากรอกชื่อหนังสือ"),
                                   decoration: InputDecoration(
                                     labelText: 'ชื่อหนังสือ',
                                   ),
@@ -88,12 +98,7 @@ class _AddBookState extends State<AddBook> {
                                   controller: _textAuthor,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: RequiredValidator(errorText: "กรุณากรอกชื่อผู้แต่ง"),
                                   decoration: InputDecoration(
                                     labelText: 'ชื่อผู้แต่ง',
                                   ),
@@ -104,12 +109,7 @@ class _AddBookState extends State<AddBook> {
                                   controller: _textPublisher,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: RequiredValidator(errorText: "กรุณากรอกชื่อสำนักพิมพ์"),
                                   decoration: InputDecoration(
                                     labelText: 'สำนักพิมพ์',
                                   ),
@@ -118,14 +118,11 @@ class _AddBookState extends State<AddBook> {
                               Container(
                                 child: TextFormField(
                                   controller: _textEdition,
-                                  keyboardType: TextInputType.text,
+                                  keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: (value) {
+                                    return value!.isEmpty ? "กรุณากรอกครั้งที่พิมพ์" : int.parse(value) > 0 ? null : "ครั้งที่พิมพ์ต้องมากกว่า 0";
+                                  },
                                   decoration: InputDecoration(
                                     labelText: 'ครั้งที่พิมพ์',
                                   ),
@@ -136,32 +133,45 @@ class _AddBookState extends State<AddBook> {
                                   controller: _textPrice,
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: (value) {
+                                    return value!.isEmpty ? "กรุณากรอกราคา" : int.parse(value) > 0 ? null : "ราคาต้องมากกว่า 0";
+                                  },
                                   decoration: InputDecoration(
                                     labelText: 'ราคาตามปก',
                                   ),
                                 ),
                               ),
-                              Container(
-                                child: TextFormField(
-                                  controller: _textType,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
-                                  decoration: InputDecoration(
-                                    labelText: 'ประเภทหนังสือ',
-                                  ),
-                                ),
+                              Row(
+                                children: [
+                                  Text("ประเภท"),
+                                  Expanded(
+                                    child: AutocompleteLabel<String>(
+                                      fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
+                                        return ConstrainedBox(
+                                          constraints: BoxConstraints(minWidth: 68),
+                                          child: DryIntrinsicWidth(
+                                            child: Padding(
+                                              padding: EdgeInsets.all(5),
+                                              child: TextField(
+                                                strutStyle: StrutStyle(height: 1.0),
+                                                decoration: InputDecoration(
+                                                  contentPadding: EdgeInsets.zero,
+                                                  isDense: true,
+                                                  border: InputBorder.none,
+                                                  hintText: "เพิ่ม",
+                                                ),
+                                                controller: textEditingController,
+                                                textInputAction: TextInputAction.next,
+                                                onEditingComplete: onFieldSubmitted,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                      autocompleteLabelController: typeOption,
+                                    )
+                                  )
+                                ],
                               ),
                               Container(
                                 child: TextFormField(
@@ -178,33 +188,45 @@ class _AddBookState extends State<AddBook> {
                                   margin:
                                       EdgeInsets.only(top: 16.0, bottom: 16.0),
                                   child: ElevatedButton(
-                                      onPressed: () {
-                                        if (_addressValidationForm.currentState!
-                                            .validate()) {
-                                          showDialog(
-                                              context: context,
-                                              builder: (_) => AlertDialog(
-                                                    title: const Text(
-                                                        "รอการยืนยันจากผู้ดูแล"),
-                                                    content: Text(
-                                                        'รอการยืนยันจากผู้ดูแล'),
+                                      onPressed: () async {
+                                        if (_newBookFormKey.currentState!.validate()) {
+                                          try {
+                                            await BookController().addNewBookFromUser(_textISBN.text, _textTitle.text, _textAuthor.text, _textPublisher.text, int.parse(_textEdition.text), int.parse(_textPrice.text), typeOption!.values, _textSynopsys.text, null)
+                                              .then((value) => showDialog(
+                                                context: context,
+                                                builder: (_) => AlertDialog(
+                                                  title: const Text("รอการยืนยันจากผู้ดูแล"),
+                                                  content: Text('ส่งข้อมูลเสร็จสิ้น รอการยืนยันจากผู้ดูแล'),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  BottomBar()),
-                                                        ),
-                                                        child:
-                                                            const Text('ตกลง'),
+                                                        onPressed: () => Navigator.of(context)..pop()..pop(),
+                                                        child: const Text('ตกลง'),
                                                       ),
                                                     ],
-                                                  ));
-                                          // _addressValidationForm
-                                          //     .currentState
-                                          //     ?.reset();
+                                                )
+                                              ));
+                                          } on FirebaseException catch (e) {
+                                            print(e.code);
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) =>
+                                                    AlertDialog(
+                                                        title: Text(e
+                                                            .message
+                                                            .toString()),
+                                                        content: Text(
+                                                            "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
+                                                        actions: <
+                                                            Widget>[
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: const Text(
+                                                                'ตกลง'),
+                                                          )
+                                                        ]));
+                                          }
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(

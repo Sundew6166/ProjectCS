@@ -216,6 +216,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_autocomplete_label:
+    dependency: "direct main"
+    description:
+      name: flutter_autocomplete_label
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -261,6 +268,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_widget_offset:
+    dependency: transitive
+    description:
+      name: flutter_widget_offset
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   form_field_validator:
     dependency: "direct main"
     description:

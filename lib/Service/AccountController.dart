@@ -82,9 +82,9 @@ class AccountController {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
-    String downloadURL = await ImageController().uploadToFireStorage(file);
+    String downloadURL = await ImageController().uploadToFireStorage(file, user!.uid);
     print("downloadURL: " + downloadURL);
-    await db.collection('accounts').doc(user!.uid)
+    await db.collection('accounts').doc(user.uid)
       .update({
         "image": downloadURL
       });

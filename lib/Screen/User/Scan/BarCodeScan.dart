@@ -51,6 +51,14 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
+                          if (result != null)
+                            // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
+                            ElevatedButton(
+                              onPressed: () async {
+                                Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
+                              },
+                              child: Text('เพิ่มหนังสือใหม่')
+                            )
                           // TODO: ไม่มีหนังสือในคลัง => ReviewPage
                           // if (result != null)
                           //   ElevatedButton(
@@ -74,18 +82,6 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           // );
                           // }),
                           //         child: Text('เพิ่มไปยังการขาย')),
-                          // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
-                          if (result != null)
-                            ElevatedButton(
-                                onPressed: (() {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            AddBook(isbn: result.toString())),
-                                  );
-                                }),
-                                child: Text('เพิ่มหนังสือใหม่'))
                           else
                             const Text('กรุณาสแกนบาร์โค้ด'),
                           Row(
@@ -98,6 +94,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                     onPressed: () async {
                                       await controller?.toggleFlash();
                                       setState(() {});
+                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
                                     },
                                     child: FutureBuilder(
                                       future: controller?.getFlashStatus(),

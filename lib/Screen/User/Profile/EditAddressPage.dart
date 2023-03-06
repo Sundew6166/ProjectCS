@@ -3,17 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:my_book/Service/AccountController.dart';
 
 class EditAddressPage extends StatefulWidget {
-  const EditAddressPage({super.key, required this.deliInfo});
-  final Map<String, dynamic> deliInfo;
+  const EditAddressPage({super.key});
 
   @override
-  State<EditAddressPage> createState() => _EditAddressPageState(this.deliInfo);
+  State<EditAddressPage> createState() => _EditAddressPageState();
 }
 
 class _EditAddressPageState extends State<EditAddressPage> {
-  Map<String, dynamic> deliInfo;
-  _EditAddressPageState(this.deliInfo);
-
   static var _addressFormKey = GlobalKey<FormState>();
 
   TextEditingController _textEditName = TextEditingController();
@@ -22,10 +18,18 @@ class _EditAddressPageState extends State<EditAddressPage> {
 
   @override
   void initState() {
-    _textEditName.text = deliInfo['name'];
-    _textEditAddress.text = deliInfo['address'];
-    _textEditPhone.text = deliInfo['phone'];
+    setInitForm();
     super.initState();
+  }
+
+  setInitForm() async {
+    await AccountController().getDeliveryInformation().then((value) {
+      setState(() {
+        _textEditName.text = value['name'];
+        _textEditAddress.text = value['address'];
+        _textEditPhone.text = value['phone'];
+      });
+    });
   }
 
   @override
