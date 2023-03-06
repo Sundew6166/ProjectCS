@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_book/Service/AccountController.dart';
 import 'dart:io';
-import 'package:path/path.dart' as Path;
-import 'package:path_provider/path_provider.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -45,39 +43,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
               padding: const EdgeInsets.all(35),
               child: Column(
                 children: [
-                  // Container(
-                  //   alignment: Alignment.center,
-                  //   width: double.infinity,
-                  //   height: 300,
-
-                  //   color: Colors.grey[300],
-                  //   child: _image != null
-                  //       ? Image.file(_image!, fit: BoxFit.cover)
-                  //       : const Text('กรุณาเลือกรูป'),
-                  // ),
                   Container(
                       alignment: Alignment.center,
                       width: double.infinity,
                       height: 300,
                       color: Colors.grey[300],
-                      // child: Column(
-                      //   mainAxisAlignment: MainAxisAlignment.center,
-                      //   mainAxisSize: MainAxisSize.max,
-                      //   crossAxisAlignment: CrossAxisAlignment.stretch,
-                      //   children: <Widget>[
-                      // Container(
-                      //   child: Icon(Icons.image_outlined, size: 300.0),
-                      // ),
                       child: Container(
                         child: _image != null
                             ? Image.file(_image!, fit: BoxFit.cover)
-                            // : Icon(Icons.image_outlined, size: 200),
                             : const Text('กรุณาเลือกรูป'),
-                      )
-                      //   ],
-                      // ),
-                      ),
-                  const SizedBox(height: 20),
+                      )),
                   Center(
                     child: ElevatedButton(
                       onPressed: _openImagePicker,
@@ -91,36 +66,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           onPressed: () async {
                             if (_image != null) {
                               try {
-                                await AccountController().updateProfilePic(_image!)
-                                  .then((value) => showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                      title: const Text("เสร็จสิ้น"),
-                                      content: Text('การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.of(context)..pop()..pop(),
-                                          child: const Text('ตกลง'),
-                                        ),
-                                      ],
-                                    ))
-                                  );
+                                await AccountController()
+                                    .updateProfilePic(_image!)
+                                    .then((value) => showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: const Text("เสร็จสิ้น"),
+                                              content: Text(
+                                                  'การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.of(context)
+                                                        ..pop()
+                                                        ..pop(),
+                                                  child: const Text('ตกลง'),
+                                                ),
+                                              ],
+                                            )));
                               } on FirebaseException catch (e) {
                                 print(e.code);
                                 showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                    title: Text(e.message.toString()),
-                                    content: Text("เกิดข้อผิดพลาดในการแก้ไขโปรไฟล์ กรุณาลองใหม่"),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () => Navigator.pop(context),
-                                        child: const Text('ตกลง'),
-                                      )
-                                    ]
-                                  )
-                                );
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                            title: Text(e.message.toString()),
+                                            content: Text(
+                                                "เกิดข้อผิดพลาดในการแก้ไขโปรไฟล์ กรุณาลองใหม่"),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: const Text('ตกลง'),
+                                              )
+                                            ]));
                               }
                             } else {
                               // print("No image selected");
