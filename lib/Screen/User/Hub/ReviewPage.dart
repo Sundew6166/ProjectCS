@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -29,12 +30,19 @@ class _ReviewPageState extends State<ReviewPage> {
 
   setBookInfo() async {
     await BookController()
+        .checkHasBook(widget.isbn, widget.edition)
+        .then((value) {
+          setState(() {
+            _isBookOn = value;
+          });
+        });
+    await BookController()
         .getBookInfo(widget.isbn, widget.edition)
         .then((value) {
-      setState(() {
-        bookInfo = value;
-      });
-    });
+          setState(() {
+            bookInfo = value;
+          });
+        });
   }
 
   @override
@@ -73,40 +81,76 @@ class _ReviewPageState extends State<ReviewPage> {
                                     color:
                                         _isBookOn ? Colors.green : Colors.black,
                                   ),
-                                  onPressed: (() {
-                                    setState(() {
-                                      if (_isBookOn) {
+                                  onPressed: (() async {
+                                    if (_isBookOn) {
+                                      showDialog(
+                                          context: context,
+                                          builder: (_) => AlertDialog(
+                                                title: const Text(
+                                                    "ลบออกจากคลังหนังสือ"),
+                                                content: Text(
+                                                    'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
+                                                actions: <Widget>[
+                                                  TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context,
+                                                            'ยกเลิก'),
+                                                    child:
+                                                        const Text('ยกเลิก'),
+                                                  ),
+                                                  TextButton(
+                                                    onPressed: () async {
+                                                      try {
+                                                        await BookController().deleteBookFromLibrary(bookInfo!['isbn'], bookInfo!['edition'].toString())
+                                                          .then((value) {setState(() {
+                                                            _isBookOn = false;
+                                                            Navigator.pop(context);
+                                                          });});
+                                                      } on FirebaseException catch (e) {
+                                                        print(e.code);
+                                                        showDialog(
+                                                          context: context,
+                                                          builder: (_) => AlertDialog(
+                                                            title: Text(e.message.toString()),
+                                                            content: Text("เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                onPressed: () => Navigator.pop(context),
+                                                                child: const Text('ตกลง'),
+                                                              )
+                                                            ]
+                                                          )
+                                                        );
+                                                      }
+                                                    },
+                                                    child: const Text('ตกลง'),
+                                                  ),
+                                                ],
+                                              ));
+                                    } else {
+                                      try {
+                                        await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition'].toString())
+                                          .then((value) {setState(() {
+                                            _isBookOn = true;
+                                          });});
+                                      } on FirebaseException catch (e) {
+                                        print(e.code);
                                         showDialog(
-                                            context: context,
-                                            builder: (_) => AlertDialog(
-                                                  title: const Text(
-                                                      "ลบออกจากคลังหนังสือ"),
-                                                  content: Text(
-                                                      'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      onPressed: () =>
-                                                          Navigator.pop(context,
-                                                              'ยกเลิก'),
-                                                      child:
-                                                          const Text('ยกเลิก'),
-                                                    ),
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.pop(context);
-                                                        setState(() {
-                                                          _isBookOn =
-                                                              !_isBookOn;
-                                                        });
-                                                      },
-                                                      child: const Text('ตกลง'),
-                                                    ),
-                                                  ],
-                                                ));
-                                      } else
-                                        _isBookOn = !_isBookOn;
-                                      // print(_isBookOn);
-                                    });
+                                          context: context,
+                                          builder: (_) => AlertDialog(
+                                            title: Text(e.message.toString()),
+                                            content: Text("เกิดข้อผิดพลาดในการเพิ่มหนังสือเข้าคลัง กรุณาลองใหม่"),
+                                            actions: <Widget>[
+                                              TextButton(
+                                                onPressed: () => Navigator.pop(context),
+                                                child: const Text('ตกลง'),
+                                              )
+                                            ]
+                                          )
+                                        );
+                                      }
+                                    }
+                                    // print(_isBookOn);
                                   }),
                                 ),
                                 SizedBox(

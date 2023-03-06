@@ -255,12 +255,11 @@ class _AddBookState extends State<AddBook> {
                                                     _textTitle.text,
                                                     _textAuthor.text,
                                                     _textPublisher.text,
-                                                    int.parse(
-                                                        _textEdition.text),
+                                                    int.parse(_textEdition.text),
                                                     int.parse(_textPrice.text),
                                                     typeOption!.values,
                                                     _textSynopsys.text,
-                                                    null)
+                                                    _image)
                                                 .then((value) => showDialog(
                                                     context: context,
                                                     builder: (_) => AlertDialog(

@@ -52,16 +52,16 @@ class BookController {
           if (value.docs.isNotEmpty) {
             print("add b_has_bt");
             db.collection('b_has_bt').add({
-              "book": db.collection('books').doc(bookId),
-              "type": db.collection('book_types').doc(value.docs[0].id)
+              "book": bookId,
+              "type": value.docs[0].id
             });
           } else {
             print("add type and b_has_bt");
             db.collection('book_types').add({"name": type})
               .then((value) {
                 db.collection('b_has_bt').add({
-                  "book": db.collection('books').doc(bookId),
-                  "type": db.collection('book_types').doc(value.id)
+                  "book": bookId,
+                  "type": value.id
                 });
               });
           }
@@ -71,17 +71,17 @@ class BookController {
 
   Future<Map<String, dynamic>?> getBookInfo(String isbn, String edition) async {
     final db = FirebaseFirestore.instance;
-    final bookRef = db.collection('books').doc('${isbn}_${edition}');
+    final id = '${isbn}_${edition}';
     
     Map<String, dynamic>? bookInfo;
-    await bookRef.get().then((value) => bookInfo = value.data());
+    await db.collection('books').doc(id).get()
+      .then((value) => bookInfo = value.data());
     List<String> types = [];
-    await db.collection('b_has_bt').where("book", isEqualTo: bookRef).get()
+    await db.collection('b_has_bt').where("book", isEqualTo: id).get()
       .then((querySnapshot) async {
         for (var docSnap in querySnapshot.docs) {
-          DocumentReference docRef = docSnap.data()['type'];
-          print(docRef.path);
-          await db.doc(docRef.path).get()
+          print(docSnap.data()['type']);
+          await db.collection('book_types').doc(docSnap.data()['type']).get()
             .then((value) {
               types.add(value.data()!['name']);
             });
@@ -91,5 +91,42 @@ class BookController {
     
     print(bookInfo);
     return bookInfo;
+  }
+
+  Future<void> addBookToLibrary(String isbn, String edition) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    await db.collection('a_has_b').add({
+      "account": user!.uid,
+      "book": '${isbn}_${edition}'
+    });
+  }
+
+  Future<void> deleteBookFromLibrary(String isbn, String edition) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    await db.collection('a_has_b')
+      .where('account', isEqualTo: user!.uid)
+      .where('book', isEqualTo: '${isbn}_${edition}')
+      .get().then((value) {
+        db.collection('a_has_b').doc(value.docs[0].id).delete();
+      });
+  }
+
+  Future<bool> checkHasBook(String isbn, String edition) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    bool hasBook = false;
+
+    await db.collection('a_has_b')
+      .where('account', isEqualTo: user!.uid)
+      .where('book', isEqualTo: '${isbn}_${edition}')
+      .get().then((value) {
+        if(value.docs.isNotEmpty)
+          hasBook = true;
+      });
+    return hasBook;
   }
 }
