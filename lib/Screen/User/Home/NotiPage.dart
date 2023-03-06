@@ -22,7 +22,7 @@ class _NotificationPageState extends State<NotificationPage> {
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
                     // TODO: go to review page when noti of approve
-                    // TODO: noti of address
+                    // TODO: noti คนขายไปส่งของ
                     // TODO: go to payment page
                       onTap: () => Navigator.push(
                             context,
@@ -33,6 +33,7 @@ class _NotificationPageState extends State<NotificationPage> {
                           height: 100,
                           child: Card(
                             child: ListTile(
+                              leading: Icon(Icons.circle_notifications, size: 40,),
                               title: Text(
                                 "แจ้งเตือน $index",
                                 maxLines: 1,

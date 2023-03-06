@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/BottomBar.dart';
-// import 'package:my_book/User/Profile/ProfilePage.dart';
 
 class SellPage extends StatefulWidget {
   const SellPage({super.key});
@@ -15,78 +14,87 @@ class _SellPageState extends State<SellPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-            appBar: AppBar(
-                title: const Text('ซื้อ'),
-                ),
-            resizeToAvoidBottomInset: false,
-            body: SingleChildScrollView(
-                child: Container(
-                    color: Color(0xfff5f3e8),
-                    alignment: Alignment.topCenter,
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SizedBox(height: 20),
-                        ImageProduct(),
-                        BookName(),
-                        Author(),
-                        Publisher(),
-                        Type(),
-                        Price(),
-                        Selling_Price(),
-                        DeliveryFee(),
-                        Synopsys(),
-                        Detail(),
-                        Container(
-                            margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                            child: ElevatedButton(
-                                // TODO: เงื่อนไขการ disable ปุ่มซื้อในกรณีผู้ใช้มีหนังสือเล่มนั้นแล้ว
-                                // onPressed: () {
-                                //   setState(() {
-                                //     //setState to refresh UI
-                                //     if (buttonenabled) {
-                                //       buttonenabled = false;
-                                //       //if buttonenabled == true, then make buttonenabled = false
-                                //     } else {
-                                //       buttonenabled = true;
-                                //       //if buttonenabled == false, then make buttonenabled = true
-                                //     }
-                                //   });
-                                // },
-                                onPressed: (() => showDialog(
-                                    context: context,
-                                    builder: (_) => AlertDialog(
-                                          title: const Text(
-                                              "ยืนยันการซื้อหนังสือ"),
-                                          content: Text(
-                                              'ชื่อหนังสือ\nราคารวม XXXX บาท'),
-                                          actions: <Widget>[
-                                            TextButton(
-                                              onPressed: () => Navigator.pop(
-                                                  context, 'ยกเลิก'),
-                                              child: const Text('ยกเลิก'),
-                                            ),
-                                            TextButton(
-                                              onPressed: () => Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          BottomBar())),
-                                              child: const Text('ตกลง'),
-                                            ),
-                                          ],
-                                        ))),
-                                style: ElevatedButton.styleFrom(
-                                    fixedSize:
-                                        Size(100, 40), // specify width, height
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(
-                                      10,
+        appBar: AppBar(
+          title: const Text('ซื้อ'),
+        ),
+        resizeToAvoidBottomInset: false,
+        body: SingleChildScrollView(
+            child: Container(
+                color: Color(0xfff5f3e8),
+                alignment: Alignment.topCenter,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(height: 20),
+                    ImageProduct(),
+                    SizedBox(height: 20),
+                    Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: 10,
+                        ),
+                        color: Colors.white,
+                        child: Column(children: [
+                          BookName(),
+                          Author(),
+                          Publisher(),
+                          Type(),
+                          Price(),
+                          Selling_Price(),
+                          DeliveryFee(),
+                          Synopsys(),
+                          Detail(),
+                        ])),
+                    Container(
+                        margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                        child: ElevatedButton(
+                            // TODO: เงื่อนไขการ disable ปุ่มซื้อในกรณีผู้ใช้มีหนังสือเล่มนั้นแล้ว
+                            // onPressed: () {
+                            //   setState(() {
+                            //     //setState to refresh UI
+                            //     if (buttonenabled) {
+                            //       buttonenabled = false;
+                            //       //if buttonenabled == true, then make buttonenabled = false
+                            //     } else {
+                            //       buttonenabled = true;
+                            //       //if buttonenabled == false, then make buttonenabled = true
+                            //     }
+                            //   });
+                            // },
+                            onPressed: (() => showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                      title: const Text("ยืนยันการซื้อหนังสือ"),
+                                      content:
+                                          Text('ชื่อหนังสือ\nราคารวม XXXX บาท'),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context, 'ยกเลิก'),
+                                          child: const Text('ยกเลิก'),
+                                        ),
+                                        TextButton(
+                                          onPressed: () => Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      BottomBar(
+                                                        accType: 'USER',
+                                                      ))),
+                                          child: const Text('ตกลง'),
+                                        ),
+                                      ],
                                     ))),
-                                child: Text("ซื้อ",
-                                    style: TextStyle(fontSize: 20)))),
-                      ],
-                    ))));
+                            style: ElevatedButton.styleFrom(
+                                fixedSize:
+                                    Size(100, 40), // specify width, height
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                  10,
+                                ))),
+                            child:
+                                Text("ซื้อ", style: TextStyle(fontSize: 20)))),
+                  ],
+                ))));
   }
 }
 
@@ -109,7 +117,7 @@ class BookName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 20.0),
+      // margin: const EdgeInsets.only(top: 20.0),
       padding: const EdgeInsets.all(8),
       child: Center(
         child: Text('ชื่อหนังสือ', style: TextStyle(fontSize: 20)),

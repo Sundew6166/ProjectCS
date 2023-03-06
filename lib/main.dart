@@ -1,8 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
-// import 'package:my_book/BottomBar.dart';
-// import 'package:my_book/LogInPage.dart';
+
 import 'package:my_book/Screen/RegisterPage.dart';
 
 void main() async {

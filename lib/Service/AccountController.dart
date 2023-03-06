@@ -5,33 +5,42 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_book/Service/ImageController.dart';
 
 class AccountController {
-  Future<void> register(String username, String password, String name, String address, String phone) async {
+  // AccountController()
+  Future<void> register(String username, String password, String name,
+      String address, String phone) async {
     await FirebaseAuth.instance
-      .createUserWithEmailAndPassword(email: username + "@mybook.com", password: password)
-      .then((value) => postAccountDetails(username, name, address, phone));
+        .createUserWithEmailAndPassword(
+            email: username + "@mybook.com", password: password)
+        .then((value) => postAccountDetails(username, name, address, phone));
   }
 
-  void postAccountDetails(String username, String name, String address, String phone) async {
+  void postAccountDetails(
+      String username, String name, String address, String phone) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
     final data = {
-      "username" : username,
-      "type" : "USER",
-      "name" : name,
-      "address" : address,
-      "phone" : phone,
-      "image" : "https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346"
+      "username": username,
+      "type": "USER",
+      "name": name,
+      "address": address,
+      "phone": phone,
+      "image":
+          "https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346"
     };
 
     db.collection('accounts').doc(user!.uid).set(data);
     user.updateDisplayName(username);
-    user.updatePhotoURL("https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346");
+    user.updatePhotoURL(
+        "https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346");
   }
 
   Future<String> login(String username, String password) async {
-    await FirebaseAuth.instance
-      .signInWithEmailAndPassword(email: username + "@mybook.com", password: password);
-    
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: username + "@mybook.com", password: password);
+    return getAccountType();
+  }
+
+  Future<String> getAccountType() async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
     final docSnap = await db.collection('accounts').doc(user!.uid).get();
@@ -39,18 +48,18 @@ class AccountController {
   }
 
   Future<void> logout() async {
-    FirebaseAuth.instance
-      .signOut();
+    FirebaseAuth.instance.signOut();
   }
 
-  Future<void> changePassword(String currentPassword, String newPassword) async {
+  Future<void> changePassword(
+      String currentPassword, String newPassword) async {
     final user = FirebaseAuth.instance.currentUser;
-    final cred = EmailAuthProvider.credential(email: user?.email ?? "", password: currentPassword);
+    final cred = EmailAuthProvider.credential(
+        email: user?.email ?? "", password: currentPassword);
 
-    await user?.reauthenticateWithCredential(cred)
-      .then((value) async {
-        await user.updatePassword(newPassword);
-      });
+    await user?.reauthenticateWithCredential(cred).then((value) async {
+      await user.updatePassword(newPassword);
+    });
   }
 
   Future<Map<String, dynamic>> getDeliveryInformation() async {
@@ -69,13 +78,12 @@ class AccountController {
   Future<void> updateDeliveryInformation(Map<String, dynamic> data) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
-    
-    await db.collection('accounts').doc(user!.uid)
-      .update({
-        "name": data['name'],
-        "address": data['address'],
-        "phone": data['phone']
-      });
+
+    await db.collection('accounts').doc(user!.uid).update({
+      "name": data['name'],
+      "address": data['address'],
+      "phone": data['phone']
+    });
   }
 
   Future<void> updateProfilePic(File file) async {

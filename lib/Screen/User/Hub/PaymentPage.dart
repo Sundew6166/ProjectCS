@@ -1,10 +1,6 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:path/path.dart' as Path;
-import 'package:path_provider/path_provider.dart';
 
 import 'package:my_book/Screen/BottomBar.dart';
 
@@ -28,24 +24,29 @@ class _PaymentPageState extends State<PaymentPage> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                BookName(),
-                DeliveryFee(),
-                Address(),
-                Total(),
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    color: Colors.white,
+                    child: Column(children: [
+                      BookName(),
+                      DeliveryFee(),
+                      Address(),
+                      Total(),
+                    ])),
                 PaymentSlip(),
                 SizedBox(height: 20),
                 UploadSlip(),
                 SizedBox(height: 40),
                 Container(
-                    // margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
                     child: ElevatedButton(
                         onPressed: (() => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BottomBar()),
-                          )),
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => BottomBar(
+                                        accType: 'USER',
+                                      )),
+                            )),
                         style: ElevatedButton.styleFrom(
-                            // fixedSize: Size(400, 40), // specify width, height
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                           10,

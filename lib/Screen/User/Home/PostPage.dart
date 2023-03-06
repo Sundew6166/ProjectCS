@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Service/AccountController.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -39,12 +40,17 @@ class _PostPageState extends State<PostPage> {
                                 width: 2, color: const Color(0xff795e35)))),
                   ),
                   ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_keyValidationForm.currentState!.validate()) {
+                          String accT =
+                              await AccountController().getAccountType();
+                          // print(accT);
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => BottomBar()),
+                                builder: (context) => BottomBar(
+                                      accType: accT,
+                                    )),
                           );
                           // print(textarea.text);
                         }

@@ -5,10 +5,10 @@ import 'package:flutter_autocomplete_label/autocomplete_label.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:my_book/Screen/BottomBar.dart';
 import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/AccountController.dart';
 
 class AddBook extends StatefulWidget {
   AddBook({Key? key, required this.isbn}) : super(key: key);
-
 
   String isbn;
 
@@ -199,8 +199,23 @@ class _AddBookState extends State<AddBook> {
                                                   content: Text('ส่งข้อมูลเสร็จสิ้น รอการยืนยันจากผู้ดูแล'),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        onPressed: () => Navigator.of(context)..pop()..pop(),
-                                                        child: const Text('ตกลง'),
+                                                        onPressed: () async {
+                                                          String accT =
+                                                              await AccountController()
+                                                                  .getAccountType();
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        BottomBar(
+                                                                          accType:
+                                                                              accT,
+                                                                        )),
+                                                          );
+                                                        },
+                                                        child:
+                                                            const Text('ตกลง'),
                                                       ),
                                                     ],
                                                 )

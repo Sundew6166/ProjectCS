@@ -7,7 +7,10 @@ import 'package:my_book/Screen/Admin/HomeAdmin.dart';
 import 'package:my_book/Screen/Admin/ProfileAdmin.dart';
 
 class BottomBar extends StatefulWidget {
-  const BottomBar({super.key});
+  // const BottomBar({super.key});
+  BottomBar({Key? key, required this.accType}) : super(key: key);
+
+  String accType;
 
   @override
   State<BottomBar> createState() => _BottomBarState();
@@ -38,11 +41,9 @@ class _BottomBarState extends State<BottomBar> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        //TODO: if account type == user
-        // child: _userOptions.elementAt(currentIndex),
-        
-        //TODO: if account type == admin
-        child: _adminOptions.elementAt(currentIndex),
+        child: widget.accType == 'USER'
+            ? _userOptions.elementAt(currentIndex)
+            : _adminOptions.elementAt(currentIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: [

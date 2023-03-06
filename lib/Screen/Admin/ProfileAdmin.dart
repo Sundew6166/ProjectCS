@@ -54,7 +54,7 @@ class _ProfileAdminState extends State<ProfileAdmin> with TickerProviderStateMix
                   ),
                   Center(
                     child: CircleAvatar(
-                      backgroundImage: const AssetImage("images/rambo.jpg"),
+                      backgroundImage: NetworkImage(user!.photoURL.toString()),
                       backgroundColor: Color(0xffadd1dc),
                       radius: 40,
                     ),
