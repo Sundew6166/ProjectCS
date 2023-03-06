@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
 import 'package:my_book/Service/BookController.dart';
@@ -27,7 +28,9 @@ class _ReviewPageState extends State<ReviewPage> {
   }
 
   setBookInfo() async {
-    await BookController().getBookInfo(widget.isbn, widget.edition).then((value) {
+    await BookController()
+        .getBookInfo(widget.isbn, widget.edition)
+        .then((value) {
       setState(() {
         bookInfo = value;
       });
@@ -42,106 +45,124 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
-            child: Container(
-                color: Color(0xfff5f3e8),
-                alignment: Alignment.topCenter,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(height: 20),
-                    Row(
+            child: bookInfo != null
+                ? Container(
+                    color: Color(0xfff5f3e8),
+                    alignment: Alignment.topCenter,
+                    child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          alignment: Alignment.center,
-                          width: 50,
-                        ),
-                        ImageProduct(coverImageURL: bookInfo!['coverImage']),
-                        Column(
+                        SizedBox(height: 20),
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            IconButton(
-                              icon: Icon(
-                                Icons.book,
-                                size: 45,
-                                color: _isBookOn ? Colors.green : Colors.black,
-                              ),
-                              onPressed: (() {
-                                setState(() {
-                                  if (_isBookOn) {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AlertDialog(
-                                              title: const Text(
-                                                  "ลบออกจากคลังหนังสือ"),
-                                              content: Text(
-                                                  'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          context, 'ยกเลิก'),
-                                                  child: const Text('ยกเลิก'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () {
-                                                    Navigator.pop(context);
-                                                    setState(() {
-                                                      _isBookOn = !_isBookOn;
-                                                    });
-                                                  },
-                                                  child: const Text('ตกลง'),
-                                                ),
-                                              ],
-                                            ));
-                                  } else
-                                    _isBookOn = !_isBookOn;
-                                  // print(_isBookOn);
-                                });
-                              }),
+                            Container(
+                              alignment: Alignment.center,
+                              width: 50,
                             ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            if (_isBookOn)
-                              IconButton(
-                                  icon: const Icon(
-                                    Icons.shopping_cart,
+                            ImageProduct(
+                                coverImageURL: bookInfo!['coverImage']),
+                            Column(
+                              children: [
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.book,
                                     size: 45,
-                                    color: Colors.red,
+                                    color:
+                                        _isBookOn ? Colors.green : Colors.black,
                                   ),
-                                  onPressed: (() => Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => AddSale()),
-                                      ))),
+                                  onPressed: (() {
+                                    setState(() {
+                                      if (_isBookOn) {
+                                        showDialog(
+                                            context: context,
+                                            builder: (_) => AlertDialog(
+                                                  title: const Text(
+                                                      "ลบออกจากคลังหนังสือ"),
+                                                  content: Text(
+                                                      'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
+                                                  actions: <Widget>[
+                                                    TextButton(
+                                                      onPressed: () =>
+                                                          Navigator.pop(context,
+                                                              'ยกเลิก'),
+                                                      child:
+                                                          const Text('ยกเลิก'),
+                                                    ),
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                        setState(() {
+                                                          _isBookOn =
+                                                              !_isBookOn;
+                                                        });
+                                                      },
+                                                      child: const Text('ตกลง'),
+                                                    ),
+                                                  ],
+                                                ));
+                                      } else
+                                        _isBookOn = !_isBookOn;
+                                      // print(_isBookOn);
+                                    });
+                                  }),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                if (_isBookOn)
+                                  IconButton(
+                                      icon: const Icon(
+                                        Icons.shopping_cart,
+                                        size: 45,
+                                        color: Colors.red,
+                                      ),
+                                      onPressed: (() => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    AddSale()),
+                                          ))),
+                              ],
+                            )
                           ],
-                        )
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          margin: EdgeInsets.symmetric(
+                            horizontal: 10,
+                          ),
+                          color: Colors.white,
+                          child: Column(
+                            children: [
+                              BookName(title: bookInfo!['title']),
+                              Author(author: bookInfo!['author']),
+                              Publisher(publisher: bookInfo!['publisher']),
+                              Edition(edition: bookInfo!['edition'].toString()),
+                              Price(price: bookInfo!['price'].toString()),
+                              Type(types: bookInfo!['types']),
+                              Synopsys(synopsys: bookInfo!['synopsys']),
+                            ],
+                          ),
+                        ),
+                        WriteReview(),
+                        RateReview(),
                       ],
-                    ),
-                    SizedBox(height: 20),
-                    Container(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: 10,
-                      ),
-                      color: Colors.white,
-                      child: Column(
-                        children: [
-                          BookName(title: bookInfo!['title']),
-                          Author(author: bookInfo!['author']),
-                          Publisher(publisher: bookInfo!['publisher']),
-                          Edition(edition: bookInfo!['edition'].toString()),
-                          Price(price: bookInfo!['price'].toString()),
-                          Type(types: bookInfo!['types']),
-                          Synopsys(synopsys: bookInfo!['synopsys']),
-                        ],
+                    ))
+                : Container(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    color: Colors.black,
+                    child: Center(
+                      child: LoadingAnimationWidget.twistingDots(
+                        leftDotColor: const Color(0xFF1A1A3F),
+                        rightDotColor: const Color(0xFFEA3799),
+                        size: 50,
                       ),
                     ),
-                    WriteReview(),
-                    RateReview(),
-                  ],
-                ))));
+                  )));
   }
 }
 
@@ -338,10 +359,7 @@ class Type extends StatelessWidget {
           Wrap(
             spacing: 6.0,
             runSpacing: 6.0,
-            children: [
-              for (var type in types)
-                _buildChip(type)
-            ],
+            children: [for (var type in types) _buildChip(type)],
           )
         ],
       ),
@@ -388,8 +406,7 @@ class Synopsys extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                child: Text(synopsys,
-                    style: TextStyle(fontSize: 16)),
+                child: Text(synopsys, style: TextStyle(fontSize: 16)),
               ),
             ),
           ),

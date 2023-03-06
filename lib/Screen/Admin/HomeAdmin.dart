@@ -68,7 +68,6 @@ class _HomeAdminState extends State<HomeAdmin> {
                               ),
                             ),
                           )
-                        // Text('data')
                       ],
                     ))),
             floatingActionButton:
