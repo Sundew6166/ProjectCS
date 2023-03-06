@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
-import 'package:my_book/Screen/BottomBar.dart';
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
@@ -39,8 +38,6 @@ class _ReviewPageState extends State<ReviewPage> {
                         Container(
                           alignment: Alignment.center,
                           width: 50,
-                          // height: 300,
-                          // color: Colors.black,
                         ),
                         ImageProduct(),
                         Column(
@@ -78,53 +75,24 @@ class _ReviewPageState extends State<ReviewPage> {
                         )
                       ],
                     ),
-                    // ImageProduct(),
-                    BookName(),
-                    Author(),
-                    Publisher(),
-                    Edition(),
-                    Type(),
-                    Price(),
-                    Synopsys(),
+                    SizedBox(height: 20),
+                    Container(
+                      margin: EdgeInsets.symmetric(horizontal: 10,),
+                      color: Colors.white,
+                      child: Column(
+                        children: [
+                          BookName(),
+                          Author(),
+                          Publisher(),
+                          Edition(),
+                          Type(),
+                          Price(),
+                          Synopsys(),
+                        ],
+                      ),
+                    ),
                     WriteReview(),
                     RateReview(),
-                    // Container(
-                    //     margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
-                    //     child: ElevatedButton(
-                    //         onPressed: () {},
-                    //         // onPressed: (() => showDialog(
-                    //         //     context: context,
-                    //         //     builder: (_) => AlertDialog(
-                    //         //           title: const Text("ยืนยันการซื้อหนังสือ"),
-                    //         //           content: Text(
-                    //         //               'ชื่อหนังสือ\nราคารวม XXXX บาท'),
-                    //         //           actions: <Widget>[
-                    //         //             TextButton(
-                    //         //               onPressed: () =>
-                    //         //                   Navigator.pop(context, 'ยกเลิก'),
-                    //         //               child: const Text('ยกเลิก'),
-                    //         //             ),
-                    //         //             TextButton(
-                    //         //               onPressed: () =>
-                    //         //                   Navigator.push(
-                    //         //                 context,
-                    //         //                 MaterialPageRoute(
-                    //         //                     builder: (context) =>
-                    //         //                         BottomBar())),
-                    //         //               child: const Text('ตกลง'),
-                    //         //             ),
-
-                    //         //           ],
-                    //         //         ))),
-                    //         style: ElevatedButton.styleFrom(
-                    //             fixedSize:
-                    //                 Size(100, 40), // specify width, height
-                    //             shape: RoundedRectangleBorder(
-                    //                 borderRadius: BorderRadius.circular(
-                    //               10,
-                    //             ))),
-                    //         child:
-                    //             Text("ซื้อ", style: TextStyle(fontSize: 20)))),
                   ],
                 ))));
   }
@@ -149,7 +117,7 @@ class BookName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 20.0),
+      // margin: const EdgeInsets.only(top: 20.0),
       padding: const EdgeInsets.all(8),
       child: Center(
         child: Text('ชื่อหนังสือ', style: TextStyle(fontSize: 20)),
@@ -498,10 +466,7 @@ class _WriteReviewState extends State<WriteReview> {
               ElevatedButton(
                   onPressed: () {
                     if (_keyValidationForm.currentState!.validate()) {
-                      // Navigator.push(
-                      //   context,
-                      //   MaterialPageRoute(builder: (context) => BottomBar()),
-                      // );
+                      // TODO: reload this page
                       // print(textarea.text);
                     }
                   },

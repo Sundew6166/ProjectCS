@@ -230,7 +230,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           if (_registerFormKey.currentState!.validate()) {
                             try {
                               await AccountController().register(_textEditUsername.text, _textEditPassword.text, _textEditName.text, _textEditAddress.text, _textEditPhone.text)
-                                .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomBar())));
+                                .then((value) => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomBar(accType: 'USER',))));
                             } on FirebaseAuthException catch (e) {
                               print(e.code);
                               setState(() {

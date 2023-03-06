@@ -202,7 +202,7 @@ class _AddSaleState extends State<AddSale> {
                                                           context,
                                                           MaterialPageRoute(
                                                               builder: (context) =>
-                                                                  BottomBar()),
+                                                                  BottomBar(accType: 'USER',)),
                                                         ),
                                                         child:
                                                             const Text('ตกลง'),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Service/AccountController.dart';
 
 class AddBook extends StatefulWidget {
   AddBook({Key? key, required this.isbn}) : super(key: key);
-
 
   String isbn;
 
@@ -190,13 +190,21 @@ class _AddBookState extends State<AddBook> {
                                                         'รอการยืนยันจากผู้ดูแล'),
                                                     actions: <Widget>[
                                                       TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  BottomBar()),
-                                                        ),
+                                                        onPressed: () async {
+                                                          String accT =
+                                                              await AccountController()
+                                                                  .getAccountType();
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                                builder:
+                                                                    (context) =>
+                                                                        BottomBar(
+                                                                          accType:
+                                                                              accT,
+                                                                        )),
+                                                          );
+                                                        },
                                                         child:
                                                             const Text('ตกลง'),
                                                       ),
