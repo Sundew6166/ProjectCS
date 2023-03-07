@@ -102,7 +102,7 @@ class _TabSearchState extends State<TabSearch> {
           : Container(
               width: MediaQuery.of(context).size.width,
               height: MediaQuery.of(context).size.height,
-              color: Colors.black,
+              color: Color(0xfff5f3e8),
               child: Center(
                 child: LoadingAnimationWidget.twistingDots(
                   leftDotColor: const Color(0xFF1A1A3F),

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 
 import 'package:my_book/Service/AccountController.dart';
 
@@ -14,8 +15,7 @@ class PostController {
             .getAnotherProfile(docSnap.data()['CreateBy']);
 
         Map<String, dynamic> temp = {
-          "Create_DateTime_Post":
-              (docSnap.data()['Create_DateTime_Post']).toDate(),
+          "Create_DateTime_Post": docSnap.data()['Create_DateTime_Post'],
           "Detail_Post": docSnap.data()['Detail_Post'],
           "CreateBy": test['username'],
           'Image': test['imageURL']
@@ -27,6 +27,12 @@ class PostController {
         // print(myDateTime);
         // print(docSnap.data()['Detail_Post']);
         // print(docSnap.data()['CreateBy']);
+
+        // print(DateFormat.yMMMd().format(DateTime.now()));
+        // Mar 7, 2023
+        // DateTime now = DateTime.now();
+        // String formattedDate = DateFormat('yyyy-MM-dd - kk:mm').format(now);
+        // 2023-03-07 – 22:14
       }
     });
     return output;
@@ -43,16 +49,30 @@ class PostController {
         .then((value) {
       for (var element in value.docs) {
         Map<String, dynamic> temp = {
-          "Create_DateTime_Post":
-              (element.data()['Create_DateTime_Post']).toDate(),
+          "Create_DateTime_Post": element.data()['Create_DateTime_Post'],
           "Detail_Post": element.data()['Detail_Post'],
-          "CreateBy": user!.displayName.toString(),
-          'Image': user!.photoURL.toString()
+          "CreateBy": user.displayName.toString(),
+          'Image': user.photoURL.toString()
         };
         output.add(temp);
       }
-      // print(output);
     });
     return output;
+  }
+
+  Future<void> addPost(String detail) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    DateTime now = DateTime.now();
+    String formattedDate = DateFormat('yyyy/MM/dd \n kk:mm').format(now);
+
+    final data = {
+      'CreateBy': user!.uid,
+      'Create_DateTime_Post': formattedDate,
+      'Detail_Post': detail
+    };
+
+    await db.collection('posts').add(data);
   }
 }
