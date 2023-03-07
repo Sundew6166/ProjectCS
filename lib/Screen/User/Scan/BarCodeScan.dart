@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Service/AccountController.dart';
+import 'package:my_book/Service/BookController.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:developer';
 import 'dart:io';
@@ -19,6 +20,8 @@ class BarCodeScan extends StatefulWidget {
 
 class _BarCodeScanState extends State<BarCodeScan> {
   String? result;
+  List<int> editions = [];
+  bool hasBook = false;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -53,38 +56,33 @@ class _BarCodeScanState extends State<BarCodeScan> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           if (result != null)
-                            // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
-                            ElevatedButton(
-                              onPressed: () async {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
-                              },
-                              child: Text('เพิ่มหนังสือใหม่')
-                            )
-                          // TODO: ไม่มีหนังสือในคลัง => ReviewPage
-                          // if (result != null)
-                          //   ElevatedButton(
-                          //       onPressed: (() {
-                          // Navigator.push(
-                          //         context,
-                          //         MaterialPageRoute(
-                          //             builder: (context) => isbn: result.toString(), edition: "1"),
-                          //       );
-                          // }),
-                          //       child: Text('เพิ่มไปคลังหนังสือ')),
-
-                          // // TODO: มีหนังสือในคลัง => AddSale หรือ form ขาย
-                          // if (result != null)
-                          //     ElevatedButton(
-                          //         onPressed: (() {
-                          // Navigator.push(
-                          //   context,
-                          //   MaterialPageRoute(
-                          //       builder: (context) => AddSale()),
-                          // );
-                          // }),
-                          //         child: Text('เพิ่มไปยังการขาย')),
+                            if (editions.isEmpty)
+                              // ไม่มีข้อมูลใน database
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
+                                },
+                                child: Text('เพิ่มหนังสือใหม่')
+                              )
+                            else if (hasBook)
+                              // TODO: มีหนังสือในคลัง => AddSale หรือ form ขาย
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()));
+                                },
+                                child: Text('เพิ่มไปยังการขาย')
+                              )
+                            else
+                              // TODO: ไม่มีหนังสือในคลัง => ReviewPage
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(isbn: result.toString(), edition: "1")));
+                                },
+                                child: Text('เพิ่มไปคลังหนังสือ')
+                              )
                           else
-                            const Text('กรุณาสแกนบาร์โค้ด'),
+                            const Text('กรุณาสแกนบาร์โค้ด')
+                          ,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -185,8 +183,12 @@ class _BarCodeScanState extends State<BarCodeScan> {
       this.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
-      setState(() {
+      setState(() async {
         result = scanData.code;
+        editions = await BookController().getEditionsBook(result!);
+        if (editions.isNotEmpty) {
+          hasBook = await BookController().checkHasBook(result!, editions[0].toString());
+        }
       });
     });
   }

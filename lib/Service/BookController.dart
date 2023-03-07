@@ -115,6 +115,20 @@ class BookController {
       });
   }
 
+  Future<List<int>> getEditionsBook(String isbn) async {
+    final db = FirebaseFirestore.instance;
+    List<int> edition = [];
+
+    await db.collection('books')
+      .where('isbn', isEqualTo: isbn)
+      .get().then((querySnapshot) {
+        for (var docSnap in querySnapshot.docs) {
+          edition.add(docSnap.data()['edition']);
+        }
+      });
+    return edition;
+  }
+
   Future<bool> checkHasBook(String isbn, String edition) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
