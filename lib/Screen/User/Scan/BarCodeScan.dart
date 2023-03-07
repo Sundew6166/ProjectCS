@@ -22,8 +22,9 @@ class BarCodeScan extends StatefulWidget {
 
 class _BarCodeScanState extends State<BarCodeScan> {
   String? result;
-  List<String> editions = [];
+  List<String> editions = ['1'];
   bool hasBook = false;
+  bool dbhasBook = true;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -59,43 +60,13 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: <Widget>[
-                                // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
-                                if (result != null)
-                                  Text('ISBN: $result')
-                                else
-                                  const Text('กรุณาสแกนบาร์โค้ด'),
-                                SizedBox(
-                                  width: 10,
-                                ),
-                                Text('ครั้งที่พิมพ์: '),
-                                DropdownButton<String>(
-                                  value: dropdownValue,
-                                  icon: const Icon(Icons.arrow_downward),
-                                  elevation: 16,
-                                  style:
-                                      const TextStyle(color: Color(0xff795e35)),
-                                  underline: Container(
-                                    height: 2,
-                                    color: Color(0xff795e35),
-                                  ),
-                                  onChanged: (String? value) {
-                                    setState(() {
-                                      dropdownValue = value!;
-                                    });
-                                  },
-                                  items: editions.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(value),
-                                    );
-                                  }).toList(),
-                                ),
-                              ]),
+                          const Text('กรุณาสแกนบาร์โค้ด'),
+                          // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
+                          // if (result == null) const Text('กรุณาสแกนบาร์โค้ด'),
+                          // Text('ISBN: $result')
+                          // else
+                          //   const Text('กรุณาสแกนบาร์โค้ด'),
+
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -177,23 +148,131 @@ class _BarCodeScanState extends State<BarCodeScan> {
         if (editions.isNotEmpty) {
           hasBook = await BookController()
               .checkHasBook(result!, editions[0].toString());
+          dropdownValue = editions.first;
+          // print('hasbook: $hasBook');
         }
-        dropdownValue = editions.first;
         showDialog(
             context: context,
             builder: (_) => AlertDialog(
-                  title: const Text("เสร็จสิ้น"),
-                  content: Text('การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
+                  // title: const Text("เสร็จสิ้น"),
+                  content: dbhasBook ? Container(
+                      height: 160,
+                      width: 320,
+                      child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(5), // Image border
+                              child: Image.asset(
+                                'images/Conan.jpg',
+                                height: 120,
+                                width: 80,
+                              ),
+                            ),
+                            Expanded(
+                              child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16),
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text("ชื่อหนังสือ",
+                                            overflow: TextOverflow.ellipsis,
+                                            style: TextStyle(fontSize: 18)),
+                                        Text(
+                                          "\nISBN",
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        InkWell(
+                                          splashColor: const Color(0xff795e35)
+                                              .withOpacity(0.5),
+                                          // onTap: () => Navigator.push(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //       builder: (context) =>
+                                          //           ReviewPage()),
+                                          // ),
+                                          child: Text(
+                                            'รายละเอียดอื่น',
+                                            style: TextStyle(
+                                                color: const Color(0xff795e35),
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                        ),
+                                        if (dbhasBook && hasBook)
+                                          Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: <Widget>[
+                                                Text('ครั้งที่พิมพ์: '),
+                                                DropdownButton<String>(
+                                                  value: dropdownValue,
+                                                  icon: const Icon(
+                                                      Icons.arrow_downward),
+                                                  elevation: 16,
+                                                  style: const TextStyle(
+                                                      color: Color(0xff795e35)),
+                                                  underline: Container(
+                                                    height: 2,
+                                                    color: Color(0xff795e35),
+                                                  ),
+                                                  onChanged: (String? value) {
+                                                    setState(() {
+                                                      dropdownValue = value!;
+                                                    });
+                                                  },
+                                                  items: editions.map<
+                                                          DropdownMenuItem<
+                                                              String>>(
+                                                      (String value) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: value,
+                                                      child: Text(value),
+                                                    );
+                                                  }).toList(),
+                                                )
+                                              ])
+                                      ])),
+                            ),
+                          ])): Text('ยังไม่มีข้อมูลของหนังสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
                   actions: <Widget>[
+                    // TODO: DB ไม่มี นส
+                    if (!dbhasBook)
+                      TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('เพิ่มข้อมูล'),
+                    ),
+                    // TODO: DB and user มี นส
+                    if (hasBook && dbhasBook)
+                      TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('ขาย'),
+                    ),
+                    // TODO: DB มี นส and user ไม่มี นส
+                    if (!hasBook && dbhasBook)
+                      TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text('เพิ่มไปคลังหนังสือ'),
+                    ),
                     TextButton(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        controller.resumeCamera();
                       },
-                      child: const Text('ตกลง'),
+                      child: const Text('ยกเลิก'),
                     ),
                   ],
                 ));
+        controller.resumeCamera();
       });
     });
   }
