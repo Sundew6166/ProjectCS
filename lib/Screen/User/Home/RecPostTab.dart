@@ -136,7 +136,7 @@ class RecommendCard extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ReviewPage(isbn: "null", edition: "1")),
+                  builder: (context) => ReviewPage(bookInfo: {}, hasBook: false)),
             ),
         child: Container(
             height: 90,

@@ -28,7 +28,7 @@ class _StockTabState extends State<StockTab> {
               // TODO: if user => ReviewPage
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReviewPage(isbn: "", edition: "1")),
+                    MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: {}, hasBook: false)),
                   ),
 
               // TODO: if admin => AddBook

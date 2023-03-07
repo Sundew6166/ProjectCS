@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:my_book/Service/AccountController.dart';
@@ -12,6 +13,7 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  final user = FirebaseAuth.instance.currentUser;
   File? _image;
 
   final _picker = ImagePicker();
@@ -51,7 +53,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       child: Container(
                         child: _image != null
                             ? Image.file(_image!, fit: BoxFit.cover)
-                            : const Text('กรุณาเลือกรูป'),
+                            : Image.network(user!.photoURL.toString()),
                       )),
                   Center(
                     child: ElevatedButton(

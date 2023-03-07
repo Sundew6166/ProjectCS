@@ -8,42 +8,16 @@ import 'package:my_book/Service/BookController.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
-  ReviewPage({super.key, required this.isbn, required this.edition});
+  ReviewPage({super.key, required this.bookInfo, required this.hasBook});
 
-  String isbn;
-  String edition;
+  Map<String, dynamic>? bookInfo;
+  bool hasBook;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
 
 class _ReviewPageState extends State<ReviewPage> {
-  // TODO: ดึงหนังสือในคลังมาเช็ค
-  bool _isBookOn = false;
-  Map<String, dynamic>? bookInfo;
-
-  @override
-  void initState() {
-    setBookInfo();
-    super.initState();
-  }
-
-  setBookInfo() async {
-    await BookController()
-        .checkHasBook(widget.isbn, widget.edition)
-        .then((value) {
-          setState(() {
-            _isBookOn = value;
-          });
-        });
-    await BookController()
-        .getBookInfo(widget.isbn, widget.edition)
-        .then((value) {
-          setState(() {
-            bookInfo = value;
-          });
-        });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +27,7 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
-            child: bookInfo != null
+            child: widget.bookInfo != null
                 ? Container(
                     color: Color(0xfff5f3e8),
                     alignment: Alignment.topCenter,
@@ -71,7 +45,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               width: 50,
                             ),
                             ImageProduct(
-                                coverImageURL: bookInfo!['coverImage']),
+                                coverImageURL: widget.bookInfo!['coverImage']),
                             Column(
                               children: [
                                 IconButton(
@@ -79,10 +53,10 @@ class _ReviewPageState extends State<ReviewPage> {
                                     Icons.book,
                                     size: 45,
                                     color:
-                                        _isBookOn ? Colors.green : Colors.black,
+                                        widget.hasBook ? Colors.green : Colors.black,
                                   ),
                                   onPressed: (() async {
-                                    if (_isBookOn) {
+                                    if (widget.hasBook) {
                                       showDialog(
                                           context: context,
                                           builder: (_) => AlertDialog(
@@ -101,9 +75,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                                   TextButton(
                                                     onPressed: () async {
                                                       try {
-                                                        await BookController().deleteBookFromLibrary(bookInfo!['isbn'], bookInfo!['edition'].toString())
+                                                        await BookController().deleteBookFromLibrary(widget.bookInfo!['isbn'], widget.bookInfo!['edition'].toString())
                                                           .then((value) {setState(() {
-                                                            _isBookOn = false;
+                                                            widget.hasBook = false;
                                                             Navigator.pop(context);
                                                           });});
                                                       } on FirebaseException catch (e) {
@@ -129,9 +103,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                               ));
                                     } else {
                                       try {
-                                        await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition'].toString())
+                                        await BookController().addBookToLibrary(widget.bookInfo!['isbn'], widget.bookInfo!['edition'].toString())
                                           .then((value) {setState(() {
-                                            _isBookOn = true;
+                                            widget.hasBook = true;
                                           });});
                                       } on FirebaseException catch (e) {
                                         print(e.code);
@@ -156,7 +130,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                if (_isBookOn)
+                                if (widget.hasBook)
                                   IconButton(
                                       icon: const Icon(
                                         Icons.shopping_cart,
@@ -181,13 +155,13 @@ class _ReviewPageState extends State<ReviewPage> {
                           color: Colors.white,
                           child: Column(
                             children: [
-                              BookName(title: bookInfo!['title']),
-                              Author(author: bookInfo!['author']),
-                              Publisher(publisher: bookInfo!['publisher']),
-                              Edition(edition: bookInfo!['edition'].toString()),
-                              Price(price: bookInfo!['price'].toString()),
-                              Type(types: bookInfo!['types']),
-                              Synopsys(synopsys: bookInfo!['synopsys']),
+                              BookName(title: widget.bookInfo!['title']),
+                              Author(author: widget.bookInfo!['author']),
+                              Publisher(publisher: widget.bookInfo!['publisher']),
+                              Edition(edition: widget.bookInfo!['edition'].toString()),
+                              Price(price: widget.bookInfo!['price'].toString()),
+                              Type(types: widget.bookInfo!['types']),
+                              Synopsys(synopsys: widget.bookInfo!['synopsys']),
                             ],
                           ),
                         ),

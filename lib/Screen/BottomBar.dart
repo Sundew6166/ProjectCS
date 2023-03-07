@@ -19,15 +19,15 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   int currentIndex = 0;
 
-  static const List<Widget> _userOptions = <Widget>[
+  static List<Widget> _userOptions = <Widget>[
     HomePage(),
-    BarCodeScan(),
+    BarCodeScan(type: "USER"),
     Profile(),
   ];
 
-  static const List<Widget> _adminOptions = <Widget>[
+  static List<Widget> _adminOptions = <Widget>[
     HomeAdmin(),
-    BarCodeScan(),
+    BarCodeScan(type: "ADMIN"),
     ProfileAdmin(),
   ];
 

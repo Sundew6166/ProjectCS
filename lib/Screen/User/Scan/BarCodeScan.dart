@@ -14,7 +14,9 @@ import 'package:my_book/Screen/User/Scan/AddSale.dart';
 import 'package:my_book/Screen/BottomBar.dart';
 
 class BarCodeScan extends StatefulWidget {
-  const BarCodeScan({super.key});
+  BarCodeScan({super.key, required this.type});
+
+  String type;
 
   @override
   State<BarCodeScan> createState() => _BarCodeScanState();
@@ -22,9 +24,9 @@ class BarCodeScan extends StatefulWidget {
 
 class _BarCodeScanState extends State<BarCodeScan> {
   String? result;
-  List<String> editions = ['1'];
+  List<String> editions = [];
   bool hasBook = false;
-  bool dbhasBook = true;
+  Map<String,dynamic>? bookInfo;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -146,16 +148,22 @@ class _BarCodeScanState extends State<BarCodeScan> {
         controller.pauseCamera();
         editions = await BookController().getEditionsBook(result!);
         if (editions.isNotEmpty) {
-          hasBook = await BookController()
-              .checkHasBook(result!, editions[0].toString());
           dropdownValue = editions.first;
+          bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
+          hasBook = await BookController().checkHasBook(result!, dropdownValue!);
           // print('hasbook: $hasBook');
+        } else {
+          bookInfo = null;
+          hasBook = false;
         }
-        showDialog(
+        if (widget.type == "ADMIN"){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(bookInfo: bookInfo)));
+        } else {
+          showDialog(
             context: context,
             builder: (_) => AlertDialog(
                   // title: const Text("เสร็จสิ้น"),
-                  content: dbhasBook ? Container(
+                  content: bookInfo != null ? Container(
                       height: 160,
                       width: 320,
                       child: Row(
@@ -164,11 +172,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                             ClipRRect(
                               borderRadius:
                                   BorderRadius.circular(5), // Image border
-                              child: Image.asset(
-                                'images/Conan.jpg',
-                                height: 120,
-                                width: 80,
-                              ),
+                              child: Image.network(bookInfo!['coverImage'], height: 120, width: 80)
                             ),
                             Expanded(
                               child: Padding(
@@ -177,22 +181,22 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text("ชื่อหนังสือ",
+                                        Text(bookInfo!['title'],
                                             overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
                                             style: TextStyle(fontSize: 18)),
                                         Text(
-                                          "\nISBN",
+                                          "\n${bookInfo!['isbn']}",
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                         InkWell(
                                           splashColor: const Color(0xff795e35)
                                               .withOpacity(0.5),
-                                          // onTap: () => Navigator.push(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //       builder: (context) =>
-                                          //           ReviewPage()),
-                                          // ),
+                                          onTap: () => Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)),
+                                          ),
                                           child: Text(
                                             'รายละเอียดอื่น',
                                             style: TextStyle(
@@ -200,79 +204,83 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                                 fontWeight: FontWeight.bold),
                                           ),
                                         ),
-                                        if (dbhasBook && hasBook)
-                                          Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.center,
-                                              children: <Widget>[
-                                                Text('ครั้งที่พิมพ์: '),
-                                                DropdownButton<String>(
-                                                  value: dropdownValue,
-                                                  icon: const Icon(
-                                                      Icons.arrow_downward),
-                                                  elevation: 16,
-                                                  style: const TextStyle(
-                                                      color: Color(0xff795e35)),
-                                                  underline: Container(
-                                                    height: 2,
-                                                    color: Color(0xff795e35),
-                                                  ),
-                                                  onChanged: (String? value) {
-                                                    setState(() {
-                                                      dropdownValue = value!;
-                                                    });
-                                                  },
-                                                  items: editions.map<
-                                                          DropdownMenuItem<
-                                                              String>>(
-                                                      (String value) {
-                                                    return DropdownMenuItem<
-                                                        String>(
-                                                      value: value,
-                                                      child: Text(value),
-                                                    );
-                                                  }).toList(),
-                                                )
-                                              ])
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Text('ครั้งที่พิมพ์: '),
+                                              DropdownButton<String>(
+                                                value: dropdownValue,
+                                                icon: const Icon(
+                                                    Icons.arrow_downward),
+                                                elevation: 16,
+                                                style: const TextStyle(
+                                                    color: Color(0xff795e35)),
+                                                underline: Container(
+                                                  height: 2,
+                                                  color: Color(0xff795e35),
+                                                ),
+                                                onChanged: (String? value) {
+                                                  setState(() async {
+                                                    dropdownValue = value!;
+                                                    bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
+                                                    hasBook = await BookController().checkHasBook(result!, dropdownValue!);
+                                                  });
+                                                },
+                                                items: editions.map<
+                                                        DropdownMenuItem<
+                                                            String>>(
+                                                    (String value) {
+                                                  return DropdownMenuItem<
+                                                      String>(
+                                                    value: value,
+                                                    child: Text(value),
+                                                  );
+                                                }).toList(),
+                                              )
+                                            ])
                                       ])),
                             ),
                           ])): Text('ยังไม่มีข้อมูลของหนังสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
                   actions: <Widget>[
                     // TODO: DB ไม่มี นส
-                    if (!dbhasBook)
+                    if (editions.isEmpty)
                       TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
                       },
                       child: const Text('เพิ่มข้อมูล'),
-                    ),
+                    )
                     // TODO: DB and user มี นส
-                    if (hasBook && dbhasBook)
+                    else if (hasBook)
                       TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()));
                       },
                       child: const Text('ขาย'),
-                    ),
+                    )
                     // TODO: DB มี นส and user ไม่มี นส
-                    if (!hasBook && dbhasBook)
+                    else
                       TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
+                      onPressed: () async {
+                        await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition']);
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)));
                       },
                       child: const Text('เพิ่มไปคลังหนังสือ'),
-                    ),
+                    )
+                    ,
                     TextButton(
                       onPressed: () {
+                        controller.resumeCamera();
                         Navigator.of(context).pop();
                       },
                       child: const Text('ยกเลิก'),
                     ),
                   ],
                 ));
-        controller.resumeCamera();
+        }
       });
     });
   }

@@ -10,9 +10,10 @@ import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/AccountController.dart';
 
 class AddBook extends StatefulWidget {
-  AddBook({Key? key, required this.isbn}) : super(key: key);
+  AddBook({Key? key, this.isbn, this.bookInfo}) : super(key: key);
 
-  String isbn;
+  Map<String,dynamic>? bookInfo;
+  String? isbn;
 
   @override
   State<AddBook> createState() => _AddBookState();
@@ -30,15 +31,18 @@ class _AddBookState extends State<AddBook> {
   TextEditingController _textAuthor = TextEditingController();
   TextEditingController _textPublisher = TextEditingController();
   TextEditingController _textPrice = TextEditingController();
-  TextEditingController _textType = TextEditingController();
   TextEditingController _textSynopsys = TextEditingController();
   TextEditingController _textEdition = TextEditingController();
 
   @override
   void initState() {
-    _textISBN.text = widget.isbn;
-    _textEdition.text = "1";
-    print(widget.isbn);
+    _textISBN.text = widget.bookInfo!['isbn'] ?? widget.isbn;
+    _textTitle.text = widget.bookInfo!['title'];
+    _textAuthor.text = widget.bookInfo!['author'];
+    _textPublisher.text = widget.bookInfo!['publisher'];
+    _textPrice.text = widget.bookInfo!['price'].toString();
+    _textSynopsys.text = widget.bookInfo!['synopsys'];
+    _textEdition.text = widget.bookInfo != null ? widget.bookInfo!['edition'].toString() : "1";
     setTypeOption();
     super.initState();
   }
@@ -46,7 +50,7 @@ class _AddBookState extends State<AddBook> {
   setTypeOption() async {
     await BookController().getBookTypes().then((value) {
       setState(() {
-        typeOption = AutocompleteLabelController<String>(source: value);
+        typeOption = AutocompleteLabelController<String>(source: value, values: widget.bookInfo!['types']);
       });
     });
   }
@@ -98,6 +102,8 @@ class _AddBookState extends State<AddBook> {
                                   child: Container(
                                     child: _image != null
                                         ? Image.file(_image!, fit: BoxFit.cover)
+                                        : widget.bookInfo != null
+                                        ? Image.network(widget.bookInfo!['coverImage'], fit: BoxFit.cover)
                                         : const Text('กรุณาเลือกรูป'),
                                   )),
                               // เลือกรูป
