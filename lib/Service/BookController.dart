@@ -115,15 +115,15 @@ class BookController {
       });
   }
 
-  Future<List<int>> getEditionsBook(String isbn) async {
+  Future<List<String>> getEditionsBook(String isbn) async {
     final db = FirebaseFirestore.instance;
-    List<int> edition = [];
+    List<String> edition = [];
 
     await db.collection('books')
       .where('isbn', isEqualTo: isbn)
       .get().then((querySnapshot) {
         for (var docSnap in querySnapshot.docs) {
-          edition.add(docSnap.data()['edition']);
+          edition.add(docSnap.data()['edition'].toString());
         }
       });
     return edition;

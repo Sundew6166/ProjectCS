@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/BookController.dart';
@@ -20,10 +22,12 @@ class BarCodeScan extends StatefulWidget {
 
 class _BarCodeScanState extends State<BarCodeScan> {
   String? result;
-  List<int> editions = [];
+  List<String> editions = [];
   bool hasBook = false;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  String? dropdownValue;
 
   @override
   void reassemble() {
@@ -66,11 +70,41 @@ class _BarCodeScanState extends State<BarCodeScan> {
                               )
                             else if (hasBook)
                               // TODO: มีหนังสือในคลัง => AddSale หรือ form ขาย
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()));
-                                },
-                                child: Text('เพิ่มไปยังการขาย')
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()));
+                                    },
+                                    child: Text('เพิ่มไปยังการขาย')
+                                  ),
+                                  SizedBox(width: 10,),
+                                  DropdownButton<String>(
+                                    value: dropdownValue,
+                                    icon: const Icon(Icons.arrow_downward),
+                                    elevation: 16,
+                                    style:
+                                        const TextStyle(color: Color(0xff795e35)),
+                                    underline: Container(
+                                      height: 2,
+                                      color: Color(0xff795e35),
+                                    ),
+                                    onChanged: (String? value) {
+                                      setState(() {
+                                        dropdownValue = value!;
+                                      });
+                                    },
+                                    items: editions.map<DropdownMenuItem<String>>(
+                                        (String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(value),
+                                      );
+                                    }).toList(),
+                                  ),
+                                ]
                               )
                             else
                               // TODO: ไม่มีหนังสือในคลัง => ReviewPage
@@ -125,32 +159,6 @@ class _BarCodeScanState extends State<BarCodeScan> {
                               )
                             ],
                           ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   crossAxisAlignment: CrossAxisAlignment.center,
-                          //   children: <Widget>[
-                          //     Container(
-                          //       margin: const EdgeInsets.all(8),
-                          //       child: ElevatedButton(
-                          //         onPressed: () async {
-                          //           await controller?.pauseCamera();
-                          //         },
-                          //         child: const Text('pause',
-                          //             style: TextStyle(fontSize: 20)),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       margin: const EdgeInsets.all(8),
-                          //       child: ElevatedButton(
-                          //         onPressed: () async {
-                          //           await controller?.resumeCamera();
-                          //         },
-                          //         child: const Text('resume',
-                          //             style: TextStyle(fontSize: 20)),
-                          //       ),
-                          //     )
-                          //   ],
-                          // ),
                         ],
                       ),
                     ),
@@ -189,6 +197,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
         if (editions.isNotEmpty) {
           hasBook = await BookController().checkHasBook(result!, editions[0].toString());
         }
+        dropdownValue = editions.first;
       });
     });
   }

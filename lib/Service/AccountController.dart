@@ -98,4 +98,13 @@ class AccountController {
       });
     user.updatePhotoURL(downloadURL);
   }
+
+  Future<Map<String, dynamic>> getAnotherProfile(String uid) async {
+    final db = FirebaseFirestore.instance;
+    final docSnap = await db.collection('accounts').doc(uid).get();
+    return {
+      "username": docSnap.data()!['username'],
+      "imageURL": docSnap.data()!['image']
+    };
+  }
 }
