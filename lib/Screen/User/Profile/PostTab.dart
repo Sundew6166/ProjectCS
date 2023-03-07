@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
+
+// import 'package:my_book/Service/PostController.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
 
 class PostTab extends StatefulWidget {
-  const PostTab({super.key});
+  // const PostTab({super.key});
+  PostTab({Key? key, required this.posts}) : super(key: key);
+  List<dynamic>? posts;
 
   @override
   State<PostTab> createState() => _PostTabState();
 }
 
 class _PostTabState extends State<PostTab> {
-    // TODO: admin and user
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +22,7 @@ class _PostTabState extends State<PostTab> {
       color: Color(0xfff5f3e8),
       child: new ListView.builder(
         // padding: const EdgeInsets.all(5),
-        itemCount: 5,
+        itemCount: widget.posts!.length,
         shrinkWrap: true,
         itemBuilder: (context, i) {
           return GestureDetector(
@@ -37,7 +40,7 @@ class _PostTabState extends State<PostTab> {
                               children: [
                                 CircleAvatar(
                                   backgroundImage:
-                                      const AssetImage("images/rambo.jpg"),
+                                      NetworkImage('${widget.posts![i]['Image']}'),
                                   backgroundColor: Color(0xffadd1dc),
                                   radius: 30,
                                 ),
@@ -49,18 +52,20 @@ class _PostTabState extends State<PostTab> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("ชื่อตัวเอง",
+                                            Text('${widget.posts![i]['CreateBy']}',
                                                 style: TextStyle(fontSize: 18)),
                                             // Expanded(
                                             //     child:
                                             Text(
-                                              "รายละเอียดโพสต์",
+                                              '${widget.posts![i]['Detail_Post']}',
                                               overflow: TextOverflow.ellipsis,
                                             )
                                             // )
                                           ])),
                                 ),
-                                Text("03.03.2020"),
+                                Text(
+                                  '${widget.posts![i]['Create_DateTime_Post']}',
+                                ),
                               ])))));
         },
       ),

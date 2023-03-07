@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:my_book/Service/AccountController.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -10,6 +12,8 @@ import 'package:my_book/Screen/User/Hub/AddBook.dart';
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
 import 'package:my_book/Screen/BottomBar.dart';
 
+const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+
 class BarCodeScan extends StatefulWidget {
   const BarCodeScan({super.key});
 
@@ -21,6 +25,8 @@ class _BarCodeScanState extends State<BarCodeScan> {
   String? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+
+  String dropdownValue = list.first;
 
   @override
   void reassemble() {
@@ -52,14 +58,51 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          if (result != null)
-                            // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
-                            ElevatedButton(
-                              onPressed: () async {
-                                Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
-                              },
-                              child: Text('เพิ่มหนังสือใหม่')
-                            )
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
+                                if (result != null)
+                                  ElevatedButton(
+                                      onPressed: () async {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => AddBook(
+                                                    isbn: result.toString())));
+                                      },
+                                      child: Text('เพิ่มหนังสือใหม่'))
+                                else
+                                  const Text('กรุณาสแกนบาร์โค้ด'),
+
+                                  SizedBox(width: 10,),
+
+                                DropdownButton<String>(
+                                  value: dropdownValue,
+                                  icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+                                  style:
+                                      const TextStyle(color: Color(0xff795e35)),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Color(0xff795e35),
+                                  ),
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      dropdownValue = value!;
+                                    });
+                                  },
+                                  items: list.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ]),
+
                           // TODO: ไม่มีหนังสือในคลัง => ReviewPage
                           // if (result != null)
                           //   ElevatedButton(
@@ -72,7 +115,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           // }),
                           //       child: Text('เพิ่มไปคลังหนังสือ')),
 
-                          // // TODO: มีหนังสือในคลัง => AddSale หรือ form ขาย
+                          // TODO: มีหนังสือในคลัง => AddSale หรือ form ขาย
                           // if (result != null)
                           //     ElevatedButton(
                           //         onPressed: (() {
@@ -83,8 +126,8 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           // );
                           // }),
                           //         child: Text('เพิ่มไปยังการขาย')),
-                          else
-                            const Text('กรุณาสแกนบาร์โค้ด'),
+                          // else
+                          //   const Text('กรุณาสแกนบาร์โค้ด'),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -127,32 +170,6 @@ class _BarCodeScanState extends State<BarCodeScan> {
                               )
                             ],
                           ),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   crossAxisAlignment: CrossAxisAlignment.center,
-                          //   children: <Widget>[
-                          //     Container(
-                          //       margin: const EdgeInsets.all(8),
-                          //       child: ElevatedButton(
-                          //         onPressed: () async {
-                          //           await controller?.pauseCamera();
-                          //         },
-                          //         child: const Text('pause',
-                          //             style: TextStyle(fontSize: 20)),
-                          //       ),
-                          //     ),
-                          //     Container(
-                          //       margin: const EdgeInsets.all(8),
-                          //       child: ElevatedButton(
-                          //         onPressed: () async {
-                          //           await controller?.resumeCamera();
-                          //         },
-                          //         child: const Text('resume',
-                          //             style: TextStyle(fontSize: 20)),
-                          //       ),
-                          //     )
-                          //   ],
-                          // ),
                         ],
                       ),
                     ),

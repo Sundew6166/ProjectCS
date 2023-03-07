@@ -27,7 +27,6 @@ class _HomeAdminState extends State<HomeAdmin> {
     await PostController().getPostAll().then((value) {
       setState(() {
         posts = value;
-        // print(posts!.length);
       });
     });
   }
@@ -54,7 +53,9 @@ class _HomeAdminState extends State<HomeAdmin> {
                     child: Column(
                       children: <Widget>[
                         if (posts != null)
-                          PostSection(posts: posts!,)
+                          PostSection(
+                            posts: posts!,
+                          )
                         else
                           Container(
                             width: MediaQuery.of(context).size.width,
@@ -138,32 +139,35 @@ class _PostSectionState extends State<PostSection> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CircleAvatar(
-                                    backgroundImage:
-                                        const AssetImage("images/rambo.jpg"),
+                                    backgroundImage: NetworkImage(
+                                        '${widget.posts[i]['Image']}'),
                                     backgroundColor: Color(0xffadd1dc),
                                     radius: 30,
                                   ),
                                   Expanded(
                                     child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 16),
+                                          horizontal: 16,
+                                        ),
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text('${widget.posts[i]['CreateBy']}',
-                                              // Text("ชื่อคนอื่น",
+                                              Text(
+                                                  '${widget.posts[i]['CreateBy']}',
+                                                  // Text("ชื่อคนอื่น",
                                                   maxLines: 1,
                                                   style:
                                                       TextStyle(fontSize: 18)),
                                               Text(
                                                 '${widget.posts[i]['Detail_Post']}',
                                                 // "รายละเอียดโพสต์",
-                                                overflow: TextOverflow.clip,
+                                                overflow: TextOverflow.ellipsis,
                                               )
                                             ])),
                                   ),
-                                  Text("03.03.2020"),
+                                  Text(
+                                      '${widget.posts[i]['Create_DateTime_Post']}'),
                                 ])))));
           },
         ));

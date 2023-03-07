@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 // screen
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
+import 'package:my_book/Service/PostController.dart';
 
 class PostTab extends StatefulWidget {
   const PostTab({super.key});
@@ -13,38 +15,63 @@ class PostTab extends StatefulWidget {
 }
 
 class _PostTabState extends State<PostTab> {
-  late Map<String, dynamic> dataPost;
+  List<dynamic>? posts;
 
   @override
   void initState() {
+    setPosts();
     super.initState();
+  }
+
+  setPosts() async {
+    await PostController().getPostAll().then((value) {
+      setState(() {
+        posts = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-          child: Container(
-              color: Color(0xfff5f3e8),
-              padding: EdgeInsets.all(5),
-              child: Column(
-                children: [
-                  RecommendSection(),
-                  PostSection(),
-                ],
-              ))),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff795e35),
-        child: Icon(Icons.add),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => const PostPage()),
+    return posts != null
+        ? Scaffold(
+            // resizeToAvoidBottomInset: false,
+            body: SingleChildScrollView(
+                child: Container(
+                    color: Color(0xfff5f3e8),
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+                      children: [
+                        RecommendSection(),
+                        PostSection(
+                          posts: posts!,
+                        ),
+                      ],
+                    ))),
+
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Color(0xff795e35),
+              child: Icon(Icons.add),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const PostPage()),
+                );
+              },
+            ),
+          )
+        : Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.black,
+            child: Center(
+              child: LoadingAnimationWidget.twistingDots(
+                leftDotColor: const Color(0xFF1A1A3F),
+                rightDotColor: const Color(0xFFEA3799),
+                size: 50,
+              ),
+            ),
           );
-        },
-      ),
-    );
   }
 }
 
@@ -108,7 +135,8 @@ class RecommendCard extends StatelessWidget {
     return GestureDetector(
         onTap: () => Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => ReviewPage(isbn: "null", edition: "1")),
+              MaterialPageRoute(
+                  builder: (context) => ReviewPage(isbn: "null", edition: "1")),
             ),
         child: Container(
             height: 90,
@@ -148,7 +176,9 @@ class RecommendCard extends StatelessWidget {
 }
 
 class PostSection extends StatefulWidget {
-  const PostSection({super.key});
+  // const PostSection({super.key});
+  PostSection({Key? key, required this.posts}) : super(key: key);
+  List<dynamic> posts;
 
   @override
   State<PostSection> createState() => _PostSectionState();
@@ -158,12 +188,12 @@ class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Color(0xfff5f3e8),
-      // height: MediaQuery.of(context).size.height,
+        color: Color(0xfff5f3e8),
+        height: MediaQuery.of(context).size.height,
         padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         // width: 280,
         child: ListView.builder(
-          itemCount: 5,
+          itemCount: widget.posts.length,
           shrinkWrap: true,
           itemBuilder: (context, i) {
             return GestureDetector(
@@ -180,8 +210,8 @@ class _PostSectionState extends State<PostSection> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CircleAvatar(
-                                    backgroundImage:
-                                        const AssetImage("images/rambo.jpg"),
+                                    backgroundImage: NetworkImage(
+                                        '${widget.posts[i]['Image']}'),
                                     backgroundColor: Color(0xffadd1dc),
                                     radius: 30,
                                   ),
@@ -193,17 +223,19 @@ class _PostSectionState extends State<PostSection> {
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
-                                              Text("ชื่อคนอื่น",
+                                              Text(
+                                                  '${widget.posts[i]['CreateBy']}',
                                                   maxLines: 1,
                                                   style:
                                                       TextStyle(fontSize: 18)),
                                               Text(
-                                                "รายละเอียดโพสต์",
+                                                '${widget.posts[i]['Detail_Post']}',
                                                 overflow: TextOverflow.ellipsis,
                                               )
                                             ])),
                                   ),
-                                  Text("03.03.2020"),
+                                  Text(
+                                      '${widget.posts[i]['Create_DateTime_Post']}'),
                                 ])))));
           },
         ));

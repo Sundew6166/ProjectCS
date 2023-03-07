@@ -5,6 +5,8 @@ import 'package:my_book/Screen/User/Profile/SettingPage.dart';
 import 'package:my_book/Screen/User/Profile/StockTab.dart';
 import 'package:my_book/Screen/User/Profile/SaleTab.dart';
 import 'package:my_book/Screen/User/Profile/PostTab.dart';
+import 'package:my_book/Service/PostController.dart';
+
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -15,6 +17,21 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   User? user = FirebaseAuth.instance.currentUser;
+    List<dynamic>? posts;
+
+  @override
+  void initState() {
+    setPosts();
+    super.initState();
+  }
+
+  setPosts() async {
+    await PostController().getMyPost().then((value) {
+      setState(() {
+        posts = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +131,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     height: MediaQuery.of(context).size.height,
                     child: TabBarView(controller: _tabController, children: [
                       StockTab(),
-                      PostTab(),
+                      PostTab(posts: posts,),
                       SaleTab(),
                     ]),
                   ),
