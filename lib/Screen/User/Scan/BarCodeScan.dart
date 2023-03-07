@@ -59,64 +59,43 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          if (result != null)
-                            if (editions.isEmpty)
-                              // ไม่มีข้อมูลใน database
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
-                                },
-                                child: Text('เพิ่มหนังสือใหม่')
-                              )
-                            else if (hasBook)
-                              // TODO: มีหนังสือในคลัง => AddSale หรือ form ขาย
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: <Widget>[
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()));
-                                    },
-                                    child: Text('เพิ่มไปยังการขาย')
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: <Widget>[
+                                // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
+                                if (result != null)
+                                  Text('ISBN: $result')
+                                else
+                                  const Text('กรุณาสแกนบาร์โค้ด'),
+                                SizedBox(
+                                  width: 10,
+                                ),
+                                Text('ครั้งที่พิมพ์: '),
+                                DropdownButton<String>(
+                                  value: dropdownValue,
+                                  icon: const Icon(Icons.arrow_downward),
+                                  elevation: 16,
+                                  style:
+                                      const TextStyle(color: Color(0xff795e35)),
+                                  underline: Container(
+                                    height: 2,
+                                    color: Color(0xff795e35),
                                   ),
-                                  SizedBox(width: 10,),
-                                  DropdownButton<String>(
-                                    value: dropdownValue,
-                                    icon: const Icon(Icons.arrow_downward),
-                                    elevation: 16,
-                                    style:
-                                        const TextStyle(color: Color(0xff795e35)),
-                                    underline: Container(
-                                      height: 2,
-                                      color: Color(0xff795e35),
-                                    ),
-                                    onChanged: (String? value) {
-                                      setState(() {
-                                        dropdownValue = value!;
-                                      });
-                                    },
-                                    items: editions.map<DropdownMenuItem<String>>(
-                                        (String value) {
-                                      return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(value),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ]
-                              )
-                            else
-                              // TODO: ไม่มีหนังสือในคลัง => ReviewPage
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(isbn: result.toString(), edition: "1")));
-                                },
-                                child: Text('เพิ่มไปคลังหนังสือ')
-                              )
-                          else
-                            const Text('กรุณาสแกนบาร์โค้ด')
-                          ,
+                                  onChanged: (String? value) {
+                                    setState(() {
+                                      dropdownValue = value!;
+                                    });
+                                  },
+                                  items: editions.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(value),
+                                    );
+                                  }).toList(),
+                                ),
+                              ]),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
@@ -193,11 +172,28 @@ class _BarCodeScanState extends State<BarCodeScan> {
     controller.scannedDataStream.listen((scanData) {
       setState(() async {
         result = scanData.code;
+        controller.pauseCamera();
         editions = await BookController().getEditionsBook(result!);
         if (editions.isNotEmpty) {
-          hasBook = await BookController().checkHasBook(result!, editions[0].toString());
+          hasBook = await BookController()
+              .checkHasBook(result!, editions[0].toString());
         }
         dropdownValue = editions.first;
+        showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+                  title: const Text("เสร็จสิ้น"),
+                  content: Text('การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
+                  actions: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        controller.resumeCamera();
+                      },
+                      child: const Text('ตกลง'),
+                    ),
+                  ],
+                ));
       });
     });
   }
