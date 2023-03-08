@@ -39,33 +39,35 @@ class _PostTabState extends State<PostTab> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CircleAvatar(
-                                  backgroundImage:
-                                      NetworkImage('${widget.posts![i]['Image']}'),
+                                  backgroundImage: NetworkImage(
+                                      '${widget.posts![i]['Image']}'),
                                   backgroundColor: Color(0xffadd1dc),
                                   radius: 30,
                                 ),
                                 Expanded(
                                   child: Padding(
                                       padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
+                                          EdgeInsets.symmetric(horizontal: 10),
                                       child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text('${widget.posts![i]['CreateBy']}',
+                                            Text(
+                                                '${widget.posts![i]['CreateBy']}',
                                                 style: TextStyle(fontSize: 18)),
                                             // Expanded(
                                             //     child:
                                             Text(
                                               '${widget.posts![i]['Detail_Post']}',
+                                              maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             )
                                             // )
                                           ])),
                                 ),
                                 Text(
-                                  '${widget.posts![i]['Create_DateTime_Post']}',
-                                ),
+                                    '${widget.posts![i]['Create_DateTime_Post']}',
+                                    textAlign: TextAlign.right),
                               ])))));
         },
       ),

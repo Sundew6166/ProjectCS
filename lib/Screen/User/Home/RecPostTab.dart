@@ -63,7 +63,7 @@ class _PostTabState extends State<PostTab> {
         : Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: Colors.black,
+            color: Color(0xfff5f3e8),
             child: Center(
               child: LoadingAnimationWidget.twistingDots(
                 leftDotColor: const Color(0xFF1A1A3F),
@@ -218,24 +218,25 @@ class _PostSectionState extends State<PostSection> {
                                   Expanded(
                                     child: Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 16),
+                                            horizontal: 10),
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                   '${widget.posts[i]['CreateBy']}',
-                                                  maxLines: 1,
                                                   style:
                                                       TextStyle(fontSize: 18)),
                                               Text(
                                                 '${widget.posts[i]['Detail_Post']}',
+                                                maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                               )
                                             ])),
                                   ),
                                   Text(
-                                      '${widget.posts[i]['Create_DateTime_Post']}'),
+                                      '${widget.posts[i]['Create_DateTime_Post']}',
+                                      textAlign: TextAlign.right),
                                 ])))));
           },
         ));

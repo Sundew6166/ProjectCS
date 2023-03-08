@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/BottomBar.dart';
 import 'package:my_book/Service/AccountController.dart';
+import 'package:my_book/Service/PostController.dart';
 
 class PostPage extends StatefulWidget {
   const PostPage({super.key});
@@ -44,14 +46,34 @@ class _PostPageState extends State<PostPage> {
                         if (_keyValidationForm.currentState!.validate()) {
                           String accT =
                               await AccountController().getAccountType();
+                          try {
+                            await PostController()
+                                .addPost(textarea.text)
+                                .then((value) => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BottomBar(
+                                                accType: accT,
+                                              )),
+                                    ));
+                          } on FirebaseException catch (e) {
+                            showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                        title: Text(e.message.toString()),
+                                        content: Text(
+                                            "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () =>
+                                                Navigator.pop(context),
+                                            child: const Text('ตกลง'),
+                                          )
+                                        ]));
+                          }
+
                           // print(accT);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => BottomBar(
-                                      accType: accT,
-                                    )),
-                          );
+
                           // print(textarea.text);
                         }
                       },
