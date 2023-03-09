@@ -14,8 +14,12 @@ class PostController {
         Map<String, dynamic> test = await AccountController()
             .getAnotherProfile(docSnap.data()['CreateBy']);
 
+        DateTime now = (docSnap.data()['Create_DateTime_Post']).toDate();
+        String formattedDate = DateFormat('yyyy/MM/dd \n kk:mm').format(now);
+        // print(formattedDate);
+
         Map<String, dynamic> temp = {
-          "Create_DateTime_Post": docSnap.data()['Create_DateTime_Post'],
+          "Create_DateTime_Post": formattedDate,
           "Detail_Post": docSnap.data()['Detail_Post'],
           "CreateBy": test['username'],
           'Image': test['imageURL']
@@ -48,8 +52,10 @@ class PostController {
         .get()
         .then((value) {
       for (var element in value.docs) {
+        DateTime now = (element.data()['Create_DateTime_Post']).toDate();
+        String formattedDate = DateFormat('yyyy/MM/dd \n kk:mm').format(now);
         Map<String, dynamic> temp = {
-          "Create_DateTime_Post": element.data()['Create_DateTime_Post'],
+          "Create_DateTime_Post": formattedDate,
           "Detail_Post": element.data()['Detail_Post'],
           "CreateBy": user.displayName.toString(),
           'Image': user.photoURL.toString()
@@ -64,12 +70,9 @@ class PostController {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
-    DateTime now = DateTime.now();
-    String formattedDate = DateFormat('yyyy/MM/dd \n kk:mm').format(now);
-
     final data = {
       'CreateBy': user!.uid,
-      'Create_DateTime_Post': formattedDate,
+      'Create_DateTime_Post': Timestamp.now(),
       'Detail_Post': detail
     };
 
