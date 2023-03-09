@@ -96,7 +96,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                   context,
                   MaterialPageRoute(
                       builder: (context) => AddBook(
-                            isbn: '',
+                            accType: "ADMIN"
                           )),
                 ),
               ),

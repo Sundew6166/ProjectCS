@@ -156,8 +156,9 @@ class _BarCodeScanState extends State<BarCodeScan> {
           bookInfo = null;
           hasBook = false;
         }
-        if (widget.type == "ADMIN"){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(bookInfo: bookInfo)));
+        if (widget.type == "ADMIN" && bookInfo == null){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, isbn: result)))
+            .then((value) => controller.resumeCamera());
         } else {
           showDialog(
             context: context,
@@ -245,31 +246,39 @@ class _BarCodeScanState extends State<BarCodeScan> {
                             ),
                           ])): Text('ยังไม่มีข้อมูลของหนังสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
                   actions: <Widget>[
-                    // TODO: DB ไม่มี นส
-                    if (editions.isEmpty)
+                    if (widget.type == "ADMIN")
                       TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(isbn: result.toString())));
-                      },
-                      child: const Text('เพิ่มข้อมูล'),
-                    )
-                    // TODO: DB and user มี นส
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, bookInfo: bookInfo, )))
+                          .then((value) => controller.resumeCamera());
+                        },
+                        child: Text(bookInfo!['approveStatus'] ? 'แก้ไขข้อมูล' : 'ไปอนุมัติข้อมูล'),
+                      )
+                    else if (editions.isEmpty)
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, isbn: result)))
+                          .then((value) => controller.resumeCamera());
+                        },
+                        child: const Text('เพิ่มข้อมูล'),
+                      )
                     else if (hasBook)
                       TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()));
-                      },
-                      child: const Text('ขาย'),
-                    )
-                    // TODO: DB มี นส and user ไม่มี นส
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()))
+                          .then((value) => controller.resumeCamera());
+                        },
+                        child: const Text('ขาย'),
+                      )
                     else
                       TextButton(
-                      onPressed: () async {
-                        await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition']);
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)));
-                      },
-                      child: const Text('เพิ่มไปคลังหนังสือ'),
-                    )
+                        onPressed: () async {
+                          await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition']);
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)))
+                          .then((value) => controller.resumeCamera());
+                        },
+                        child: const Text('เพิ่มไปคลังหนังสือ'),
+                      )
                     ,
                     TextButton(
                       onPressed: () {

@@ -10,8 +10,9 @@ import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/AccountController.dart';
 
 class AddBook extends StatefulWidget {
-  AddBook({Key? key, this.isbn, this.bookInfo}) : super(key: key);
+  AddBook({Key? key, required this.accType, this.isbn, this.bookInfo}) : super(key: key);
 
+  String accType;
   Map<String,dynamic>? bookInfo;
   String? isbn;
 
@@ -20,7 +21,7 @@ class AddBook extends StatefulWidget {
 }
 
 class _AddBookState extends State<AddBook> {
-  static var _newBookFormKey = GlobalKey<FormState>();
+  static var _bookInfoFormKey = GlobalKey<FormState>();
   AutocompleteLabelController<String>? typeOption;
   File? _image;
 
@@ -36,13 +37,18 @@ class _AddBookState extends State<AddBook> {
 
   @override
   void initState() {
-    _textISBN.text = widget.bookInfo!['isbn'] ?? widget.isbn;
-    _textTitle.text = widget.bookInfo!['title'];
-    _textAuthor.text = widget.bookInfo!['author'];
-    _textPublisher.text = widget.bookInfo!['publisher'];
-    _textPrice.text = widget.bookInfo!['price'].toString();
-    _textSynopsys.text = widget.bookInfo!['synopsys'];
-    _textEdition.text = widget.bookInfo != null ? widget.bookInfo!['edition'].toString() : "1";
+    if (widget.bookInfo != null) {
+      _textISBN.text = widget.bookInfo!['isbn'];
+      _textTitle.text = widget.bookInfo!['title'];
+      _textAuthor.text = widget.bookInfo!['author'];
+      _textPublisher.text = widget.bookInfo!['publisher'];
+      _textPrice.text = widget.bookInfo!['price'].toString();
+      _textSynopsys.text = widget.bookInfo!['synopsys'];
+      _textEdition.text = widget.bookInfo!['edition'].toString();
+    } else if (widget.isbn != null) {
+      _textISBN.text = widget.isbn!;
+      _textEdition.text = "1";
+    }
     setTypeOption();
     super.initState();
   }
@@ -50,7 +56,10 @@ class _AddBookState extends State<AddBook> {
   setTypeOption() async {
     await BookController().getBookTypes().then((value) {
       setState(() {
-        typeOption = AutocompleteLabelController<String>(source: value, values: widget.bookInfo!['types']);
+        typeOption = AutocompleteLabelController<String>(source: value);
+        if (widget.bookInfo != null) {
+          typeOption!.values.addAll(widget.bookInfo!['types']);
+        }
       });
     });
   }
@@ -80,7 +89,7 @@ class _AddBookState extends State<AddBook> {
         // resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Form(
-                key: _newBookFormKey,
+                key: _bookInfoFormKey,
                 child: Column(
                   children: [
                     Container(
@@ -252,11 +261,13 @@ class _AddBookState extends State<AddBook> {
                                       EdgeInsets.only(top: 16.0, bottom: 16.0),
                                   child: ElevatedButton(
                                       onPressed: () async {
-                                        if (_newBookFormKey.currentState!
+                                        if (_bookInfoFormKey.currentState!
                                             .validate()) {
                                           try {
-                                            await BookController()
-                                                .addNewBookFromUser(
+                                            if (widget.bookInfo == null) {
+                                              await BookController()
+                                                .addNewBook(
+                                                    widget.accType,
                                                     _textISBN.text,
                                                     _textTitle.text,
                                                     _textAuthor.text,
@@ -269,24 +280,21 @@ class _AddBookState extends State<AddBook> {
                                                 .then((value) => showDialog(
                                                     context: context,
                                                     builder: (_) => AlertDialog(
-                                                          title: const Text(
-                                                              "รอการยืนยันจากผู้ดูแล"),
+                                                          title: Text(
+                                                              widget.accType == "ADMIN" ? "เสร็จสิ้น" : "รอการยืนยันจากผู้ดูแล"),
                                                           content: Text(
-                                                              'ส่งข้อมูลเสร็จสิ้น รอการยืนยันจากผู้ดูแล'),
+                                                              widget.accType == "ADMIN" ? "เพิ่มข้อมูลหนังสือใหม่เสร็จสิ้น" : 'ส่งข้อมูลเสร็จสิ้น รอการยืนยันจากผู้ดูแล'),
                                                           actions: <Widget>[
                                                             TextButton(
                                                               onPressed:
                                                                   () async {
-                                                                String accT =
-                                                                    await AccountController()
-                                                                        .getAccountType();
                                                                 Navigator.push(
                                                                   context,
                                                                   MaterialPageRoute(
                                                                       builder:
                                                                           (context) =>
                                                                               BottomBar(
-                                                                                accType: accT,
+                                                                                accType: widget.accType,
                                                                               )),
                                                                 );
                                                               },
@@ -295,6 +303,33 @@ class _AddBookState extends State<AddBook> {
                                                             ),
                                                           ],
                                                         )));
+                                            } else {
+                                              await BookController().updateBookInfo('${widget.bookInfo!['isbn']}_${widget.bookInfo!['edition']}', _textTitle.text, _textAuthor.text, _textPublisher.text, int.parse(_textPrice.text), widget.bookInfo!['types'], typeOption!.values, _textSynopsys.text, widget.bookInfo!['coverImage'], _image)
+                                                .then((value) => showDialog(
+                                                    context: context,
+                                                    builder: (_) => AlertDialog(
+                                                          title: Text("เสร็จสิ้น"),
+                                                          content: Text("อัพเดทข้อมูลหนังสือเสร็จสิ้น"),
+                                                          actions: <Widget>[
+                                                            TextButton(
+                                                              onPressed:
+                                                                  () async {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder:
+                                                                          (context) =>
+                                                                              BottomBar(
+                                                                                accType: widget.accType,
+                                                                              )),
+                                                                );
+                                                              },
+                                                              child: const Text(
+                                                                  'ตกลง'),
+                                                            ),
+                                                          ],
+                                                        )));
+                                            }
                                           } on FirebaseException catch (e) {
                                             print(e.code);
                                             showDialog(
@@ -303,7 +338,7 @@ class _AddBookState extends State<AddBook> {
                                                         title: Text(e.message
                                                             .toString()),
                                                         content: Text(
-                                                            "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
+                                                            "เกิดข้อผิดพลาดในการทำงาน กรุณาลองใหม่"),
                                                         actions: <Widget>[
                                                           TextButton(
                                                             onPressed: () =>
@@ -324,9 +359,7 @@ class _AddBookState extends State<AddBook> {
                                                   BorderRadius.circular(
                                             10,
                                           ))),
-                                      // TODO: if isApprove == false ปุ่มจะเขีบยว่า อนุมัติ
-                                      // TODO: if isApprove == true ปุ่มจะเขีบยว่า บันทึก
-                                      child: Text("บันทึก",
+                                      child: Text(widget.bookInfo == null ? "บันทึก" : widget.bookInfo!['approveStatus'] ? "บันทึก" : "อนุมัติ",
                                           style: TextStyle(
                                               fontSize: 20)))), //button: login
                             ],

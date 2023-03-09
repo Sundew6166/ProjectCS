@@ -18,7 +18,7 @@ class BookController {
     return output;
   }
 
-  Future<void> addNewBookFromUser(String isbn, String title, String author, String publisher, int edition, int price, List<String> types, String synopsys, File? coverImage) async {
+  Future<void> addNewBook(String accType, String isbn, String title, String author, String publisher, int edition, int price, List<String> types, String synopsys, File? coverImage) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
@@ -34,7 +34,7 @@ class BookController {
       "coverImage": downloadURL,
       "synopsys": synopsys,
       "updateDateTime": Timestamp.now(),
-      "approveStatus": false,
+      "approveStatus": accType == "ADMIN" ? true : false,
       "createBy": user!.uid
     };
 
@@ -117,16 +117,17 @@ class BookController {
 
   Future<List<String>> getEditionsBook(String isbn) async {
     final db = FirebaseFirestore.instance;
-    List<String> edition = [];
+    List<String> editions = [];
 
     await db.collection('books')
       .where('isbn', isEqualTo: isbn)
       .get().then((querySnapshot) {
         for (var docSnap in querySnapshot.docs) {
-          edition.add(docSnap.data()['edition'].toString());
+          editions.add(docSnap.data()['edition'].toString());
         }
+        editions.sort();
       });
-    return edition;
+    return editions;
   }
 
   Future<bool> checkHasBook(String isbn, String edition) async {
@@ -142,5 +143,42 @@ class BookController {
           hasBook = true;
       });
     return hasBook;
+  }
+
+  Future<void> updateBookInfo(String idBook, String title, String author, String publisher, int price, List<String> oldTypes, List<String> newTypes, String synopsys, String oldCoverImage, File? newCoverImage) async {
+    final db = FirebaseFirestore.instance;
+
+    String downloadURL = newCoverImage == null ? oldCoverImage : await ImageController().uploadToFireStorage(newCoverImage, idBook);
+    final data = {
+      "title": title,
+      "author": author,
+      "publisher": publisher,
+      "price": price,
+      "coverImage": downloadURL,
+      "synopsys": synopsys,
+      "updateDateTime": Timestamp.now(),
+      "approveStatus": true
+    };
+    await db.collection('books').doc(idBook).update(data);
+
+    for (var type in oldTypes) {
+      if (newTypes.contains(type)) {
+        oldTypes.remove(type);
+        newTypes.remove(type);
+      }
+    }
+    for (var type in oldTypes) {
+      await db.collection('book_types')
+        .where('name', isEqualTo: type)
+        .get().then((docType) {
+          db.collection('b_has_bt')
+            .where('book', isEqualTo: idBook)
+            .where('type', isEqualTo: docType.docs[0].id)
+            .get().then((value) {
+              db.collection('b_has_bt').doc(value.docs[0].id).delete();
+          });
+        });
+    }
+    linkTypeAndBook(idBook, newTypes);
   }
 }

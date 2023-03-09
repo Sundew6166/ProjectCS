@@ -24,7 +24,7 @@ class _ApproveTabState extends State<ApproveTab> {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AddBook(isbn: '',)),
+                    MaterialPageRoute(builder: (context) => AddBook(accType: "ADMIN")),
                   ),
               child: Container(
                   height: 100,
