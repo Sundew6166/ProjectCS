@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
+import 'package:my_book/Service/BookController.dart';
 
 class ApproveTab extends StatefulWidget {
   const ApproveTab({super.key});
@@ -10,21 +11,37 @@ class ApproveTab extends StatefulWidget {
 }
 
 class _ApproveTabState extends State<ApproveTab> {
+  List<Map<String,dynamic>?> bookList = [];
+
+  @override
+  void initState() {
+    setBookList();
+    super.initState();
+  }
+
+  setBookList() async {
+    await BookController().getAllBookPendingApproval().then((value) {
+      setState(() {
+        bookList.addAll(value);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
+      body: Container(
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       color: Color(0xfff5f3e8),
       child: new ListView.builder(
-        itemCount: 5,
+        itemCount: bookList.length,
         shrinkWrap: true,
-        itemBuilder: (context, i) {
+        itemBuilder: (context, index) {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => AddBook(accType: "ADMIN")),
+                    MaterialPageRoute(builder: (context) => AddBook(accType: "ADMIN", bookInfo: bookList[index])),
                   ),
               child: Container(
                   height: 100,
@@ -37,7 +54,7 @@ class _ApproveTabState extends State<ApproveTab> {
                                 ClipRRect(
                                   borderRadius:
                                       BorderRadius.circular(5), // Image border
-                                  child: Image.asset('images/Conan.jpg'),
+                                  child: Image.network(bookList[index]!['coverImage']),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -47,16 +64,16 @@ class _ApproveTabState extends State<ApproveTab> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("ชื่อหนังสือ",
+                                            Text(bookList[index]!['title'],
                                                 style: TextStyle(fontSize: 18)),
                                             Expanded(
                                                 child: Text(
-                                              "ISBN",
+                                              bookList[index]!['isbn'],
                                               overflow: TextOverflow.ellipsis,
                                             ))
                                           ])),
                                 ),
-                                Text("03.03.2020"),
+                                // Text("03.03.2020"),
                               ])))));
         },
       ),

@@ -30,7 +30,6 @@ class _StockTabState extends State<StockTab> {
     });
   }
 
-  // TODO: admin and user
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,17 +44,13 @@ class _StockTabState extends State<StockTab> {
         itemBuilder: (context, index) {
           return GestureDetector(
               // TODO: if user => ReviewPage
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookList[index], hasBook: true)),
-                  ),
-
-              // TODO: if admin => AddBook
-              // onTap: () => Navigator.push(
-              //       context,
-              //       MaterialPageRoute(builder: (context) => AddBook()),
-              //     ),
-              
+              onTap: () {
+                if (widget.accType == "ADMIN") {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.accType, bookInfo: bookList[index])));
+                } else {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookList[index], hasBook: true)));
+                }
+              },
               child: Container(
                   height: 100,
                   child: Card(

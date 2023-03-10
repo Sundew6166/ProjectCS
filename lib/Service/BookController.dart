@@ -187,8 +187,9 @@ class BookController {
     List<Map<String,dynamic>?> output = [];
 
     if (accType == "ADMIN") {
-      await db.collection('books').get()
-        .then((querySnapshot) {
+      await db.collection('books')
+        .where('approveStatus', isEqualTo: true)
+        .get().then((querySnapshot) {
         for (var docSnap in querySnapshot.docs) {
           output.add(docSnap.data());
         }
@@ -206,6 +207,21 @@ class BookController {
           }
       });
     }
+
+    return output;
+  }
+
+  Future<List<Map<String,dynamic>?>> getAllBookPendingApproval() async {
+    final db = FirebaseFirestore.instance;
+    List<Map<String,dynamic>?> output = [];
+
+    await db.collection('books')
+      .where('approveStatus', isEqualTo: false)
+      .get().then((querySnapshot) {
+        for (var docSnap in querySnapshot.docs) {
+          output.add(docSnap.data());
+        }
+      });
 
     return output;
   }

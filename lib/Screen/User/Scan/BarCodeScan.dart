@@ -164,7 +164,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
             context: context,
             builder: (_) => AlertDialog(
                   // title: const Text("เสร็จสิ้น"),
-                  content: bookInfo != null ? Container(
+                  content: bookInfo != null ? bookInfo!['approveStatus'] ? Container(
                       height: 160,
                       width: 320,
                       child: Row(
@@ -193,11 +193,13 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                         InkWell(
                                           splashColor: const Color(0xff795e35)
                                               .withOpacity(0.5),
-                                          onTap: () => Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)),
-                                          ),
+                                          onTap: () => {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)),
+                                            )
+                                          },
                                           child: Text(
                                             'รายละเอียดอื่น',
                                             style: TextStyle(
@@ -244,7 +246,9 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                             ])
                                       ])),
                             ),
-                          ])): Text('ยังไม่มีข้อมูลของหนังสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
+                          ]))
+                          : Text('หนังสือเล่มนี้กำลังรอการอนุมัติ\nกรุณาลองใหม่ในภายหลัง')
+                          : Text('ยังไม่มีข้อมูลของหนังสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
                   actions: <Widget>[
                     if (widget.type == "ADMIN")
                       TextButton(
@@ -267,6 +271,14 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           });
                         },
                         child: const Text('เพิ่มข้อมูล'),
+                      )
+                    else if (!bookInfo!['approveStatus'])
+                      TextButton(
+                        onPressed: () {
+                          controller.resumeCamera();
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('ตกลง'),
                       )
                     else if (hasBook)
                       TextButton(
