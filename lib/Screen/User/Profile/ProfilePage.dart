@@ -130,7 +130,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     child: TabBarView(controller: _tabController, children: [
-                      StockTab(),
+                      StockTab(accType: "USER"),
                       PostTab(posts: posts,),
                       SaleTab(),
                     ]),

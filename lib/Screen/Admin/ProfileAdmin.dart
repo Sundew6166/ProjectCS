@@ -131,7 +131,7 @@ class _ProfileAdminState extends State<ProfileAdmin>
                               child: TabBarView(
                                   controller: _tabController,
                                   children: [
-                                    StockTab(),
+                                    StockTab(accType: "ADMIN"),
                                     PostTab(posts: posts,),
                                     ApproveTab(),
                                   ]),

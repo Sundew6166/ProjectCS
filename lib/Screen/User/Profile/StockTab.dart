@@ -2,15 +2,34 @@ import 'package:flutter/material.dart';
 
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
+import 'package:my_book/Service/BookController.dart';
 
 class StockTab extends StatefulWidget {
-  const StockTab({super.key});
+  StockTab({super.key, required this.accType});
+
+  String accType;
 
   @override
   State<StockTab> createState() => _StockTabState();
 }
 
 class _StockTabState extends State<StockTab> {
+  List<Map<String,dynamic>?> bookList = [];
+
+  @override
+  void initState() {
+    setBookList();
+    super.initState();
+  }
+
+  setBookList() async {
+    await BookController().getAllBookInLibrary(widget.accType).then((value) {
+      setState(() {
+        bookList.addAll(value);
+      });
+    });
+  }
+
   // TODO: admin and user
   @override
   Widget build(BuildContext context) {
@@ -21,14 +40,14 @@ class _StockTabState extends State<StockTab> {
       color: Color(0xfff5f3e8),
       child: new ListView.builder(
         // padding: const EdgeInsets.all(5),
-        itemCount: 5,
+        itemCount: bookList.length,
         shrinkWrap: true,
-        itemBuilder: (context, i) {
+        itemBuilder: (context, index) {
           return GestureDetector(
               // TODO: if user => ReviewPage
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: {}, hasBook: false)),
+                    MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookList[index], hasBook: true)),
                   ),
 
               // TODO: if admin => AddBook
@@ -48,7 +67,7 @@ class _StockTabState extends State<StockTab> {
                                 ClipRRect(
                                   borderRadius:
                                       BorderRadius.circular(5), // Image border
-                                  child: Image.asset('images/Conan.jpg'),
+                                  child: Image.network(bookList[index]!['coverImage']),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -58,16 +77,16 @@ class _StockTabState extends State<StockTab> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("ชื่อหนังสือ",
+                                            Text(bookList[index]!['title'],
                                                 style: TextStyle(fontSize: 18)),
                                             Expanded(
                                                 child: Text(
-                                              "ISBN",
+                                              bookList[index]!['isbn'],
                                               overflow: TextOverflow.ellipsis,
                                             ))
                                           ])),
                                 ),
-                                Text("03.03.2020"),
+                                // Text("03.03.2020"),
                               ])))));
         },
       ),

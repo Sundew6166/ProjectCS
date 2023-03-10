@@ -181,4 +181,32 @@ class BookController {
     }
     linkTypeAndBook(idBook, newTypes);
   }
+
+  Future<List<Map<String,dynamic>?>> getAllBookInLibrary(String accType) async {
+    final db = FirebaseFirestore.instance;
+    List<Map<String,dynamic>?> output = [];
+
+    if (accType == "ADMIN") {
+      await db.collection('books').get()
+        .then((querySnapshot) {
+        for (var docSnap in querySnapshot.docs) {
+          output.add(docSnap.data());
+        }
+      });
+    } else {
+      final user = FirebaseAuth.instance.currentUser;
+      await db.collection('a_has_b')
+        .where('account', isEqualTo: user!.uid)
+        .get().then((querySnapshot) async {
+          for (var docSnap in querySnapshot.docs) {
+            await db.collection('books').doc(docSnap.data()['book']).get()
+              .then((value) {
+                output.add(value.data());
+              });
+          }
+      });
+    }
+
+    return output;
+  }
 }
