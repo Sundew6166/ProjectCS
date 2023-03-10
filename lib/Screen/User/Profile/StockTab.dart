@@ -44,11 +44,14 @@ class _StockTabState extends State<StockTab> {
         itemBuilder: (context, index) {
           return GestureDetector(
               // TODO: if user => ReviewPage
-              onTap: () {
+              onTap: () async {
+                var bookInfo = bookList[index];
+                await BookController().getTypesOfBook('${bookInfo!['isbn']}_${bookInfo['edition']}')
+                  .then((value) => bookInfo.addAll({"types": value}));
                 if (widget.accType == "ADMIN") {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.accType, bookInfo: bookList[index])));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.accType, bookInfo: bookInfo)));
                 } else {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookList[index], hasBook: true)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: true)));
                 }
               },
               child: Container(

@@ -76,8 +76,18 @@ class BookController {
     Map<String, dynamic>? bookInfo;
     await db.collection('books').doc(id).get()
       .then((value) => bookInfo = value.data());
+    await getTypesOfBook(id)
+      .then((value) => bookInfo!.addAll({"types": value}));
+    
+    print(bookInfo);
+    return bookInfo;
+  }
+
+  Future<List<String>> getTypesOfBook(String idBook) async {
+    final db = FirebaseFirestore.instance;
+
     List<String> types = [];
-    await db.collection('b_has_bt').where("book", isEqualTo: id).get()
+    await db.collection('b_has_bt').where("book", isEqualTo: idBook).get()
       .then((querySnapshot) async {
         for (var docSnap in querySnapshot.docs) {
           print(docSnap.data()['type']);
@@ -86,11 +96,9 @@ class BookController {
               types.add(value.data()!['name']);
             });
         }
-        bookInfo!.addAll({"types": types});
       });
-    
-    print(bookInfo);
-    return bookInfo;
+
+    return types;
   }
 
   Future<void> addBookToLibrary(String isbn, String edition) async {

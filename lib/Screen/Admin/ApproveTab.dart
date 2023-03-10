@@ -39,10 +39,15 @@ class _ApproveTabState extends State<ApproveTab> {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return GestureDetector(
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => AddBook(accType: "ADMIN", bookInfo: bookList[index])),
-                  ),
+              onTap: () async {
+                var bookInfo = bookList[index];
+                await BookController().getTypesOfBook('${bookInfo!['isbn']}_${bookInfo['edition']}')
+                  .then((value) => bookInfo.addAll({"types": value}));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddBook(accType: "ADMIN", bookInfo: bookInfo)),
+                );
+              },
               child: Container(
                   height: 100,
                   child: Card(
