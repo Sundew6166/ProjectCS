@@ -1,11 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class AddSale extends StatefulWidget {
-  const AddSale({super.key});
+  AddSale({super.key, required this.bookInfo});
+
+  Map<String,dynamic> bookInfo;
 
   @override
   State<AddSale> createState() => _AddSaleState();
@@ -15,12 +20,10 @@ class _AddSaleState extends State<AddSale> {
   File? _image;
 
   final _picker = ImagePicker();
-  static var _addressValidationForm = GlobalKey<FormState>();
+  static var _addSaleFormKey = GlobalKey<FormState>();
 
   TextEditingController _textISBN = TextEditingController();
   TextEditingController _textTitle = TextEditingController();
-  TextEditingController _textAuthor = TextEditingController();
-  TextEditingController _textPublisher = TextEditingController();
   TextEditingController _textPrice = TextEditingController();
   TextEditingController _textEdition = TextEditingController();
 
@@ -28,7 +31,7 @@ class _AddSaleState extends State<AddSale> {
   TextEditingController _textSellingPrice = TextEditingController();
   TextEditingController _textDeliveryFee = TextEditingController();
   TextEditingController _textNameBankAccount = TextEditingController();
-  TextEditingController _textAccountNumber = TextEditingController();
+  TextEditingController _textBankAccountNumber = TextEditingController();
 
   Future<void> _openImagePicker() async {
     final XFile? pickedImage =
@@ -42,6 +45,15 @@ class _AddSaleState extends State<AddSale> {
   }
 
   @override
+  void initState() {
+    _textISBN.text = widget.bookInfo['isbn'];
+    _textTitle.text = widget.bookInfo['title'];
+    _textPrice.text = widget.bookInfo['price'].toString();
+    _textEdition.text = widget.bookInfo['edition'].toString();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -50,7 +62,7 @@ class _AddSaleState extends State<AddSale> {
         // resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Form(
-                key: _addressValidationForm,
+                key: _addSaleFormKey,
                 child: Column(
                   children: [
                     Container(
@@ -133,12 +145,7 @@ class _AddSaleState extends State<AddSale> {
                                   controller: _textDetail,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  maxLines: 3,
                                   decoration: InputDecoration(
                                     labelText: 'รายละเอียดสินค้า',
                                   ),
@@ -149,12 +156,13 @@ class _AddSaleState extends State<AddSale> {
                                   controller: _textSellingPrice,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: (value) {
+                                    return value!.isEmpty
+                                        ? "กรุณากรอกราคาที่จะขาย"
+                                        : int.parse(value) > 0
+                                            ? null
+                                            : "ราคาขายต้องมากกว่า 0";
+                                  },
                                   decoration: InputDecoration(
                                     labelText: 'ราคาขาย',
                                   ),
@@ -165,12 +173,13 @@ class _AddSaleState extends State<AddSale> {
                                   controller: _textDeliveryFee,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: (value) {
+                                    return value!.isEmpty
+                                        ? "กรุณากรอกค่าส่ง"
+                                        : int.parse(value) >= 0
+                                            ? null
+                                            : "ค่าส่งต้องไม่ติดลบ";
+                                  },
                                   decoration: InputDecoration(
                                     labelText: 'ค่าส่ง',
                                   ),
@@ -181,12 +190,7 @@ class _AddSaleState extends State<AddSale> {
                                   controller: _textNameBankAccount,
                                   keyboardType: TextInputType.text,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: RequiredValidator(errorText: "กรุณากรอกชื่อธนาคาร"),
                                   decoration: InputDecoration(
                                     labelText: 'ธนาคาร',
                                   ),
@@ -194,15 +198,10 @@ class _AddSaleState extends State<AddSale> {
                               ),
                               Container(
                                 child: TextFormField(
-                                  controller: _textAccountNumber,
+                                  controller: _textBankAccountNumber,
                                   keyboardType: TextInputType.number,
                                   textInputAction: TextInputAction.next,
-                                  // validator: (value) {
-                                  //   return (value!.isNotEmpty &&
-                                  //           value.length != 10)
-                                  //       ? 'กรอกเบอร์โทรศัพท์ไม่ถูกต้อง'
-                                  //       : null;
-                                  // },
+                                  validator: RequiredValidator(errorText: "กรุณากรอกเลขบัญชีธนาคาร"),
                                   decoration: InputDecoration(
                                     labelText: 'เลขบัญชี',
                                   ),
@@ -213,8 +212,18 @@ class _AddSaleState extends State<AddSale> {
                                       EdgeInsets.only(top: 16.0, bottom: 16.0),
                                   child: ElevatedButton(
                                       onPressed: () {
-                                        if (_addressValidationForm.currentState!
-                                            .validate()) {
+                                        if (_image == null) {
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) => AlertDialog(
+                                              title: Text("กรุณาเพิ่มรูปสภาพหนังสือเล่มที่จะขาย"),
+                                              content: Text("กรุณาเพิ่มรูปสภาพหนังสือเล่มที่จะขาย"),
+                                              actions: [
+                                                TextButton(onPressed: () => Navigator.pop(context), child: Text('ตกลง')),
+                                              ],
+                                            )
+                                          );
+                                        } else if (_addSaleFormKey.currentState!.validate()) {
                                           showDialog(
                                               context: context,
                                               builder: (_) => AlertDialog(
@@ -224,6 +233,59 @@ class _AddSaleState extends State<AddSale> {
                                                         'ยืนยันเพื่อเพิ่มไปยังการขาย'),
                                                     actions: <Widget>[
                                                       TextButton(
+                                                        onPressed: () async {
+                                                          try {
+                                                            await SaleController().addSale("${widget.bookInfo['isbn']}_${widget.bookInfo['edition']}", _textDetail.text, _textSellingPrice.text, _textDeliveryFee.text, _textNameBankAccount.text, _textBankAccountNumber.text, _image!)
+                                                              .then((value) {
+                                                                showDialog(
+                                                                  context: context,
+                                                                  builder: (_) => AlertDialog(
+                                                                    title: Text("เสร็จสิ้น"),
+                                                                    content: Text("เพิ่มการขายหนังสือเสร็จสิ้น"),
+                                                                    actions: <Widget>[
+                                                                      TextButton(
+                                                                        onPressed: () async {
+                                                                          Navigator.push(
+                                                                            context,
+                                                                            MaterialPageRoute(
+                                                                                builder:
+                                                                                    (context) =>
+                                                                                        BottomBar(
+                                                                                          accType: "USER",
+                                                                                          tab: "PROFILE",
+                                                                                        )),
+                                                                          );
+                                                                        },
+                                                                        child: const Text(
+                                                                            'ตกลง'),
+                                                                      ),
+                                                                    ],
+                                                                  ));
+                                                              });
+                                                          } on FirebaseException catch (e) {
+                                                            print(e.code);
+                                                            showDialog(
+                                                                context: context,
+                                                                builder: (_) => AlertDialog(
+                                                                        title: Text(e.message
+                                                                            .toString()),
+                                                                        content: Text(
+                                                                            "เกิดข้อผิดพลาดในการทำงาน กรุณาลองใหม่"),
+                                                                        actions: <Widget>[
+                                                                          TextButton(
+                                                                            onPressed: () =>
+                                                                                Navigator.pop(
+                                                                                    context),
+                                                                            child: const Text(
+                                                                                'ตกลง'),
+                                                                          )
+                                                                        ]));
+                                                          }
+                                                        },
+                                                        child:
+                                                          const Text('ตกลง'),
+                                                      ),
+                                                      TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(
                                                                 context,
@@ -231,26 +293,8 @@ class _AddSaleState extends State<AddSale> {
                                                         child: const Text(
                                                             'ยกเลิก'),
                                                       ),
-                                                      TextButton(
-                                                        onPressed: () =>
-                                                            Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      BottomBar(
-                                                                        accType:'USER',
-                                                                        tab: "PROFILE",
-                                                                      )),
-                                                        ),
-                                                        child:
-                                                            const Text('ตกลง'),
-                                                      ),
                                                     ],
                                                   ));
-                                          // _addressValidationForm
-                                          //     .currentState
-                                          //     ?.reset();
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(

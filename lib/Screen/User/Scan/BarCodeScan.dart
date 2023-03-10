@@ -197,7 +197,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)),
+                                                  builder: (context) => ReviewPage(bookInfo: bookInfo!, hasBook: hasBook)),
                                             )
                                           },
                                           child: Text(
@@ -283,7 +283,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                     else if (hasBook)
                       TextButton(
                         onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()))
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale(bookInfo: bookInfo!)))
                           .then((value) {
                             controller.resumeCamera();
                             Navigator.of(context).pop();

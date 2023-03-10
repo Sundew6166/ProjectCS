@@ -10,7 +10,7 @@ import 'package:my_book/Service/BookController.dart';
 class ReviewPage extends StatefulWidget {
   ReviewPage({super.key, required this.bookInfo, required this.hasBook});
 
-  Map<String, dynamic>? bookInfo;
+  Map<String, dynamic> bookInfo;
   bool hasBook;
 
   @override
@@ -45,7 +45,7 @@ class _ReviewPageState extends State<ReviewPage> {
                               width: 50,
                             ),
                             ImageProduct(
-                                coverImageURL: widget.bookInfo!['coverImage']),
+                                coverImageURL: widget.bookInfo['coverImage']),
                             Column(
                               children: [
                                 IconButton(
@@ -75,7 +75,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                                   TextButton(
                                                     onPressed: () async {
                                                       try {
-                                                        await BookController().deleteBookFromLibrary(widget.bookInfo!['isbn'], widget.bookInfo!['edition'].toString())
+                                                        await BookController().deleteBookFromLibrary(widget.bookInfo['isbn'], widget.bookInfo['edition'].toString())
                                                           .then((value) {setState(() {
                                                             widget.hasBook = false;
                                                             Navigator.pop(context);
@@ -103,7 +103,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                               ));
                                     } else {
                                       try {
-                                        await BookController().addBookToLibrary(widget.bookInfo!['isbn'], widget.bookInfo!['edition'].toString())
+                                        await BookController().addBookToLibrary(widget.bookInfo['isbn'], widget.bookInfo['edition'].toString())
                                           .then((value) {setState(() {
                                             widget.hasBook = true;
                                           });});
@@ -141,7 +141,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
-                                                    AddSale()),
+                                                    AddSale(bookInfo: widget.bookInfo)),
                                           ))),
                               ],
                             )
@@ -155,13 +155,13 @@ class _ReviewPageState extends State<ReviewPage> {
                           color: Colors.white,
                           child: Column(
                             children: [
-                              BookName(title: widget.bookInfo!['title']),
-                              Author(author: widget.bookInfo!['author']),
-                              Publisher(publisher: widget.bookInfo!['publisher']),
-                              Edition(edition: widget.bookInfo!['edition'].toString()),
-                              Price(price: widget.bookInfo!['price'].toString()),
-                              Type(types: widget.bookInfo!['types']),
-                              Synopsys(synopsys: widget.bookInfo!['synopsys']),
+                              BookName(title: widget.bookInfo['title']),
+                              Author(author: widget.bookInfo['author']),
+                              Publisher(publisher: widget.bookInfo['publisher']),
+                              Edition(edition: widget.bookInfo['edition'].toString()),
+                              Price(price: widget.bookInfo['price'].toString()),
+                              Type(types: widget.bookInfo['types']),
+                              Synopsys(synopsys: widget.bookInfo['synopsys']),
                             ],
                           ),
                         ),
