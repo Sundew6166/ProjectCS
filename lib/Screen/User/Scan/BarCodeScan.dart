@@ -250,7 +250,10 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       TextButton(
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, bookInfo: bookInfo, )))
-                          .then((value) => controller.resumeCamera());
+                          .then((value) {
+                            controller.resumeCamera();
+                            Navigator.of(context).pop();
+                          });
                         },
                         child: Text(bookInfo!['approveStatus'] ? 'แก้ไขข้อมูล' : 'ไปอนุมัติข้อมูล'),
                       )
@@ -258,7 +261,10 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       TextButton(
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, isbn: result)))
-                          .then((value) => controller.resumeCamera());
+                          .then((value) {
+                            controller.resumeCamera();
+                            Navigator.of(context).pop();
+                          });
                         },
                         child: const Text('เพิ่มข้อมูล'),
                       )
@@ -266,16 +272,18 @@ class _BarCodeScanState extends State<BarCodeScan> {
                       TextButton(
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale()))
-                          .then((value) => controller.resumeCamera());
+                          .then((value) {
+                            controller.resumeCamera();
+                            Navigator.of(context).pop();
+                          });
                         },
                         child: const Text('ขาย'),
                       )
                     else
                       TextButton(
                         onPressed: () async {
-                          await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition']);
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: hasBook)))
-                          .then((value) => controller.resumeCamera());
+                          await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition'].toString())
+                            .then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: widget.type, tab: "PROFILE"))));
                         },
                         child: const Text('เพิ่มไปคลังหนังสือ'),
                       )

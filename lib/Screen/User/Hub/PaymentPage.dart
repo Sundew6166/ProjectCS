@@ -79,6 +79,7 @@ class _PaymentPageState extends State<PaymentPage> {
                               MaterialPageRoute(
                                   builder: (context) => BottomBar(
                                         accType: 'USER',
+                                        tab: "PROFILE",
                                       )),
                             )),
                         style: ElevatedButton.styleFrom(

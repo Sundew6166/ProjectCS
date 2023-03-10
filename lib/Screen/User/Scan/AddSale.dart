@@ -239,8 +239,8 @@ class _AddSaleState extends State<AddSale> {
                                                               builder:
                                                                   (context) =>
                                                                       BottomBar(
-                                                                        accType:
-                                                                            'USER',
+                                                                        accType:'USER',
+                                                                        tab: "PROFILE",
                                                                       )),
                                                         ),
                                                         child:

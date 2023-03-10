@@ -79,6 +79,7 @@ class _SellPageState extends State<SellPage> {
                                                   builder: (context) =>
                                                       BottomBar(
                                                         accType: 'USER',
+                                                        tab: "PROFILE",
                                                       ))),
                                           child: const Text('ตกลง'),
                                         ),

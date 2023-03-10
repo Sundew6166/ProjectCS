@@ -295,6 +295,7 @@ class _AddBookState extends State<AddBook> {
                                                                           (context) =>
                                                                               BottomBar(
                                                                                 accType: widget.accType,
+                                                                                tab: "PROFILE",
                                                                               )),
                                                                 );
                                                               },
@@ -321,6 +322,7 @@ class _AddBookState extends State<AddBook> {
                                                                           (context) =>
                                                                               BottomBar(
                                                                                 accType: widget.accType,
+                                                                                tab: "PROFILE",
                                                                               )),
                                                                 );
                                                               },

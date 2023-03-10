@@ -138,7 +138,7 @@ class _LogInPageState extends State<LogInPage> {
                               await AccountController().login(_textEditUsername.text, _textEditPassword.text)
                                 .then((value) {
                                   print("type: " + value);
-                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomBar(accType: value,)));
+                                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => BottomBar(accType: value, tab: "HOME",)));
                                 });
                             } on FirebaseAuthException catch (e) {
                               print(e.code);

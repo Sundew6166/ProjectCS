@@ -54,6 +54,7 @@ class _PostPageState extends State<PostPage> {
                                       MaterialPageRoute(
                                           builder: (context) => BottomBar(
                                                 accType: accT,
+                                                tab: "HOME",
                                               )),
                                     ));
                           } on FirebaseException catch (e) {

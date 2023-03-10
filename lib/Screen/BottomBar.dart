@@ -8,9 +8,10 @@ import 'package:my_book/Screen/Admin/ProfileAdmin.dart';
 
 class BottomBar extends StatefulWidget {
   // const BottomBar({super.key});
-  BottomBar({Key? key, required this.accType}) : super(key: key);
+  BottomBar({Key? key, required this.accType, required this.tab}) : super(key: key);
 
   String accType;
+  String tab;
 
   @override
   State<BottomBar> createState() => _BottomBarState();
@@ -30,6 +31,13 @@ class _BottomBarState extends State<BottomBar> {
     BarCodeScan(type: "ADMIN"),
     ProfileAdmin(),
   ];
+
+  @override
+  void initState() {
+    String tab = widget.tab;
+    currentIndex = tab == "PROFILE" ? 2 : tab == "BARCODESCAN" ? 1 : 0;
+    super.initState();
+  }
 
   void _onItemTapped(int index) {
     setState(() {
