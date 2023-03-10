@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
         ),
         body: TabBarView(
           children: [
-            PostTab(),
+            RecPostTab(),
             SaleTab(),
           ],
         ),

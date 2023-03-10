@@ -28,7 +28,7 @@ class _PostTabState extends State<PostTab> {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SocialPage()),
+                    MaterialPageRoute(builder: (context) => SocialPage(posts: widget.posts![i],)),
                   ),
               child: Container(
                   height: 100,
