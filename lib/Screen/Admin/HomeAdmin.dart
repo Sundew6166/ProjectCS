@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
@@ -16,6 +17,7 @@ class HomeAdmin extends StatefulWidget {
 
 class _HomeAdminState extends State<HomeAdmin> {
   List<dynamic>? posts;
+  DateTime timeBackPressed = DateTime.now();
 
   @override
   void initState() {
@@ -34,7 +36,23 @@ class _HomeAdminState extends State<HomeAdmin> {
   @override
   Widget build(BuildContext context) {
     return new WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: () async {
+          final difference = DateTime.now().difference(timeBackPressed);
+          final isExitWarning = difference >= Duration(seconds: 2);
+
+          timeBackPressed = DateTime.now();
+
+          if (isExitWarning) {
+            final msg = 'กดอีกครั้งเพื่อออกจากแอพ';
+            Fluttertoast.showToast(msg: msg, fontSize: 18);
+
+            return false;
+          } else {
+            Fluttertoast.cancel();
+
+            return true;
+          }
+        },
         child: Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
@@ -95,9 +113,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddBook(
-                            accType: "ADMIN"
-                          )),
+                      builder: (context) => AddBook(accType: "ADMIN")),
                 ),
               ),
             ])));
@@ -128,7 +144,10 @@ class _PostSectionState extends State<PostSection> {
             return GestureDetector(
                 onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SocialPage(posts: widget.posts[i],)),
+                      MaterialPageRoute(
+                          builder: (context) => SocialPage(
+                                posts: widget.posts[i],
+                              )),
                     ),
                 child: Container(
                     height: 90,
