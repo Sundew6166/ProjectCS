@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_book/Service/ImageController.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class BookController {
   Future<List<String>> getBookTypes() async {
@@ -79,7 +80,6 @@ class BookController {
     await getTypesOfBook(id)
       .then((value) => bookInfo!.addAll({"types": value}));
     
-    print(bookInfo);
     return bookInfo;
   }
 
@@ -208,10 +208,12 @@ class BookController {
         .where('account', isEqualTo: user!.uid)
         .get().then((querySnapshot) async {
           for (var docSnap in querySnapshot.docs) {
-            await db.collection('books').doc(docSnap.data()['book']).get()
-              .then((value) {
-                output.add(value.data());
-              });
+            var idSplit = docSnap.data()['book'].split("_");
+            if (!await SaleController().checkHasSale(idSplit[0], idSplit[1]))
+              await db.collection('books').doc(docSnap.data()['book']).get()
+                .then((value) {
+                  output.add(value.data());
+                });
           }
       });
     }

@@ -31,7 +31,7 @@ class BookCard extends StatelessWidget {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: {}, hasBook: false)),
+                    MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: {}, hasBook: false, hasSale: false)),
                   ),
               child: Card(
                 child: Container(

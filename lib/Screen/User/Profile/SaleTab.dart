@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/User/Hub/BuyPage.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class SaleTab extends StatefulWidget {
   const SaleTab({super.key});
@@ -9,6 +10,22 @@ class SaleTab extends StatefulWidget {
 }
 
 class _SaleTabState extends State<SaleTab> {
+  List<Map<String,dynamic>?> saleList = [];
+
+  @override
+  void initState() {
+    setSaleList();
+    super.initState();
+  }
+
+  setSaleList() async {
+    await SaleController().getMySale().then((value) {
+      setState(() {
+        saleList.addAll(value);
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,15 +33,15 @@ class _SaleTabState extends State<SaleTab> {
       height: MediaQuery.of(context).size.height,
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       color: Color(0xfff5f3e8),
-      child: new ListView.builder(
+      child: ListView.builder(
         // padding: const EdgeInsets.all(5),
-        itemCount: 5,
+        itemCount: saleList.length,
         shrinkWrap: true,
-        itemBuilder: (context, i) {
+        itemBuilder: (context, index) {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SellPage()),
+                    MaterialPageRoute(builder: (context) => SellPage(saleInfo: saleList[index]!)),
                   ),
               child: Container(
                   height: 100,
@@ -37,7 +54,7 @@ class _SaleTabState extends State<SaleTab> {
                                 ClipRRect(
                                   borderRadius:
                                       BorderRadius.circular(5), // Image border
-                                  child: Image.asset('images/Conan.jpg'),
+                                  child: Image.network(saleList[index]!['image']),
                                 ),
                                 Expanded(
                                   child: Padding(
@@ -47,16 +64,16 @@ class _SaleTabState extends State<SaleTab> {
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text("ชื่อหนังสือ",
+                                            Text(saleList[index]!['book']['title'],
                                                 style: TextStyle(fontSize: 18)),
                                             Expanded(
                                                 child: Text(
-                                              "ISBN",
+                                              saleList[index]!['book']['isbn'],
                                               overflow: TextOverflow.ellipsis,
                                             ))
                                           ])),
                                 ),
-                                Text("03.03.2020"),
+                                Text(saleList[index]!['createDateTime'], textAlign: TextAlign.right),
                               ])))));
         },
       ),

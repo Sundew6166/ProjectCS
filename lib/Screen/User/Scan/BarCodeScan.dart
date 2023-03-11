@@ -3,6 +3,7 @@ import 'dart:ffi';
 import 'package:flutter/material.dart';
 import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/SaleController.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:developer';
 import 'dart:io';
@@ -26,6 +27,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
   String? result;
   List<String> editions = [];
   bool hasBook = false;
+  bool hasSale = false;
   Map<String,dynamic>? bookInfo;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -151,10 +153,14 @@ class _BarCodeScanState extends State<BarCodeScan> {
           dropdownValue = editions.first;
           bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
           hasBook = await BookController().checkHasBook(result!, dropdownValue!);
-          // print('hasbook: $hasBook');
+          if (hasBook)
+            hasSale = await SaleController().checkHasSale(result!, dropdownValue!);
+          else
+            hasSale = false;
         } else {
           bookInfo = null;
           hasBook = false;
+          hasSale = false;
         }
         if (widget.type == "ADMIN" && bookInfo == null){
           Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, isbn: result)))
@@ -197,7 +203,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                  builder: (context) => ReviewPage(bookInfo: bookInfo!, hasBook: hasBook)),
+                                                  builder: (context) => ReviewPage(bookInfo: bookInfo!, hasBook: hasBook, hasSale: hasSale)),
                                             )
                                           },
                                           child: Text(
@@ -230,6 +236,10 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                                     dropdownValue = value!;
                                                     bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
                                                     hasBook = await BookController().checkHasBook(result!, dropdownValue!);
+                                                    if (hasBook)
+                                                      hasSale = await SaleController().checkHasSale(result!, dropdownValue!);
+                                                    else
+                                                      hasSale = false;
                                                   });
                                                 },
                                                 items: editions.map<
@@ -279,6 +289,17 @@ class _BarCodeScanState extends State<BarCodeScan> {
                           Navigator.of(context).pop();
                         },
                         child: const Text('ตกลง'),
+                      )
+                    else if (hasSale)
+                      TextButton(
+                        onPressed: () {
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale(bookInfo: bookInfo!)))
+                          // .then((value) {
+                          //   controller.resumeCamera();
+                          //   Navigator.of(context).pop();
+                          // });
+                        },
+                        child: const Text('กำลังขาย'),
                       )
                     else if (hasBook)
                       TextButton(

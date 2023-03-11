@@ -8,10 +8,11 @@ import 'package:my_book/Service/BookController.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
-  ReviewPage({super.key, required this.bookInfo, required this.hasBook});
+  ReviewPage({super.key, required this.bookInfo, required this.hasBook, required this.hasSale});
 
   Map<String, dynamic> bookInfo;
   bool hasBook;
+  bool hasSale;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
@@ -132,17 +133,20 @@ class _ReviewPageState extends State<ReviewPage> {
                                 ),
                                 if (widget.hasBook)
                                   IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.shopping_cart,
                                         size: 45,
-                                        color: Colors.red,
+                                        color: widget.hasSale ? Colors.black : Colors.red,
                                       ),
-                                      onPressed: (() => Navigator.push(
+                                      onPressed: (() {
+                                        if (!widget.hasSale)
+                                          Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                                 builder: (context) =>
                                                     AddSale(bookInfo: widget.bookInfo)),
-                                          ))),
+                                          );
+                                      })),
                               ],
                             )
                           ],

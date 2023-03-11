@@ -51,7 +51,7 @@ class _StockTabState extends State<StockTab> {
                 if (widget.accType == "ADMIN") {
                   Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.accType, bookInfo: bookInfo)));
                 } else {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: true)));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: true, hasSale: false)));
                 }
               },
               child: Container(
