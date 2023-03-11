@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comment_box/comment/comment.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:my_book/Service/PostController.dart';
@@ -14,8 +15,8 @@ class SocialPage extends StatefulWidget {
 }
 
 class _SocialPageState extends State<SocialPage> {
+  final user = FirebaseAuth.instance.currentUser;
   List<dynamic>? comments;
-  final formKey = GlobalKey<FormState>();
   final TextEditingController commentController = TextEditingController();
 
   @override
@@ -44,7 +45,6 @@ class _SocialPageState extends State<SocialPage> {
                     padding: const EdgeInsets.all(10.0),
                     child: Column(children: [
                       Row(
-                        // crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           CircleAvatar(
                             backgroundImage:
@@ -67,7 +67,7 @@ class _SocialPageState extends State<SocialPage> {
                               textAlign: TextAlign.right),
                         ],
                       ),
-                      Text('\t${widget.posts!['Rating']}',
+                      Text('\t${widget.posts!['Detail_Post']}',
                           style: TextStyle(fontSize: 16)),
                     ])))),
         for (var i = 0; i < data.length; i++)
@@ -114,57 +114,56 @@ class _SocialPageState extends State<SocialPage> {
             ? Container(
                 child: CommentBox(
                   userImage: CommentBox.commentImageParser(
-                    imageURLorPath: NetworkImage('${widget.posts!['Image']}'),
+                    imageURLorPath: NetworkImage(user!.photoURL.toString()),
                   ),
                   child: commentChild(comments),
                   labelText: 'เขียนแสดงความคิดเห็น...',
                   errorText: 'ข้อมูลไม่ถูกต้อง',
                   withBorder: true,
-                  sendButtonMethod: () {
-                    if (formKey.currentState!.validate()) {
-                      setState(() async {
-                        try {
-                          await PostController()
-                              .addComment(
-                                  commentController.text, widget.posts!['ID'])
-                              .then((value) => Navigator.pushReplacement(
-                                    context,
-                                    PageRouteBuilder(
-                                      pageBuilder: (BuildContext context,
-                                          Animation<double> animation1,
-                                          Animation<double> animation2) {
-                                        return super.widget;
-                                      },
-                                      transitionDuration: Duration.zero,
-                                      reverseTransitionDuration: Duration.zero,
-                                    ),
-                                    // MaterialPageRoute(
-                                    //     builder: (BuildContext context) =>
-                                    //         super.widget)
-                                  ));
-                        } on FirebaseException catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                      title: Text(e.message.toString()),
-                                      content: Text(
-                                          "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('ตกลง'),
-                                        )
-                                      ]));
-                        }
-                      });
+                  sendButtonMethod: () async {
+                    if (commentController.text.isNotEmpty) {
+                      try {
+                        await PostController()
+                            .addComment(
+                                commentController.text, widget.posts!['ID'])
+                            .then((value) => Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (BuildContext context,
+                                        Animation<double> animation1,
+                                        Animation<double> animation2) {
+                                      return super.widget;
+                                    },
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                  ),
+                                  // MaterialPageRoute(
+                                  //     builder: (BuildContext context) =>
+                                  //         super.widget)
+                                ));
+                      } on FirebaseException catch (e) {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                    title: Text(e.message.toString()),
+                                    content: Text(
+                                        "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('ตกลง'),
+                                      )
+                                    ]));
+                      }
+
                       commentController.clear();
                       FocusScope.of(context).unfocus();
                     } else {
-                      print("Not validated");
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('กรุณาแสดงความเห็น', style: TextStyle(fontSize: 18)),backgroundColor: Colors.red,),
+                      );
                     }
                   },
-                  formKey: formKey,
                   commentController: commentController,
                   backgroundColor: Color(0xff795e35),
                   textColor: Colors.white,

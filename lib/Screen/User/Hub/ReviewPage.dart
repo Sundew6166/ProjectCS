@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -508,6 +509,7 @@ class WriteReview extends StatefulWidget {
 }
 
 class _WriteReviewState extends State<WriteReview> {
+  final user = FirebaseAuth.instance.currentUser;
   TextEditingController textarea = TextEditingController();
   double rate = 0.0;
 
@@ -555,10 +557,35 @@ class _WriteReviewState extends State<WriteReview> {
                             rating: widget.reviews[index]['Rating'].toDouble(),
                             itemCount: 5,
                             itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                            itemBuilder: (context, _) => Icon(
-                              Icons.star,
-                              color: Color(0xff795e35),
-                            ),
+                            itemBuilder: (context, index) {
+                              switch (index) {
+                                case 0:
+                                  return Icon(
+                                    Icons.sentiment_very_dissatisfied,
+                                    color: Colors.red,
+                                  );
+                                case 1:
+                                  return Icon(
+                                    Icons.sentiment_dissatisfied,
+                                    color: Colors.redAccent,
+                                  );
+                                case 2:
+                                  return Icon(
+                                    Icons.sentiment_neutral,
+                                    color: Colors.amber,
+                                  );
+                                case 3:
+                                  return Icon(
+                                    Icons.sentiment_satisfied,
+                                    color: Colors.lightGreen,
+                                  );
+                                default:
+                                  return Icon(
+                                    Icons.sentiment_very_satisfied,
+                                    color: Colors.green,
+                                  );
+                              }
+                            },
                           ),
                           SizedBox(width: 20),
                           Row(
@@ -598,23 +625,49 @@ class _WriteReviewState extends State<WriteReview> {
           Row(
             children: [
               CircleAvatar(
-                backgroundImage: const AssetImage("images/rambo.jpg"),
+                backgroundImage: NetworkImage(user!.photoURL.toString()),
                 backgroundColor: Color(0xffadd1dc),
                 radius: 20,
               ),
-              Text('\tUsername', style: TextStyle(fontSize: 16)),
+              Text('\t${user!.displayName.toString()}',
+                  style: TextStyle(fontSize: 16)),
               SizedBox(width: 20),
               RatingBar.builder(
-                itemSize: 30,
-                initialRating: rate,
+                itemSize: 40,
                 minRating: 1,
-                direction: Axis.horizontal,
+                initialRating: rate,
+                // direction: Axis.horizontal,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                itemBuilder: (context, _) => Icon(
-                  Icons.star,
-                  color: Color(0xff795e35),
-                ),
+                itemBuilder: (context, index) {
+                  switch (index) {
+                    case 0:
+                      return Icon(
+                        Icons.sentiment_very_dissatisfied,
+                        color: Colors.red,
+                      );
+                    case 1:
+                      return Icon(
+                        Icons.sentiment_dissatisfied,
+                        color: Colors.redAccent,
+                      );
+                    case 2:
+                      return Icon(
+                        Icons.sentiment_neutral,
+                        color: Colors.amber,
+                      );
+                    case 3:
+                      return Icon(
+                        Icons.sentiment_satisfied,
+                        color: Colors.lightGreen,
+                      );
+                    default:
+                      return Icon(
+                        Icons.sentiment_very_satisfied,
+                        color: Colors.green,
+                      );
+                  }
+                },
                 onRatingUpdate: (rating) {
                   rate = rating;
                 },
@@ -636,36 +689,46 @@ class _WriteReviewState extends State<WriteReview> {
           ),
           ElevatedButton(
               onPressed: () async {
-                try {
-                  await ReviewController()
-                      .addReview(
-                          textarea.text, rate, widget.edition, widget.isbn)
-                      .then((value) async {
+                if (rate != 0.0) {
+                  try {
                     await ReviewController()
-                        .getReview(widget.edition, widget.isbn)
-                        .then((value) {
-                      setState(() {
-                        widget.reviews = value;
+                        .addReview(
+                            textarea.text, rate, widget.edition, widget.isbn)
+                        .then((value) async {
+                      await ReviewController()
+                          .getReview(widget.edition, widget.isbn)
+                          .then((value) {
+                        setState(() {
+                          widget.reviews = value;
+                        });
                       });
                     });
-                  });
-                } on FirebaseException catch (e) {
-                  print(e.code);
-                  showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                              title: Text(e.message.toString()),
-                              content: Text(
-                                  "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
-                              actions: <Widget>[
-                                TextButton(
-                                  onPressed: () => Navigator.pop(context),
-                                  child: const Text('ตกลง'),
-                                )
-                              ]));
+                  } on FirebaseException catch (e) {
+                    print(e.code);
+                    showDialog(
+                        context: context,
+                        builder: (_) => AlertDialog(
+                                title: Text(e.message.toString()),
+                                content: Text(
+                                    "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('ตกลง'),
+                                  )
+                                ]));
+                  }
+                  textarea.clear();
+                  rate = 0.0;
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('กรุณาคะแนนหนังสือ',
+                          style: TextStyle(fontSize: 18)),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
                 }
-                textarea.clear();
-                rate = 0.0;
               },
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(400, 40),
