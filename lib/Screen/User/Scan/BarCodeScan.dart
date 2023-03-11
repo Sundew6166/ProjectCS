@@ -65,12 +65,6 @@ class _BarCodeScanState extends State<BarCodeScan> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           const Text('กรุณาสแกนบาร์โค้ด'),
-                          // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
-                          // if (result == null) const Text('กรุณาสแกนบาร์โค้ด'),
-                          // Text('ISBN: $result')
-                          // else
-                          //   const Text('กรุณาสแกนบาร์โค้ด'),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,

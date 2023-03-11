@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:my_book/Screen/User/Home/BookSearch.dart';
@@ -6,6 +7,7 @@ import 'package:my_book/Screen/User/Home/RecPostTab.dart';
 
 import 'package:my_book/Screen/User/Home/SaleTab.dart';
 import 'package:my_book/Service/PostController.dart';
+import 'package:my_book/Service/SearchController.dart';
 
 class TabSearch extends StatefulWidget {
   TabSearch({Key? key, required this.data}) : super(key: key);
@@ -22,13 +24,14 @@ class _TabSearchState extends State<TabSearch> {
 
   @override
   void initState() {
-    setPosts();
     super.initState();
     _controller = TextEditingController(text: widget.data);
+    setPosts();
     // print(widget.data);
   }
 
   setPosts() async {
+    await SearchController().getPosts(_controller.text);
     await PostController().getPostAll().then((value) {
       setState(() {
         posts = value;
@@ -68,12 +71,21 @@ class _TabSearchState extends State<TabSearch> {
                   IconButton(
                     icon: Icon(Icons.search),
                     onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                TabSearch(data: _controller.text)),
-                      );
+                      _controller.text.trim().isNotEmpty
+                          ? Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      TabSearch(data: _controller.text)),
+                            )
+                          : Fluttertoast.showToast(
+                              msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
+                              toastLength: Toast.LENGTH_SHORT,
+                              gravity: ToastGravity.BOTTOM,
+                              timeInSecForIosWeb: 1,
+                              backgroundColor: Colors.red,
+                              textColor: Colors.white,
+                              fontSize: 18.0);
                     },
                   ),
                 ],
