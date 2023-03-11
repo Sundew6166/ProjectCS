@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:my_book/Screen/User/Hub/BuyPage.dart';
 import 'package:my_book/Service/SaleController.dart';
 
-
 class SaleTab extends StatefulWidget {
   const SaleTab({super.key});
 
@@ -11,7 +10,7 @@ class SaleTab extends StatefulWidget {
 }
 
 class _SaleTabState extends State<SaleTab> {
-  List<Map<String,dynamic>?> saleList = [];
+  List<Map<String, dynamic>?> saleList = [];
 
   @override
   void initState() {
@@ -30,18 +29,22 @@ class _SaleTabState extends State<SaleTab> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: saleList == [] ? Text("ยังไม่มีการขาย") : Container(color: Color(0xfff5f3e8), child: BookCard(saleList: saleList)));
+        body: saleList == []
+            ? Text("ยังไม่มีการขาย")
+            : Container(
+                color: Color(0xfff5f3e8), child: BookCard(saleList: saleList)));
   }
 }
 
 class BookCard extends StatelessWidget {
   BookCard({super.key, required this.saleList});
-  List<Map<String,dynamic>?> saleList;
+  List<Map<String, dynamic>?> saleList;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return Container(
       padding: const EdgeInsets.all(1.0),
+      height: MediaQuery.of(context).size.height,
       child: GridView.builder(
         shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: 5),
@@ -51,7 +54,8 @@ class BookCard extends StatelessWidget {
               onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => BuyPage(saleInfo: saleList[index]!)),
+                        builder: (context) =>
+                            BuyPage(saleInfo: saleList[index]!)),
                   ),
               child: Card(
                 child: Container(

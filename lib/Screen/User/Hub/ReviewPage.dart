@@ -9,7 +9,11 @@ import 'package:my_book/Service/ReviewController.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
-  ReviewPage({super.key, required this.bookInfo, required this.hasBook, required this.hasSale});
+  ReviewPage(
+      {super.key,
+      required this.bookInfo,
+      required this.hasBook,
+      required this.hasSale});
 
   Map<String, dynamic> bookInfo;
   bool hasBook;
@@ -31,7 +35,7 @@ class _ReviewPageState extends State<ReviewPage> {
   setData() async {
     await ReviewController()
         .getReview(
-            widget.bookInfo!['edition'].toString(), widget.bookInfo!['isbn'])
+            widget.bookInfo['edition'].toString(), widget.bookInfo['isbn'])
         .then((value) {
       setState(() {
         reviews = value;
@@ -47,7 +51,7 @@ class _ReviewPageState extends State<ReviewPage> {
         ),
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
-            child: widget.bookInfo != null
+            child: widget.bookInfo != null && reviews != null
                 ? Container(
                     color: Color(0xfff5f3e8),
                     alignment: Alignment.topCenter,
@@ -95,11 +99,21 @@ class _ReviewPageState extends State<ReviewPage> {
                                                   TextButton(
                                                     onPressed: () async {
                                                       try {
-                                                        await BookController().deleteBookFromLibrary(widget.bookInfo['isbn'], widget.bookInfo['edition'].toString())
-                                                          .then((value) {setState(() {
-                                                            widget.hasBook = false;
-                                                            Navigator.pop(context);
-                                                          });});
+                                                        await BookController()
+                                                            .deleteBookFromLibrary(
+                                                                widget.bookInfo[
+                                                                    'isbn'],
+                                                                widget.bookInfo[
+                                                                        'edition']
+                                                                    .toString())
+                                                            .then((value) {
+                                                          setState(() {
+                                                            widget.hasBook =
+                                                                false;
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+                                                        });
                                                       } on FirebaseException catch (e) {
                                                         print(e.code);
                                                         showDialog(
@@ -129,8 +143,13 @@ class _ReviewPageState extends State<ReviewPage> {
                                               ));
                                     } else {
                                       try {
-                                        await BookController().addBookToLibrary(widget.bookInfo['isbn'], widget.bookInfo['edition'].toString())
-                                          .then((value) {setState(() {
+                                        await BookController()
+                                            .addBookToLibrary(
+                                                widget.bookInfo['isbn'],
+                                                widget.bookInfo['edition']
+                                                    .toString())
+                                            .then((value) {
+                                          setState(() {
                                             widget.hasBook = true;
                                           });
                                         });
@@ -165,15 +184,17 @@ class _ReviewPageState extends State<ReviewPage> {
                                       icon: Icon(
                                         Icons.shopping_cart,
                                         size: 45,
-                                        color: widget.hasSale ? Colors.black : Colors.red,
+                                        color: widget.hasSale
+                                            ? Colors.black
+                                            : Colors.red,
                                       ),
                                       onPressed: (() {
                                         if (!widget.hasSale)
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                                builder: (context) =>
-                                                    AddSale(bookInfo: widget.bookInfo)),
+                                                builder: (context) => AddSale(
+                                                    bookInfo: widget.bookInfo)),
                                           );
                                       })),
                               ],
@@ -190,8 +211,11 @@ class _ReviewPageState extends State<ReviewPage> {
                             children: [
                               BookName(title: widget.bookInfo['title']),
                               Author(author: widget.bookInfo['author']),
-                              Publisher(publisher: widget.bookInfo['publisher']),
-                              Edition(edition: widget.bookInfo['edition'].toString()),
+                              Publisher(
+                                  publisher: widget.bookInfo['publisher']),
+                              Edition(
+                                  edition:
+                                      widget.bookInfo['edition'].toString()),
                               Price(price: widget.bookInfo['price'].toString()),
                               Type(types: widget.bookInfo['types']),
                               Synopsys(synopsys: widget.bookInfo['synopsys']),
@@ -199,10 +223,9 @@ class _ReviewPageState extends State<ReviewPage> {
                           ),
                         ),
                         WriteReview(
-                          edition: widget.bookInfo!['edition'].toString(),
-                          isbn: widget.bookInfo!['isbn'],
-                        ),
-                        RateReview(reviews: reviews),
+                            edition: widget.bookInfo['edition'].toString(),
+                            isbn: widget.bookInfo['isbn'],
+                            reviews: reviews!),
                       ],
                     ))
                 : Container(
@@ -470,22 +493,29 @@ class Synopsys extends StatelessWidget {
   }
 }
 
-class RateReview extends StatefulWidget {
-  RateReview({super.key, required this.reviews});
-  List<dynamic>? reviews;
+class WriteReview extends StatefulWidget {
+  WriteReview(
+      {super.key,
+      required this.edition,
+      required this.isbn,
+      required this.reviews});
+  String edition;
+  String isbn;
+  List<dynamic> reviews;
 
   @override
-  State<RateReview> createState() => _RateReviewState();
+  State<WriteReview> createState() => _WriteReviewState();
 }
 
-class _RateReviewState extends State<RateReview> {
-  @override
-  Widget build(BuildContext context) {
+class _WriteReviewState extends State<WriteReview> {
+  TextEditingController textarea = TextEditingController();
+  double rate = 0.0;
+
+  Widget rateReview(reviews) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      // width: 280,
+      // padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       child: ListView.builder(
-        itemCount: widget.reviews!.length,
+        itemCount: widget.reviews.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return ClipRRect(
@@ -502,17 +532,19 @@ class _RateReviewState extends State<RateReview> {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              '${widget.reviews![index]['Image']}'),
+                          backgroundImage:
+                              NetworkImage('${widget.reviews[index]['Image']}'),
                           backgroundColor: Color(0xffadd1dc),
                           radius: 12,
                         ),
-                        Text('\t${widget.reviews![index]['CreateBy']}',
+                        Text('\t${widget.reviews[index]['CreateBy']}',
                             style: TextStyle(fontSize: 14)),
                       ],
                     ),
-                    SizedBox(height: 5,),
-                    Text('\t${widget.reviews![index]['Detail_Review']}',
+                    SizedBox(
+                      height: 5,
+                    ),
+                    Text('\t${widget.reviews[index]['Detail_Review']}',
                         style: TextStyle(fontSize: 14)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
@@ -520,7 +552,7 @@ class _RateReviewState extends State<RateReview> {
                         children: [
                           RatingBarIndicator(
                             itemSize: 20,
-                            rating: widget.reviews![index]['Rating'].toDouble(),
+                            rating: widget.reviews[index]['Rating'].toDouble(),
                             itemCount: 5,
                             itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                             itemBuilder: (context, _) => Icon(
@@ -532,13 +564,13 @@ class _RateReviewState extends State<RateReview> {
                           Row(
                             children: [
                               Text(
-                                '${widget.reviews![index]['Rating']}',
+                                '${widget.reviews[index]['Rating']}',
                                 style: TextStyle(
                                     color: Color(0xff795e35),
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '/ 5',
+                                '/ 5.0',
                                 style: TextStyle(
                                     color: Colors.grey[500],
                                     fontWeight: FontWeight.bold),
@@ -555,20 +587,6 @@ class _RateReviewState extends State<RateReview> {
       ),
     );
   }
-}
-
-class WriteReview extends StatefulWidget {
-  WriteReview({super.key, required this.edition, required this.isbn});
-  String edition;
-  String isbn;
-
-  @override
-  State<WriteReview> createState() => _WriteReviewState();
-}
-
-class _WriteReviewState extends State<WriteReview> {
-  TextEditingController textarea = TextEditingController();
-  var rate;
 
   @override
   Widget build(BuildContext context) {
@@ -588,10 +606,9 @@ class _WriteReviewState extends State<WriteReview> {
               SizedBox(width: 20),
               RatingBar.builder(
                 itemSize: 30,
-                initialRating: 0,
+                initialRating: rate,
                 minRating: 1,
                 direction: Axis.horizontal,
-                // allowHalfRating: true,
                 itemCount: 5,
                 itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                 itemBuilder: (context, _) => Icon(
@@ -600,7 +617,6 @@ class _WriteReviewState extends State<WriteReview> {
                 ),
                 onRatingUpdate: (rating) {
                   rate = rating;
-                  // print(rating);
                 },
               ),
             ],
@@ -619,44 +635,37 @@ class _WriteReviewState extends State<WriteReview> {
                         BorderSide(width: 2, color: const Color(0xff795e35)))),
           ),
           ElevatedButton(
-              onPressed: () {
-                rate != null
-                    ? setState(() async {
-                        try {
-                          print(rate);
-                          await ReviewController().addReview(
-                              textarea.text, rate, widget.edition, widget.isbn);
-                          // .then((value) => Navigator.pushReplacement(
-                          //       context,
-                          //       PageRouteBuilder(
-                          //         pageBuilder: (BuildContext context,
-                          //             Animation<double> animation1,
-                          //             Animation<double> animation2) {
-                          //           return super.widget;
-                          //         },
-                          //         transitionDuration: Duration.zero,
-                          //         reverseTransitionDuration: Duration.zero,
-                          //       ),
-                          //     ));
-                        } on FirebaseException catch (e) {
-                          showDialog(
-                              context: context,
-                              builder: (_) => AlertDialog(
-                                      title: Text(e.message.toString()),
-                                      content: Text(
-                                          "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: const Text('ตกลง'),
-                                        )
-                                      ]));
-                        }
-                      })
-                    : ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('กรุณาให้คะแนน')),
-                      );
+              onPressed: () async {
+                try {
+                  await ReviewController()
+                      .addReview(
+                          textarea.text, rate, widget.edition, widget.isbn)
+                      .then((value) async {
+                    await ReviewController()
+                        .getReview(widget.edition, widget.isbn)
+                        .then((value) {
+                      setState(() {
+                        widget.reviews = value;
+                      });
+                    });
+                  });
+                } on FirebaseException catch (e) {
+                  print(e.code);
+                  showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                              title: Text(e.message.toString()),
+                              content: Text(
+                                  "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                              actions: <Widget>[
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: const Text('ตกลง'),
+                                )
+                              ]));
+                }
+                textarea.clear();
+                rate = 0.0;
               },
               style: ElevatedButton.styleFrom(
                   fixedSize: Size(400, 40),
@@ -664,7 +673,8 @@ class _WriteReviewState extends State<WriteReview> {
                       borderRadius: BorderRadius.circular(
                     10,
                   ))),
-              child: Text("รีวิว", style: TextStyle(fontSize: 20)))
+              child: Text("รีวิว", style: TextStyle(fontSize: 20))),
+          rateReview(widget.reviews)
         ],
       ),
     );

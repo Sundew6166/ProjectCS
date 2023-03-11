@@ -122,7 +122,6 @@ class _SocialPageState extends State<SocialPage> {
                   withBorder: true,
                   sendButtonMethod: () {
                     if (formKey.currentState!.validate()) {
-                      // print(commentController.text);
                       setState(() async {
                         try {
                           await PostController()
