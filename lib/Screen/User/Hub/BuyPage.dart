@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/BottomBar.dart';
 
-class SellPage extends StatefulWidget {
-  const SellPage({super.key});
+class BuyPage extends StatefulWidget {
+  const BuyPage({super.key});
 
   @override
-  State<SellPage> createState() => _SellPageState();
+  State<BuyPage> createState() => _BuyPageState();
 }
 
-class _SellPageState extends State<SellPage> {
+class _BuyPageState extends State<BuyPage> {
   // bool buttonenabled = false;
 
   @override

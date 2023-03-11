@@ -67,7 +67,7 @@ class _SocialPageState extends State<SocialPage> {
                               textAlign: TextAlign.right),
                         ],
                       ),
-                      Text('\t${widget.posts!['Detail_Post']}',
+                      Text('\t${widget.posts!['Rating']}',
                           style: TextStyle(fontSize: 16)),
                     ])))),
         for (var i = 0; i < data.length; i++)
@@ -122,7 +122,7 @@ class _SocialPageState extends State<SocialPage> {
                   withBorder: true,
                   sendButtonMethod: () {
                     if (formKey.currentState!.validate()) {
-                      print(commentController.text);
+                      // print(commentController.text);
                       setState(() async {
                         try {
                           await PostController()

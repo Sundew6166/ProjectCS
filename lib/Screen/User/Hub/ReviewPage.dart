@@ -5,6 +5,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
 import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/ReviewController.dart';
 
 // มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
@@ -12,12 +13,30 @@ class ReviewPage extends StatefulWidget {
 
   Map<String, dynamic>? bookInfo;
   bool hasBook;
+  String? idbook;
 
   @override
   State<ReviewPage> createState() => _ReviewPageState();
 }
 
 class _ReviewPageState extends State<ReviewPage> {
+  List<dynamic>? reviews;
+  @override
+  void initState() {
+    setData();
+    super.initState();
+  }
+
+  setData() async {
+    await ReviewController()
+        .getReview(
+            widget.bookInfo!['edition'].toString(), widget.bookInfo!['isbn'])
+        .then((value) {
+      setState(() {
+        reviews = value;
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +71,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                   icon: Icon(
                                     Icons.book,
                                     size: 45,
-                                    color:
-                                        widget.hasBook ? Colors.green : Colors.black,
+                                    color: widget.hasBook
+                                        ? Colors.green
+                                        : Colors.black,
                                   ),
                                   onPressed: (() async {
                                     if (widget.hasBook) {
@@ -67,34 +87,50 @@ class _ReviewPageState extends State<ReviewPage> {
                                                 actions: <Widget>[
                                                   TextButton(
                                                     onPressed: () =>
-                                                        Navigator.pop(context,
-                                                            'ยกเลิก'),
-                                                    child:
-                                                        const Text('ยกเลิก'),
+                                                        Navigator.pop(
+                                                            context, 'ยกเลิก'),
+                                                    child: const Text('ยกเลิก'),
                                                   ),
                                                   TextButton(
                                                     onPressed: () async {
                                                       try {
-                                                        await BookController().deleteBookFromLibrary(widget.bookInfo!['isbn'], widget.bookInfo!['edition'].toString())
-                                                          .then((value) {setState(() {
-                                                            widget.hasBook = false;
-                                                            Navigator.pop(context);
-                                                          });});
+                                                        await BookController()
+                                                            .deleteBookFromLibrary(
+                                                                widget.bookInfo![
+                                                                    'isbn'],
+                                                                widget
+                                                                    .bookInfo![
+                                                                        'edition']
+                                                                    .toString())
+                                                            .then((value) {
+                                                          setState(() {
+                                                            widget.hasBook =
+                                                                false;
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+                                                        });
                                                       } on FirebaseException catch (e) {
                                                         print(e.code);
                                                         showDialog(
-                                                          context: context,
-                                                          builder: (_) => AlertDialog(
-                                                            title: Text(e.message.toString()),
-                                                            content: Text("เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
-                                                            actions: <Widget>[
-                                                              TextButton(
-                                                                onPressed: () => Navigator.pop(context),
-                                                                child: const Text('ตกลง'),
-                                                              )
-                                                            ]
-                                                          )
-                                                        );
+                                                            context: context,
+                                                            builder: (_) =>
+                                                                AlertDialog(
+                                                                    title: Text(e
+                                                                        .message
+                                                                        .toString()),
+                                                                    content: Text(
+                                                                        "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                                                                    actions: <
+                                                                        Widget>[
+                                                                      TextButton(
+                                                                        onPressed:
+                                                                            () =>
+                                                                                Navigator.pop(context),
+                                                                        child: const Text(
+                                                                            'ตกลง'),
+                                                                      )
+                                                                    ]));
                                                       }
                                                     },
                                                     child: const Text('ตกลง'),
@@ -103,25 +139,34 @@ class _ReviewPageState extends State<ReviewPage> {
                                               ));
                                     } else {
                                       try {
-                                        await BookController().addBookToLibrary(widget.bookInfo!['isbn'], widget.bookInfo!['edition'].toString())
-                                          .then((value) {setState(() {
+                                        await BookController()
+                                            .addBookToLibrary(
+                                                widget.bookInfo!['isbn'],
+                                                widget.bookInfo!['edition']
+                                                    .toString())
+                                            .then((value) {
+                                          setState(() {
                                             widget.hasBook = true;
-                                          });});
+                                          });
+                                        });
                                       } on FirebaseException catch (e) {
                                         print(e.code);
                                         showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                            title: Text(e.message.toString()),
-                                            content: Text("เกิดข้อผิดพลาดในการเพิ่มหนังสือเข้าคลัง กรุณาลองใหม่"),
-                                            actions: <Widget>[
-                                              TextButton(
-                                                onPressed: () => Navigator.pop(context),
-                                                child: const Text('ตกลง'),
-                                              )
-                                            ]
-                                          )
-                                        );
+                                            context: context,
+                                            builder: (_) => AlertDialog(
+                                                    title: Text(
+                                                        e.message.toString()),
+                                                    content: Text(
+                                                        "เกิดข้อผิดพลาดในการเพิ่มหนังสือเข้าคลัง กรุณาลองใหม่"),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () =>
+                                                            Navigator.pop(
+                                                                context),
+                                                        child:
+                                                            const Text('ตกลง'),
+                                                      )
+                                                    ]));
                                       }
                                     }
                                     // print(_isBookOn);
@@ -157,16 +202,23 @@ class _ReviewPageState extends State<ReviewPage> {
                             children: [
                               BookName(title: widget.bookInfo!['title']),
                               Author(author: widget.bookInfo!['author']),
-                              Publisher(publisher: widget.bookInfo!['publisher']),
-                              Edition(edition: widget.bookInfo!['edition'].toString()),
-                              Price(price: widget.bookInfo!['price'].toString()),
+                              Publisher(
+                                  publisher: widget.bookInfo!['publisher']),
+                              Edition(
+                                  edition:
+                                      widget.bookInfo!['edition'].toString()),
+                              Price(
+                                  price: widget.bookInfo!['price'].toString()),
                               Type(types: widget.bookInfo!['types']),
                               Synopsys(synopsys: widget.bookInfo!['synopsys']),
                             ],
                           ),
                         ),
-                        WriteReview(),
-                        RateReview(),
+                        WriteReview(
+                          edition: widget.bookInfo!['edition'].toString(),
+                          isbn: widget.bookInfo!['isbn'],
+                        ),
+                        RateReview(reviews: reviews),
                       ],
                     ))
                 : Container(
@@ -435,7 +487,8 @@ class Synopsys extends StatelessWidget {
 }
 
 class RateReview extends StatefulWidget {
-  const RateReview({super.key});
+  RateReview({super.key, required this.reviews});
+  List<dynamic>? reviews;
 
   @override
   State<RateReview> createState() => _RateReviewState();
@@ -448,7 +501,7 @@ class _RateReviewState extends State<RateReview> {
       padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
       // width: 280,
       child: ListView.builder(
-        itemCount: 5,
+        itemCount: widget.reviews!.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return ClipRRect(
@@ -465,24 +518,25 @@ class _RateReviewState extends State<RateReview> {
                     Row(
                       children: [
                         CircleAvatar(
-                          backgroundImage: const AssetImage("images/rambo.jpg"),
+                          backgroundImage: NetworkImage(
+                              '${widget.reviews![index]['Image']}'),
                           backgroundColor: Color(0xffadd1dc),
                           radius: 12,
                         ),
-                        Text('\tUsername', style: TextStyle(fontSize: 14)),
+                        Text('\t${widget.reviews![index]['CreateBy']}',
+                            style: TextStyle(fontSize: 14)),
                       ],
                     ),
-                    // Text('Frame', style: TextStyle(color: Colors.grey[500])),
-                    Text('\tรายละเอียดความเห็น',
-                        style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 5,),
+                    Text('\t${widget.reviews![index]['Detail_Review']}',
+                        style: TextStyle(fontSize: 14)),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 5),
                       child: Row(
                         children: [
                           RatingBarIndicator(
                             itemSize: 20,
-                            // TODO: ดึงค่า rating มาแสดง
-                            rating: 3,
+                            rating: widget.reviews![index]['Rating'].toDouble(),
                             itemCount: 5,
                             itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
                             itemBuilder: (context, _) => Icon(
@@ -490,18 +544,17 @@ class _RateReviewState extends State<RateReview> {
                               color: Color(0xff795e35),
                             ),
                           ),
-                          SizedBox(width: 30),
+                          SizedBox(width: 20),
                           Row(
                             children: [
                               Text(
-                                // TODO: ดึงค่า rating มาแสดง
-                                '4.0',
+                                '${widget.reviews![index]['Rating']}',
                                 style: TextStyle(
                                     color: Color(0xff795e35),
                                     fontWeight: FontWeight.bold),
                               ),
                               Text(
-                                '/ 5.0',
+                                '/ 5',
                                 style: TextStyle(
                                     color: Colors.grey[500],
                                     fontWeight: FontWeight.bold),
@@ -521,81 +574,115 @@ class _RateReviewState extends State<RateReview> {
 }
 
 class WriteReview extends StatefulWidget {
-  const WriteReview({super.key});
+  WriteReview({super.key, required this.edition, required this.isbn});
+  String edition;
+  String isbn;
 
   @override
   State<WriteReview> createState() => _WriteReviewState();
 }
 
 class _WriteReviewState extends State<WriteReview> {
-  static var _keyValidationForm = GlobalKey<FormState>();
   TextEditingController textarea = TextEditingController();
+  var rate;
 
   @override
   Widget build(BuildContext context) {
     return Container(
-        alignment: Alignment.center,
-        padding: EdgeInsets.all(20),
-        child: Form(
-          key: _keyValidationForm,
-          child: Column(
+      alignment: Alignment.center,
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  CircleAvatar(
-                    backgroundImage: const AssetImage("images/rambo.jpg"),
-                    backgroundColor: Color(0xffadd1dc),
-                    radius: 20,
-                  ),
-                  Text('\tUsername', style: TextStyle(fontSize: 16)),
-                  SizedBox(width: 20),
-                  RatingBar.builder(
-                    itemSize: 30,
-                    initialRating: 3,
-                    minRating: 1,
-                    direction: Axis.horizontal,
-                    // allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Color(0xff795e35),
-                    ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
-                    },
-                  ),
-                ],
+              CircleAvatar(
+                backgroundImage: const AssetImage("images/rambo.jpg"),
+                backgroundColor: Color(0xffadd1dc),
+                radius: 20,
               ),
-              SizedBox(height: 10),
-              TextFormField(
-                controller: textarea,
-                keyboardType: TextInputType.multiline,
-                maxLines: 8,
-                decoration: InputDecoration(
-                    filled: true, //<-- SEE HERE
-                    fillColor: Colors.white,
-                    hintText: "พิมพ์ข้อความลงในนี้...",
-                    focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(
-                            width: 2, color: const Color(0xff795e35)))),
+              Text('\tUsername', style: TextStyle(fontSize: 16)),
+              SizedBox(width: 20),
+              RatingBar.builder(
+                itemSize: 30,
+                initialRating: 0,
+                minRating: 1,
+                direction: Axis.horizontal,
+                // allowHalfRating: true,
+                itemCount: 5,
+                itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                itemBuilder: (context, _) => Icon(
+                  Icons.star,
+                  color: Color(0xff795e35),
+                ),
+                onRatingUpdate: (rating) {
+                  rate = rating;
+                  // print(rating);
+                },
               ),
-              ElevatedButton(
-                  onPressed: () {
-                    if (_keyValidationForm.currentState!.validate()) {
-                      // TODO: reload this page
-                      // print(textarea.text);
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      fixedSize: Size(400, 40), // specify width, height
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                        10,
-                      ))),
-                  child: Text("รีวิว", style: TextStyle(fontSize: 20)))
             ],
           ),
-        ));
+          SizedBox(height: 10),
+          TextField(
+            controller: textarea,
+            keyboardType: TextInputType.multiline,
+            maxLines: 8,
+            decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.white,
+                hintText: "พิมพ์ข้อความลงในนี้...",
+                focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(width: 2, color: const Color(0xff795e35)))),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                rate != null
+                    ? setState(() async {
+                        try {
+                          print(rate);
+                          await ReviewController().addReview(
+                              textarea.text, rate, widget.edition, widget.isbn);
+                          // .then((value) => Navigator.pushReplacement(
+                          //       context,
+                          //       PageRouteBuilder(
+                          //         pageBuilder: (BuildContext context,
+                          //             Animation<double> animation1,
+                          //             Animation<double> animation2) {
+                          //           return super.widget;
+                          //         },
+                          //         transitionDuration: Duration.zero,
+                          //         reverseTransitionDuration: Duration.zero,
+                          //       ),
+                          //     ));
+                        } on FirebaseException catch (e) {
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                      title: Text(e.message.toString()),
+                                      content: Text(
+                                          "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('ตกลง'),
+                                        )
+                                      ]));
+                        }
+                      })
+                    : ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('กรุณาให้คะแนน')),
+                      );
+              },
+              style: ElevatedButton.styleFrom(
+                  fixedSize: Size(400, 40),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                    10,
+                  ))),
+              child: Text("รีวิว", style: TextStyle(fontSize: 20)))
+        ],
+      ),
+    );
   }
 }
