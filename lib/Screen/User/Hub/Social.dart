@@ -1,40 +1,36 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comment_box/comment/comment.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:my_book/Service/PostController.dart';
 
 class SocialPage extends StatefulWidget {
+  SocialPage({Key? key, required this.posts}) : super(key: key);
+
+  Map<String, dynamic>? posts;
+
   @override
   _SocialPageState createState() => _SocialPageState();
 }
 
 class _SocialPageState extends State<SocialPage> {
+  List<dynamic>? comments;
   final formKey = GlobalKey<FormState>();
   final TextEditingController commentController = TextEditingController();
-  List filedata = [
-    {
-      'name': 'กิ่ง',
-      'pic': 'images/ging.jpg',
-      'message': 'อยากออกไปหาไรกิน',
-      'date': '2021-01-01 12:00:00'
-    },
-    {
-      'name': 'พะแนง',
-      'pic': 'images/peang.jpg',
-      'message': 'ราเมง',
-      'date': '2021-01-01 12:00:00'
-    },
-    {
-      'name': 'ยู',
-      'pic': 'images/you.jpg',
-      'message': 'ไปเซ็นทรัลเวิร์ล',
-      'date': '2021-01-01 12:00:00'
-    },
-    {
-      'name': 'ดิว',
-      'pic': 'images/dew.jpg',
-      'message': 'อยากกินส้มตำ',
-      'date': '2021-01-01 12:00:00'
-    },
-  ];
+
+  @override
+  void initState() {
+    setData();
+    super.initState();
+  }
+
+  setData() async {
+    await PostController().getComment(widget.posts!['ID']).then((value) {
+      setState(() {
+        comments = value;
+      });
+    });
+  }
 
   Widget commentChild(data) {
     return ListView(
@@ -52,7 +48,7 @@ class _SocialPageState extends State<SocialPage> {
                         children: [
                           CircleAvatar(
                             backgroundImage:
-                                const AssetImage("images/lina.jpg"),
+                                NetworkImage('${widget.posts!['Image']}'),
                             backgroundColor: Color(0xffadd1dc),
                             radius: 20,
                           ),
@@ -63,15 +59,15 @@ class _SocialPageState extends State<SocialPage> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text('\tลีน่า',
+                                      Text('\t${widget.posts!['CreateBy']}',
                                           style: TextStyle(fontSize: 16)),
                                     ])),
                           ),
-                          Text("03.03.2002"),
+                          Text("${widget.posts!['Create_DateTime_Post']}",
+                              textAlign: TextAlign.right),
                         ],
                       ),
-                      Text(
-                          '\tเสาร์อาทิดนี้เริ่มทำapi ละก่อนหน้านี้ชดใช้กรรมกับงานนู้นอยู่ 5555 แล้วก็ติดต่อดี๋ยากมากก ',
+                      Text('\t${widget.posts!['Rating']}',
                           style: TextStyle(fontSize: 16)),
                     ])))),
         for (var i = 0; i < data.length; i++)
@@ -91,15 +87,16 @@ class _SocialPageState extends State<SocialPage> {
                   child: CircleAvatar(
                       radius: 50,
                       backgroundImage: CommentBox.commentImageParser(
-                          imageURLorPath: data[i]['pic'])),
+                          imageURLorPath: NetworkImage(data[i]['Image']))),
                 ),
               ),
               title: Text(
-                data[i]['name'],
+                data[i]['CreateBy'],
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
-              subtitle: Text(data[i]['message']),
-              trailing: Text(data[i]['date'], style: TextStyle(fontSize: 10)),
+              subtitle: Text(data[i]['Detail_Comment']),
+              trailing: Text(data[i]['Create_DateTime_Comment'],
+                  style: TextStyle(fontSize: 10)),
             ),
           )
       ],
@@ -109,43 +106,84 @@ class _SocialPageState extends State<SocialPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("โซเชียล"),
-        backgroundColor: Color(0xff795e35),
-      ),
-      body: Container(
-        child: CommentBox(
-          userImage:
-              CommentBox.commentImageParser(imageURLorPath: "images/lina.jpg"),
-          child: commentChild(filedata),
-          labelText: 'เขียนแสดงความคิดเห็น...',
-          errorText: 'ข้อมูลไม่ถูกต้อง',
-          withBorder: true,
-          sendButtonMethod: () {
-            if (formKey.currentState!.validate()) {
-              print(commentController.text);
-              setState(() {
-                var value = {
-                  'name': 'ลีน่า',
-                  'pic': 'images/lina.jpg',
-                  'message': commentController.text,
-                  'date': '2021-01-01 12:00:00'
-                };
-                filedata.insert(0, value);
-              });
-              commentController.clear();
-              FocusScope.of(context).unfocus();
-            } else {
-              print("Not validated");
-            }
-          },
-          formKey: formKey,
-          commentController: commentController,
+        appBar: AppBar(
+          title: Text("โซเชียล"),
           backgroundColor: Color(0xff795e35),
-          textColor: Colors.white,
-          sendWidget: Icon(Icons.send_sharp, size: 30, color: Colors.white),
         ),
-      ),
-    );
+        body: comments != null
+            ? Container(
+                child: CommentBox(
+                  userImage: CommentBox.commentImageParser(
+                    imageURLorPath: NetworkImage('${widget.posts!['Image']}'),
+                  ),
+                  child: commentChild(comments),
+                  labelText: 'เขียนแสดงความคิดเห็น...',
+                  errorText: 'ข้อมูลไม่ถูกต้อง',
+                  withBorder: true,
+                  sendButtonMethod: () {
+                    if (formKey.currentState!.validate()) {
+                      // print(commentController.text);
+                      setState(() async {
+                        try {
+                          await PostController()
+                              .addComment(
+                                  commentController.text, widget.posts!['ID'])
+                              .then((value) => Navigator.pushReplacement(
+                                    context,
+                                    PageRouteBuilder(
+                                      pageBuilder: (BuildContext context,
+                                          Animation<double> animation1,
+                                          Animation<double> animation2) {
+                                        return super.widget;
+                                      },
+                                      transitionDuration: Duration.zero,
+                                      reverseTransitionDuration: Duration.zero,
+                                    ),
+                                    // MaterialPageRoute(
+                                    //     builder: (BuildContext context) =>
+                                    //         super.widget)
+                                  ));
+                        } on FirebaseException catch (e) {
+                          showDialog(
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                      title: Text(e.message.toString()),
+                                      content: Text(
+                                          "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('ตกลง'),
+                                        )
+                                      ]));
+                        }
+                      });
+                      commentController.clear();
+                      FocusScope.of(context).unfocus();
+                    } else {
+                      print("Not validated");
+                    }
+                  },
+                  formKey: formKey,
+                  commentController: commentController,
+                  backgroundColor: Color(0xff795e35),
+                  textColor: Colors.white,
+                  sendWidget:
+                      Icon(Icons.send_sharp, size: 30, color: Colors.white),
+                ),
+              )
+            : Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Color(0xfff5f3e8),
+                child: Center(
+                  child: LoadingAnimationWidget.twistingDots(
+                    leftDotColor: const Color(0xFF1A1A3F),
+                    rightDotColor: const Color(0xFFEA3799),
+                    size: 50,
+                  ),
+                ),
+              ));
   }
 }

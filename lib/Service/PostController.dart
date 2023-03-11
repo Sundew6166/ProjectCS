@@ -9,20 +9,24 @@ class PostController {
     final db = FirebaseFirestore.instance;
     List<dynamic> output = [];
 
-    await db.collection("posts").get().then((querySnapshot) async {
+    await db
+        .collection("posts")
+        .orderBy('Create_DateTime_Post', descending: true)
+        .get()
+        .then((querySnapshot) async {
       for (var docSnap in querySnapshot.docs) {
-        Map<String, dynamic> test = await AccountController()
+        Map<String, dynamic> acc = await AccountController()
             .getAnotherProfile(docSnap.data()['CreateBy']);
 
         DateTime now = (docSnap.data()['Create_DateTime_Post']).toDate();
-        String formattedDate = DateFormat('yyyy/MM/dd \n kk:mm').format(now);
-        // print(formattedDate);
+        String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
 
         Map<String, dynamic> temp = {
+          'ID': docSnap.id,
           "Create_DateTime_Post": formattedDate,
           "Detail_Post": docSnap.data()['Detail_Post'],
-          "CreateBy": test['username'],
-          'Image': test['imageURL']
+          "CreateBy": acc['username'],
+          'Image': acc['imageURL']
         };
         output.add(temp);
 
@@ -46,15 +50,17 @@ class PostController {
     User? user = FirebaseAuth.instance.currentUser;
     final db = FirebaseFirestore.instance;
     List<dynamic> output = [];
-    final myposts = await db
+    await db
         .collection('posts')
+        // .orderBy('Create_DateTime_Post')
         .where('CreateBy', isEqualTo: user!.uid)
         .get()
         .then((value) {
       for (var element in value.docs) {
         DateTime now = (element.data()['Create_DateTime_Post']).toDate();
-        String formattedDate = DateFormat('yyyy/MM/dd \n kk:mm').format(now);
+        String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
         Map<String, dynamic> temp = {
+          'ID': element.id,
           "Create_DateTime_Post": formattedDate,
           "Detail_Post": element.data()['Detail_Post'],
           "CreateBy": user.displayName.toString(),
@@ -63,6 +69,8 @@ class PostController {
         output.add(temp);
       }
     });
+    output.sort((a, b) =>
+        b['Create_DateTime_Post'].compareTo(a['Create_DateTime_Post']));
     return output;
   }
 
@@ -78,4 +86,54 @@ class PostController {
 
     await db.collection('posts').add(data);
   }
+
+  Future<List<dynamic>> getComment(String idpost) async {
+    final db = FirebaseFirestore.instance;
+    List<dynamic> output = [];
+    // print('ID: $idpost');
+    await db
+        .collection("comments")
+        .where('ID_Post', isEqualTo: idpost)
+        .get()
+        .then((querySnapshot) async {
+      // print('count: ${querySnapshot.size}');
+      for (var docSnap in querySnapshot.docs) {
+        Map<String, dynamic> acc = await AccountController()
+            .getAnotherProfile(docSnap.data()['CreateBy']);
+
+        DateTime now = (docSnap.data()['Create_DateTime_Comment']).toDate();
+        String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
+
+        Map<String, dynamic> temp = {
+          "Create_DateTime_Comment": formattedDate,
+          "Detail_Comment": docSnap.data()['Detail_Comment'],
+          "CreateBy": acc['username'],
+          'Image': acc['imageURL']
+        };
+        output.add(temp);
+      }
+    });
+    // print('>>>>> $output');
+    output.sort((a, b) =>
+        b['Create_DateTime_Comment'].compareTo(a['Create_DateTime_Comment']));
+    return output;
+  }
+
+  Future<void> addComment(String detail, String idPost) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    final data = {
+      'CreateBy': user!.uid,
+      'Create_DateTime_Comment': Timestamp.now(),
+      'Detail_Comment': detail,
+      'ID_Post' : idPost
+    };
+
+    await db.collection('comments').add(data);
+  }
+
+
+
+
 }

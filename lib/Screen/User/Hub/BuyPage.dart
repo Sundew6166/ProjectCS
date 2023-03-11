@@ -2,16 +2,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/BottomBar.dart';
 
-class SellPage extends StatefulWidget {
-  SellPage({super.key, required this.saleInfo});
+class BuyPage extends StatefulWidget {
+  BuyPage({super.key, required this.saleInfo});
 
   Map<String,dynamic> saleInfo;
 
   @override
-  State<SellPage> createState() => _SellPageState();
+  State<BuyPage> createState() => _BuyPageState();
 }
 
-class _SellPageState extends State<SellPage> {
+class _BuyPageState extends State<BuyPage> {
   // bool buttonenabled = false;
 
   @override
@@ -49,19 +49,6 @@ class _SellPageState extends State<SellPage> {
                     Container(
                         margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: ElevatedButton(
-                            // TODO: เงื่อนไขการ disable ปุ่มซื้อในกรณีผู้ใช้มีหนังสือเล่มนั้นแล้ว
-                            // onPressed: () {
-                            //   setState(() {
-                            //     //setState to refresh UI
-                            //     if (buttonenabled) {
-                            //       buttonenabled = false;
-                            //       //if buttonenabled == true, then make buttonenabled = false
-                            //     } else {
-                            //       buttonenabled = true;
-                            //       //if buttonenabled == false, then make buttonenabled = true
-                            //     }
-                            //   });
-                            // },
                             onPressed: (widget.saleInfo['seller'] == FirebaseAuth.instance.currentUser!.uid) ? null : () {
                                 showDialog(
                                   context: context,

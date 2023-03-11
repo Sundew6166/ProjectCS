@@ -7,14 +7,14 @@ import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
 import 'package:my_book/Service/PostController.dart';
 
-class PostTab extends StatefulWidget {
-  const PostTab({super.key});
+class RecPostTab extends StatefulWidget {
+  const RecPostTab({super.key});
 
   @override
-  State<PostTab> createState() => _PostTabState();
+  State<RecPostTab> createState() => _RecPostTabState();
 }
 
-class _PostTabState extends State<PostTab> {
+class _RecPostTabState extends State<RecPostTab> {
   List<dynamic>? posts;
 
   @override
@@ -199,7 +199,7 @@ class _PostSectionState extends State<PostSection> {
             return GestureDetector(
                 onTap: () => Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SocialPage()),
+                      MaterialPageRoute(builder: (context) => SocialPage(posts: widget.posts[i],)),
                     ),
                 child: Container(
                     height: 90,

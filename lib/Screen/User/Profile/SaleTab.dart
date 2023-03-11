@@ -41,7 +41,7 @@ class _SaleTabState extends State<SaleTab> {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SellPage(saleInfo: saleList[index]!)),
+                    MaterialPageRoute(builder: (context) => BuyPage(saleInfo: saleList[index]!)),
                   ),
               child: Container(
                   height: 100,
