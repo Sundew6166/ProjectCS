@@ -21,18 +21,23 @@ class TabSearch extends StatefulWidget {
 class _TabSearchState extends State<TabSearch> {
   TextEditingController _controller = TextEditingController();
   List<dynamic>? posts;
+  List<dynamic>? books;
 
   @override
   void initState() {
     super.initState();
     _controller = TextEditingController(text: widget.data);
-    setPosts();
+    setData();
     // print(widget.data);
   }
 
-  setPosts() async {
-    await SearchController().getPosts(_controller.text);
-    await PostController().getPostAll().then((value) {
+  setData() async {
+    await SearchController().getBooks(_controller.text).then((value) {
+      setState(() {
+        books = value;
+      });
+    });
+    await SearchController().getPosts(_controller.text).then((value) {
       setState(() {
         posts = value;
       });
@@ -103,7 +108,7 @@ class _TabSearchState extends State<TabSearch> {
               ),
               body: TabBarView(
                 children: [
-                  BookSearch(),
+                  BookSearch(books: books!),
                   PostSection(
                     posts: posts!,
                   ),
