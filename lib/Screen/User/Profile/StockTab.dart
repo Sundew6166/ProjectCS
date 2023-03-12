@@ -43,7 +43,6 @@ class _StockTabState extends State<StockTab> {
         shrinkWrap: true,
         itemBuilder: (context, index) {
           return GestureDetector(
-              // TODO: if user => ReviewPage
               onTap: () async {
                 var bookInfo = bookList[index];
                 await BookController().getTypesOfBook('${bookInfo!['isbn']}_${bookInfo['edition']}')

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
+import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class BookSearch extends StatefulWidget {
-  const BookSearch({super.key});
+  BookSearch({Key? key, required this.books}) : super(key: key);
+  List<dynamic> books;
 
   @override
   State<BookSearch> createState() => _BookSearchState();
@@ -12,57 +15,81 @@ class _BookSearchState extends State<BookSearch> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(color: Color(0xfff5f3e8), child: BookCard()));
+        body: widget.books.isEmpty
+            ? Center(
+                child: Text("ไม่มีหนังสือ", style: TextStyle(fontSize: 18)))
+            : Container(
+                color: Color(0xfff5f3e8),
+                child: BookCard(books: widget.books),
+              ));
   }
 }
 
 class BookCard extends StatelessWidget {
-  const BookCard({super.key});
+  BookCard({Key? key, required this.books}) : super(key: key);
+  List<dynamic> books;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(1.0),
+    return Container(
+      height: MediaQuery.of(context).size.height,
+      // padding: const EdgeInsets.all(1.0),
       child: GridView.builder(
         shrinkWrap: true,
         padding: const EdgeInsets.symmetric(horizontal: 5),
-        itemCount: 6,
+        itemCount: books.length,
         itemBuilder: (BuildContext context, index) {
           return GestureDetector(
-              onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: {}, hasBook: false, hasSale: false)),
-                  ),
+              onTap: () async {
+                var bookInfo = books[index];
+                await BookController()
+                    .getTypesOfBook(
+                        '${bookInfo!['isbn']}_${bookInfo['edition']}')
+                    .then((value) => bookInfo.addAll({"types": value}));
+                var hasBook = await BookController()
+                    .checkHasBook(bookInfo!['isbn'], bookInfo['edition'].toString());
+                var hasSale;
+                if (hasBook)
+                  hasSale = await SaleController().checkHasSale(bookInfo!['isbn'], bookInfo['edition'].toString());
+                else
+                  hasSale = false;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => ReviewPage(
+                          bookInfo: bookInfo, hasBook: hasBook, hasSale: hasSale)),
+                );
+              },
               child: Card(
                 child: Container(
-                  padding: EdgeInsets.all(5),
+                  padding: EdgeInsets.all(2),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Expanded(
+                      Container(
+                          height: 200,
                           child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10), // Image border
-                        child: Image.asset(
-                          'images/Conan.jpg',
-                          fit: BoxFit.fill,
-                        ),
-                      )),
+                            borderRadius:
+                                BorderRadius.circular(10), // Image border
+                            child: Image.network(
+                              books[index]['coverImage'],
+                            ),
+                          )),
                       Padding(
                           padding: EdgeInsets.all(2),
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text("ชื่อหนังสือ",
-                                    maxLines: 1,
+                                Text(books[index]['title'],
+                                    maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(fontSize: 18)),
                                 SizedBox(
                                   height: 5,
                                 ),
                                 Text(
-                                  'รายละเอียด',
-                                  style: TextStyle(
-                                      fontSize: 18),
+                                  books[index]['author'],
+                                  style: TextStyle(fontSize: 15),
                                 ),
                               ]))
                     ],

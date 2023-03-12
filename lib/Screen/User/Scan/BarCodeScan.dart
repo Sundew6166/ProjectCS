@@ -1,13 +1,8 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/SaleController.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:developer';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
 
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
@@ -65,12 +60,6 @@ class _BarCodeScanState extends State<BarCodeScan> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           const Text('กรุณาสแกนบาร์โค้ด'),
-                          // TODO: ไม่มีข้อมูลใน database NewBook หรือ form นส ใหม่
-                          // if (result == null) const Text('กรุณาสแกนบาร์โค้ด'),
-                          // Text('ISBN: $result')
-                          // else
-                          //   const Text('กรุณาสแกนบาร์โค้ด'),
-
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,

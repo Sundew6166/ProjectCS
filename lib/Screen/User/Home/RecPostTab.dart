@@ -8,32 +8,17 @@ import 'package:my_book/Screen/User/Hub/Social.dart';
 import 'package:my_book/Service/PostController.dart';
 
 class RecPostTab extends StatefulWidget {
-  const RecPostTab({super.key});
+  RecPostTab({super.key, required this.posts});
+  List<dynamic>? posts;
 
   @override
   State<RecPostTab> createState() => _RecPostTabState();
 }
 
 class _RecPostTabState extends State<RecPostTab> {
-  List<dynamic>? posts;
-
-  @override
-  void initState() {
-    setPosts();
-    super.initState();
-  }
-
-  setPosts() async {
-    await PostController().getPostAll().then((value) {
-      setState(() {
-        posts = value;
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return posts != null
+    return widget.posts != null
         ? Scaffold(
             // resizeToAvoidBottomInset: false,
             body: SingleChildScrollView(
@@ -44,7 +29,7 @@ class _RecPostTabState extends State<RecPostTab> {
                       children: [
                         RecommendSection(),
                         PostSection(
-                          posts: posts!,
+                          posts: widget.posts!,
                         ),
                       ],
                     ))),
@@ -136,7 +121,8 @@ class RecommendCard extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => ReviewPage(bookInfo: {}, hasBook: false, hasSale: false)),
+                  builder: (context) =>
+                      ReviewPage(bookInfo: {}, hasBook: false, hasSale: false)),
             ),
         child: Container(
             height: 90,
@@ -187,58 +173,65 @@ class PostSection extends StatefulWidget {
 class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: Color(0xfff5f3e8),
-        height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        // width: 280,
-        child: ListView.builder(
-          itemCount: widget.posts.length,
-          shrinkWrap: true,
-          itemBuilder: (context, i) {
-            return GestureDetector(
-                onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SocialPage(posts: widget.posts[i],)),
-                    ),
-                child: Container(
-                    height: 90,
-                    child: Card(
-                        child: Padding(
-                            padding: EdgeInsets.all(7),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        '${widget.posts[i]['Image']}'),
-                                    backgroundColor: Color(0xffadd1dc),
-                                    radius: 30,
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  '${widget.posts[i]['CreateBy']}',
-                                                  style:
-                                                      TextStyle(fontSize: 18)),
-                                              Text(
-                                                '${widget.posts[i]['Detail_Post']}',
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              )
-                                            ])),
-                                  ),
-                                  Text(
-                                      '${widget.posts[i]['Create_DateTime_Post']}',
-                                      textAlign: TextAlign.right),
-                                ])))));
-          },
-        ));
+    return widget.posts.isEmpty
+        ? Center(child: Text("ไม่มีโพสต์", style: TextStyle(fontSize: 18)))
+        : Container(
+            color: Color(0xfff5f3e8),
+            height: MediaQuery.of(context).size.height,
+            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            // width: 280,
+            child: ListView.builder(
+              itemCount: widget.posts.length,
+              shrinkWrap: true,
+              itemBuilder: (context, i) {
+                return GestureDetector(
+                    onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SocialPage(
+                                    posts: widget.posts[i],
+                                  )),
+                        ),
+                    child: Container(
+                        height: 90,
+                        child: Card(
+                            child: Padding(
+                                padding: EdgeInsets.all(7),
+                                child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundImage: NetworkImage(
+                                            '${widget.posts[i]['Image']}'),
+                                        backgroundColor: Color(0xffadd1dc),
+                                        radius: 30,
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 10),
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      '${widget.posts[i]['CreateBy']}',
+                                                      style: TextStyle(
+                                                          fontSize: 18)),
+                                                  Text(
+                                                    '${widget.posts[i]['Detail_Post']}',
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  )
+                                                ])),
+                                      ),
+                                      Text(
+                                          '${widget.posts[i]['Create_DateTime_Post']}',
+                                          textAlign: TextAlign.right),
+                                    ])))));
+              },
+            ));
   }
 }

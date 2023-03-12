@@ -19,7 +19,7 @@ class PostController {
             .getAnotherProfile(docSnap.data()['CreateBy']);
 
         DateTime now = (docSnap.data()['Create_DateTime_Post']).toDate();
-        String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
+        String formattedDate = DateFormat('yyyy/MM/dd\nkk:mm').format(now);
 
         Map<String, dynamic> temp = {
           'ID': docSnap.id,
@@ -58,7 +58,7 @@ class PostController {
         .then((value) {
       for (var element in value.docs) {
         DateTime now = (element.data()['Create_DateTime_Post']).toDate();
-        String formattedDate = DateFormat('yyyy/MM/dd kk:mm').format(now);
+        String formattedDate = DateFormat('yyyy/MM/dd\nkk:mm').format(now);
         Map<String, dynamic> temp = {
           'ID': element.id,
           "Create_DateTime_Post": formattedDate,

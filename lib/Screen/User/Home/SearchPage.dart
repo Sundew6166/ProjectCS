@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import 'package:my_book/Screen/User/Home/TabSearch.dart';
 
@@ -17,7 +18,6 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
         appBar: AppBar(
             title: Container(
-              // width: double.infinity,
               height: 40,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(5)),
@@ -32,7 +32,8 @@ class _SearchPageState extends State<SearchPage> {
                         },
                       ),
                       hintText: '\tค้นหา...',
-                      border: InputBorder.none),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(left: 3.0, top: 3.0)),
                 ),
               ),
             ),
@@ -41,12 +42,20 @@ class _SearchPageState extends State<SearchPage> {
             icon: Icon(Icons.search),
             onPressed: () {
               // print(data.text);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => TabSearch(data: data.text)),
-              );
-              // print(data.text);
+              data.text.trim().isNotEmpty
+                  ? Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TabSearch(data: data.text)),
+                    )
+                  : Fluttertoast.showToast(
+                      msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.BOTTOM,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: Colors.red,
+                      textColor: Colors.white,
+                      fontSize: 18.0);
             },
           ),
         ]));
