@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
 import 'package:my_book/Screen/BottomBar.dart';
+
 import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/PostController.dart';
 
@@ -12,7 +14,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  static var _keyValidationForm = GlobalKey<FormState>();
+  static final _keyValidationForm = GlobalKey<FormState>();
   TextEditingController textarea = TextEditingController();
 
   @override
@@ -23,7 +25,7 @@ class _PostPageState extends State<PostPage> {
         ),
         body: Container(
             alignment: Alignment.center,
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Form(
               key: _keyValidationForm,
               child: Column(
@@ -35,11 +37,11 @@ class _PostPageState extends State<PostPage> {
                     validator: (value) {
                       return value!.isEmpty ? 'ข้อมูลไม่ถูกต้อง' : null;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                         hintText: "พิมพ์ข้อความลงในนี้...",
                         focusedBorder: OutlineInputBorder(
                             borderSide: BorderSide(
-                                width: 2, color: const Color(0xff795e35)))),
+                                width: 2, color: Color(0xff795e35)))),
                   ),
                   ElevatedButton(
                       onPressed: () async {
@@ -52,17 +54,18 @@ class _PostPageState extends State<PostPage> {
                                 .then((value) => Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => BottomBar(
-                                                accType: accT,
-                                                tab: "HOME",
-                                              )),
+                                        builder: (context) => BottomBar(
+                                          accType: accT,
+                                          tab: "HOME",
+                                        ),
+                                      ),
                                     ));
                           } on FirebaseException catch (e) {
                             showDialog(
                                 context: context,
                                 builder: (_) => AlertDialog(
                                         title: Text(e.message.toString()),
-                                        content: Text(
+                                        content: const Text(
                                             "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
                                         actions: <Widget>[
                                           TextButton(
@@ -72,19 +75,13 @@ class _PostPageState extends State<PostPage> {
                                           )
                                         ]));
                           }
-
-                          // print(accT);
-
-                          // print(textarea.text);
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                          fixedSize: Size(400, 40), // specify width, height
+                          fixedSize: const Size(400, 40),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(
-                            10,
-                          ))),
-                      child: Text("โพสต์", style: TextStyle(fontSize: 20)))
+                              borderRadius: BorderRadius.circular(10))),
+                      child: const Text("โพสต์", style: TextStyle(fontSize: 20)))
                 ],
               ),
             )));

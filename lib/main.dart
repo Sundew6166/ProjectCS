@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       home: RegisterScreen(),
       theme: ThemeData(colorSchemeSeed: const Color(0xff795e35)),
-      // color: Color(0xffcaa171),
     );
   }
 }

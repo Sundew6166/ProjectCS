@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
+
 import 'package:my_book/Service/BookController.dart';
 
 class StockTab extends StatefulWidget {
@@ -14,7 +15,7 @@ class StockTab extends StatefulWidget {
 }
 
 class _StockTabState extends State<StockTab> {
-  List<Map<String,dynamic>?> bookList = [];
+  List<Map<String, dynamic>?> bookList = [];
 
   @override
   void initState() {
@@ -35,10 +36,9 @@ class _StockTabState extends State<StockTab> {
     return Scaffold(
         body: Container(
       height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      color: Color(0xfff5f3e8),
-      child: new ListView.builder(
-        // padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      color: const Color(0xfff5f3e8),
+      child: ListView.builder(
         itemCount: bookList.length,
         shrinkWrap: true,
         itemBuilder: (context, index) {
@@ -46,34 +46,45 @@ class _StockTabState extends State<StockTab> {
               onTap: () async {
                 var bookInfo = bookList[index]!;
                 if (widget.accType == "ADMIN") {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.accType, bookInfo: bookInfo)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddBook(
+                              accType: widget.accType, bookInfo: bookInfo)));
                 } else {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(bookInfo: bookInfo, hasBook: true, hasSale: false)));
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ReviewPage(
+                              bookInfo: bookInfo,
+                              hasBook: true,
+                              hasSale: false)));
                 }
               },
-              child: Container(
+              child: SizedBox(
                   height: 100,
                   child: Card(
                       child: Padding(
-                          padding: EdgeInsets.all(7),
+                          padding: const EdgeInsets.all(7),
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 ClipRRect(
-                                  borderRadius:
-                                      BorderRadius.circular(5), // Image border
-                                  child: Image.network(bookList[index]!['coverImage']),
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: Image.network(
+                                      bookList[index]!['coverImage']),
                                 ),
                                 Expanded(
                                   child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
                                       child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(bookList[index]!['title'],
-                                                style: TextStyle(fontSize: 18)),
+                                                style: const TextStyle(
+                                                    fontSize: 18)),
                                             Expanded(
                                                 child: Text(
                                               bookList[index]!['isbn'],
@@ -81,7 +92,6 @@ class _StockTabState extends State<StockTab> {
                                             ))
                                           ])),
                                 ),
-                                // Text("03.03.2020"),
                               ])))));
         },
       ),

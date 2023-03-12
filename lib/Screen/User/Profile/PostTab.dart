@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 
-// import 'package:my_book/Service/PostController.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
 
 class PostTab extends StatefulWidget {
-  // const PostTab({super.key});
   PostTab({Key? key, required this.posts}) : super(key: key);
   List<dynamic>? posts;
 
@@ -18,51 +16,51 @@ class _PostTabState extends State<PostTab> {
     return Scaffold(
         body: Container(
       height: MediaQuery.of(context).size.height,
-      padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      color: Color(0xfff5f3e8),
-      child: new ListView.builder(
-        // padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+      color: const Color(0xfff5f3e8),
+      child: ListView.builder(
         itemCount: widget.posts!.length,
         shrinkWrap: true,
         itemBuilder: (context, i) {
           return GestureDetector(
               onTap: () => Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => SocialPage(posts: widget.posts![i],)),
+                    MaterialPageRoute(
+                        builder: (context) => SocialPage(
+                              posts: widget.posts![i],
+                            )),
                   ),
-              child: Container(
+              child: SizedBox(
                   height: 100,
                   child: Card(
                       child: Padding(
-                          padding: EdgeInsets.all(7),
+                          padding: const EdgeInsets.all(7),
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CircleAvatar(
                                   backgroundImage: NetworkImage(
                                       '${widget.posts![i]['Image']}'),
-                                  backgroundColor: Color(0xffadd1dc),
+                                  backgroundColor: const Color(0xffadd1dc),
                                   radius: 30,
                                 ),
                                 Expanded(
                                   child: Padding(
-                                      padding:
-                                          EdgeInsets.symmetric(horizontal: 10),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10),
                                       child: Column(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
                                                 '${widget.posts![i]['CreateBy']}',
-                                                style: TextStyle(fontSize: 18)),
-                                            // Expanded(
-                                            //     child:
+                                                style: const TextStyle(
+                                                    fontSize: 18)),
                                             Text(
                                               '${widget.posts![i]['Detail_Post']}',
                                               maxLines: 2,
                                               overflow: TextOverflow.ellipsis,
                                             )
-                                            // )
                                           ])),
                                 ),
                                 Text(

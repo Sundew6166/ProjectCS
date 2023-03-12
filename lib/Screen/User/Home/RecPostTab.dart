@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
-// screen
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
-import 'package:my_book/Service/PostController.dart';
 
 class RecPostTab extends StatefulWidget {
   RecPostTab({super.key, required this.posts});
@@ -20,23 +18,19 @@ class _RecPostTabState extends State<RecPostTab> {
   Widget build(BuildContext context) {
     return widget.posts != null
         ? Scaffold(
-            // resizeToAvoidBottomInset: false,
-            body: SingleChildScrollView(
-                child: Container(
-                    color: Color(0xfff5f3e8),
-                    padding: EdgeInsets.all(5),
+            body: Container(
+                color: const Color(0xfff5f3e8),
+                child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(5),
                     child: Column(
                       children: [
-                        RecommendSection(),
-                        PostSection(
-                          posts: widget.posts!,
-                        ),
+                        const RecommendSection(),
+                        PostSection(posts: widget.posts!),
                       ],
                     ))),
-
             floatingActionButton: FloatingActionButton(
-              backgroundColor: Color(0xff795e35),
-              child: Icon(Icons.add),
+              backgroundColor: const Color(0xff795e35),
+              child: const Icon(Icons.add),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -48,13 +42,10 @@ class _RecPostTabState extends State<RecPostTab> {
         : Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: Color(0xfff5f3e8),
+            color: Colors.white,
             child: Center(
-              child: LoadingAnimationWidget.twistingDots(
-                leftDotColor: const Color(0xFF1A1A3F),
-                rightDotColor: const Color(0xFFEA3799),
-                size: 50,
-              ),
+              child: Lottie.network(
+                  'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
             ),
           );
   }
@@ -68,28 +59,22 @@ class RecommendSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          child: Text(
-            "แนะนำสำหรับคุณ",
-            style: TextStyle(
-                // color: const Color(0xff795e35),
-                fontSize: 25),
-          ),
+        const Text(
+          "แนะนำสำหรับคุณ",
+          style: TextStyle(fontSize: 25),
         ),
-        SizedBox(
-          height: 5,
-        ),
+        const SizedBox(height: 5),
         Container(
             height: 180,
             width: 400,
-            color: Color(0xffadd1dc),
+            color: const Color(0xffadd1dc),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child:
                   Column(mainAxisAlignment: MainAxisAlignment.start, children: [
                 Wrap(
                   alignment: WrapAlignment.start,
-                  children: [
+                  children: const [
                     RecommendCard(),
                     RecommendCard(),
                     RecommendCard(),
@@ -98,7 +83,7 @@ class RecommendSection extends StatelessWidget {
                 ),
                 Wrap(
                   alignment: WrapAlignment.start,
-                  children: [
+                  children: const [
                     RecommendCard(),
                     RecommendCard(),
                     RecommendCard(),
@@ -124,16 +109,15 @@ class RecommendCard extends StatelessWidget {
                   builder: (context) =>
                       ReviewPage(bookInfo: {}, hasBook: false, hasSale: false)),
             ),
-        child: Container(
+        child: SizedBox(
             height: 90,
             width: 220,
             child: Card(
                 child: Padding(
-                    padding: EdgeInsets.all(7),
+                    padding: const EdgeInsets.all(7),
                     child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Image.asset('images/Conan.jpg'),
                           ClipRRect(
                             borderRadius:
                                 BorderRadius.circular(5), // Image border
@@ -141,11 +125,12 @@ class RecommendCard extends StatelessWidget {
                           ),
                           Expanded(
                             child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16),
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 16),
                                 child: Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
-                                    children: [
+                                    children: const [
                                       Text("ชื่อหนังสือ",
                                           overflow: TextOverflow.ellipsis,
                                           style: TextStyle(fontSize: 18)),
@@ -162,7 +147,6 @@ class RecommendCard extends StatelessWidget {
 }
 
 class PostSection extends StatefulWidget {
-  // const PostSection({super.key});
   PostSection({Key? key, required this.posts}) : super(key: key);
   List<dynamic> posts;
 
@@ -174,12 +158,12 @@ class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
     return widget.posts.isEmpty
-        ? Center(child: Text("ไม่มีโพสต์", style: TextStyle(fontSize: 18)))
+        ? const Center(
+            child: Text("ไม่มีโพสต์", style: TextStyle(fontSize: 18)))
         : Container(
-            color: Color(0xfff5f3e8),
+            color: const Color(0xfff5f3e8),
             height: MediaQuery.of(context).size.height,
-            padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            // width: 280,
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             child: ListView.builder(
               itemCount: widget.posts.length,
               shrinkWrap: true,
@@ -188,15 +172,15 @@ class _PostSectionState extends State<PostSection> {
                     onTap: () => Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SocialPage(
-                                    posts: widget.posts[i],
-                                  )),
+                            builder: (context) =>
+                                SocialPage(posts: widget.posts[i]),
+                          ),
                         ),
-                    child: Container(
+                    child: SizedBox(
                         height: 90,
                         child: Card(
                             child: Padding(
-                                padding: EdgeInsets.all(7),
+                                padding: const EdgeInsets.all(7),
                                 child: Row(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
@@ -204,12 +188,13 @@ class _PostSectionState extends State<PostSection> {
                                       CircleAvatar(
                                         backgroundImage: NetworkImage(
                                             '${widget.posts[i]['Image']}'),
-                                        backgroundColor: Color(0xffadd1dc),
+                                        backgroundColor:
+                                            const Color(0xffadd1dc),
                                         radius: 30,
                                       ),
                                       Expanded(
                                         child: Padding(
-                                            padding: EdgeInsets.symmetric(
+                                            padding: const EdgeInsets.symmetric(
                                                 horizontal: 10),
                                             child: Column(
                                                 crossAxisAlignment:
@@ -217,7 +202,7 @@ class _PostSectionState extends State<PostSection> {
                                                 children: [
                                                   Text(
                                                       '${widget.posts[i]['CreateBy']}',
-                                                      style: TextStyle(
+                                                      style: const TextStyle(
                                                           fontSize: 18)),
                                                   Text(
                                                     '${widget.posts[i]['Detail_Post']}',

@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
-import 'package:my_book/Screen/User/Profile/SettingPage.dart';
 
-import '../../../Service/AccountController.dart';
+import 'package:my_book/Service/AccountController.dart';
 
 class ChangePasswordPage extends StatefulWidget {
   const ChangePasswordPage({super.key});
@@ -13,11 +12,12 @@ class ChangePasswordPage extends StatefulWidget {
 }
 
 class _ChangePasswordPageState extends State<ChangePasswordPage> {
-  static var _changePasswordFormKey = GlobalKey<FormState>();
+  static final _changePasswordFormKey = GlobalKey<FormState>();
 
-  TextEditingController _textEditCurPassword = TextEditingController();
-  TextEditingController _textEditConPassword = TextEditingController();
-  TextEditingController _textEditConConfirmPassword = TextEditingController();
+  final TextEditingController _textEditCurPassword = TextEditingController();
+  final TextEditingController _textEditConPassword = TextEditingController();
+  final TextEditingController _textEditConConfirmPassword =
+      TextEditingController();
 
   bool isCurPasswordVisible = false;
   bool isConPasswordVisible = false;
@@ -49,12 +49,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
-                              Container(
-                                  child: Column(
+                              Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  // รหัสผ่านปัจจุบัน
                                   Container(
                                     alignment: Alignment.center,
                                     child: TextFormField(
@@ -62,7 +60,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
                                       obscureText: !isCurPasswordVisible,
-                                      validator: MinLengthValidator(8, errorText: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"),
+                                      validator: MinLengthValidator(8,
+                                          errorText:
+                                              "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"),
                                       decoration: InputDecoration(
                                           labelText: 'รหัสผ่านปัจจุบัน',
                                           suffixIcon: IconButton(
@@ -76,10 +76,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                               });
                                             },
                                           ),
-                                          icon: Icon(Icons.vpn_key)),
+                                          icon: const Icon(Icons.vpn_key)),
                                     ),
                                   ),
-                                  // รหัสผ่านใหม่
                                   Container(
                                     alignment: Alignment.center,
                                     child: TextFormField(
@@ -87,7 +86,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
                                       obscureText: !isConPasswordVisible,
-                                      validator: MinLengthValidator(8, errorText: "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"),
+                                      validator: MinLengthValidator(8,
+                                          errorText:
+                                              "รหัสผ่านต้องมีความยาวอย่างน้อย 8 ตัวอักษร"),
                                       decoration: InputDecoration(
                                           labelText: 'รหัสผ่านใหม่',
                                           suffixIcon: IconButton(
@@ -101,10 +102,9 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                               });
                                             },
                                           ),
-                                          icon: Icon(Icons.vpn_key)),
+                                          icon: const Icon(Icons.vpn_key)),
                                     ),
                                   ),
-                                  // ยืนยันรหัสผ่านใหม่
                                   Container(
                                     alignment: Alignment.center,
                                     child: TextFormField(
@@ -112,7 +112,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
                                       obscureText: !isConfirmPasswordVisible,
-                                      validator: (value) => MatchValidator(errorText: "รหัสผ่านไม่ตรงกัน").validateMatch(value ?? "", _textEditConPassword.text),
+                                      validator: (value) => MatchValidator(
+                                              errorText: "รหัสผ่านไม่ตรงกัน")
+                                          .validateMatch(value ?? "",
+                                              _textEditConPassword.text),
                                       decoration: InputDecoration(
                                           labelText: 'ยืนยันรหัสผ่านใหม่',
                                           suffixIcon: IconButton(
@@ -126,70 +129,82 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                               });
                                             },
                                           ),
-                                          icon: Icon(Icons.vpn_key)),
+                                          icon: const Icon(Icons.vpn_key)),
                                     ),
                                   ),
-                                  // button
                                   Container(
-                                      margin: EdgeInsets.only(
+                                      margin: const EdgeInsets.only(
                                           top: 16.0, bottom: 16.0),
                                       child: ElevatedButton(
-                                          onPressed: () async{
-                                            if (_changePasswordFormKey.currentState!.validate()) {
+                                          onPressed: () async {
+                                            if (_changePasswordFormKey
+                                                .currentState!
+                                                .validate()) {
                                               try {
-                                                await AccountController().changePassword(_textEditCurPassword.text, _textEditConPassword.text)
-                                                  .then((value) => showDialog(
-                                                    context: context,
-                                                    builder: (_) => AlertDialog(
-                                                      title: Text("เสร็จสิ้น"),
-                                                      content: Text('การเปลี่ยนรหัสผ่านของคุณเสร็จสิ้น'),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          onPressed: () => Navigator.of(context)..pop()..pop(),
-                                                          child: const Text('ตกลง'),
-                                                        )
-                                                      ]
-                                                    )
-                                                  ));
+                                                await AccountController()
+                                                    .changePassword(
+                                                        _textEditCurPassword
+                                                            .text,
+                                                        _textEditConPassword
+                                                            .text)
+                                                    .then((value) => showDialog(
+                                                        context: context,
+                                                        builder: (_) =>
+                                                            AlertDialog(
+                                                                title: const Text(
+                                                                    "เสร็จสิ้น"),
+                                                                content: const Text(
+                                                                    'การเปลี่ยนรหัสผ่านของคุณเสร็จสิ้น'),
+                                                                actions: <
+                                                                    Widget>[
+                                                                  TextButton(
+                                                                      onPressed: () => Navigator.of(
+                                                                          context)
+                                                                        ..pop()
+                                                                        ..pop(),
+                                                                      child: const Text(
+                                                                          'ตกลง'))
+                                                                ])));
                                               } on FirebaseAuthException catch (e) {
                                                 print(e.code);
                                                 String? message;
-                                                if (e.code == 'wrong-password') {
-                                                  message = "รหัสผ่านปัจจุบันไม่ถูกต้อง";
+                                                if (e.code ==
+                                                    'wrong-password') {
+                                                  message =
+                                                      "รหัสผ่านปัจจุบันไม่ถูกต้อง";
                                                 } else {
                                                   message = e.message;
                                                 }
                                                 showDialog(
-                                                  context: context,
-                                                  builder: (_) => AlertDialog(
-                                                    title: Text(message.toString()),
-                                                    content: Text("เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน กรุณาลองใหม่"),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        onPressed: () => Navigator.pop(context),
-                                                        child: const Text('ตกลง'),
-                                                      )
-                                                    ]
-                                                  )
-                                                );
+                                                    context: context,
+                                                    builder: (_) => AlertDialog(
+                                                            title: Text(message
+                                                                .toString()),
+                                                            content: const Text(
+                                                                "เกิดข้อผิดพลาดในการเปลี่ยนรหัสผ่าน กรุณาลองใหม่"),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context),
+                                                                  child:
+                                                                      const Text(
+                                                                          'ตกลง'))
+                                                            ]));
                                               }
                                             }
-                                            // print(_textEditCurPassword.text);
-                                            // print(_textEditConPassword.text);
-                                            // print(_textEditConConfirmPassword.text);
                                           },
                                           style: ElevatedButton.styleFrom(
-                                              fixedSize: Size(400,
-                                                  40), // specify width, height
+                                              fixedSize: const Size(400, 40),
                                               shape: RoundedRectangleBorder(
                                                   borderRadius:
                                                       BorderRadius.circular(
                                                 10,
                                               ))),
-                                          child: Text("บันทึก",
+                                          child: const Text("บันทึก",
                                               style: TextStyle(fontSize: 20))))
                                 ],
-                              ))
+                              )
                             ],
                           ),
                         )),

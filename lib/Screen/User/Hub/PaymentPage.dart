@@ -34,13 +34,14 @@ class _PaymentPageState extends State<PaymentPage> {
           title: const Text('แจ้งชำระเงิน'),
         ),
         body: Container(
-            color: Color(0xfff5f3e8),
+            color: const Color(0xfff5f3e8),
             alignment: Alignment.topCenter,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
-                    margin: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 10, vertical: 10),
                     color: Colors.white,
                     child: Column(children: [
                       BookName(),
@@ -49,11 +50,9 @@ class _PaymentPageState extends State<PaymentPage> {
                       Total(),
                     ])),
                 PaymentSlip(),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Container(
-                    margin: EdgeInsets.symmetric(
-                      horizontal: 40,
-                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 40),
                     alignment: Alignment.center,
                     width: double.infinity,
                     height: 300,
@@ -63,31 +62,29 @@ class _PaymentPageState extends State<PaymentPage> {
                           ? Image.file(_image!, fit: BoxFit.cover)
                           : const Text('กรุณาเลือกรูป'),
                     )),
-                // เลือกรูป
                 Center(
                   child: ElevatedButton(
                     onPressed: _openImagePicker,
                     child: const Text('เลือกรูป'),
                   ),
                 ),
-
-                SizedBox(height: 40),
-                Container(
-                    child: ElevatedButton(
-                        onPressed: (() => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => BottomBar(
-                                        accType: 'USER',
-                                        tab: "PROFILE",
-                                      )),
-                            )),
-                        style: ElevatedButton.styleFrom(
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                          10,
-                        ))),
-                        child: Text("บันทึก", style: TextStyle(fontSize: 20)))),
+                const SizedBox(height: 40),
+                ElevatedButton(
+                    onPressed: (() => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => BottomBar(
+                                    accType: 'USER',
+                                    tab: "PROFILE",
+                                  )),
+                        )),
+                    style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(
+                      10,
+                    ))),
+                    child:
+                        const Text("บันทึก", style: TextStyle(fontSize: 20))),
               ],
             )));
   }
@@ -99,22 +96,18 @@ class BookName extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
-        children: <Widget>[
+        children: const <Widget>[
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ชื่อหนังสือ', style: TextStyle(fontSize: 20)),
-              ),
+              child: Text('ชื่อหนังสือ', style: TextStyle(fontSize: 20)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('500 บ.',
-                    style: TextStyle(fontSize: 20, color: Colors.red)),
-              ),
+              child: Text('500 บ.',
+                  style: TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
         ],
@@ -129,22 +122,18 @@ class DeliveryFee extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
-        children: <Widget>[
+        children: const <Widget>[
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ค่าจัดส่ง', style: TextStyle(fontSize: 20)),
-              ),
+              child: Text('ค่าจัดส่ง', style: TextStyle(fontSize: 20)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('20 บ.',
-                    style: TextStyle(fontSize: 20, color: Colors.red)),
-              ),
+              child: Text('20 บ.',
+                  style: TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
         ],
@@ -159,24 +148,16 @@ class Address extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Column(
-        children: <Widget>[
-          Container(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ที่อยู่', style: TextStyle(fontSize: 20)),
-              ),
-            ),
+        children: const <Widget>[
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text('ที่อยู่', style: TextStyle(fontSize: 20)),
           ),
-          Container(
-            child: Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                child: Text(
-                    '\tหมู่ที่ 7 4 ถ. ลาดปลาเค้า แขวงจรเข้บัว เขตลาดพร้าว กรุงเทพมหานคร 10230',
-                    style: TextStyle(fontSize: 20)),
-              ),
-            ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Text(
+                '\tหมู่ที่ 7 4 ถ. ลาดปลาเค้า แขวงจรเข้บัว เขตลาดพร้าว กรุงเทพมหานคร 10230',
+                style: TextStyle(fontSize: 20)),
           ),
         ],
       ),
@@ -190,22 +171,18 @@ class Total extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
-        children: <Widget>[
+        children: const <Widget>[
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ยอดรวม', style: TextStyle(fontSize: 20)),
-              ),
+              child: Text('ยอดรวม', style: TextStyle(fontSize: 20)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('520 บ.',
-                    style: TextStyle(fontSize: 20, color: Colors.red)),
-              ),
+              child: Text('520 บ.',
+                  style: TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
         ],
@@ -220,14 +197,11 @@ class PaymentSlip extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
-        children: <Widget>[
+        children: const <Widget>[
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child:
-                    Text('หลักฐานการชำระเงิน', style: TextStyle(fontSize: 20)),
-              ),
+              child: Text('หลักฐานการชำระเงิน', style: TextStyle(fontSize: 20)),
             ),
           ),
         ],

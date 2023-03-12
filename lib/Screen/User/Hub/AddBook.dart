@@ -6,14 +6,15 @@ import 'dart:io';
 import 'package:form_field_validator/form_field_validator.dart';
 
 import 'package:my_book/Screen/BottomBar.dart';
+
 import 'package:my_book/Service/BookController.dart';
-import 'package:my_book/Service/AccountController.dart';
 
 class AddBook extends StatefulWidget {
-  AddBook({Key? key, required this.accType, this.isbn, this.bookInfo}) : super(key: key);
+  AddBook({Key? key, required this.accType, this.isbn, this.bookInfo})
+      : super(key: key);
 
   String accType;
-  Map<String,dynamic>? bookInfo;
+  Map<String, dynamic>? bookInfo;
   String? isbn;
 
   @override
@@ -21,19 +22,19 @@ class AddBook extends StatefulWidget {
 }
 
 class _AddBookState extends State<AddBook> {
-  static var _bookInfoFormKey = GlobalKey<FormState>();
+  static final _bookInfoFormKey = GlobalKey<FormState>();
   AutocompleteLabelController<String>? typeOption;
   File? _image;
 
   final _picker = ImagePicker();
 
-  TextEditingController _textISBN = TextEditingController();
-  TextEditingController _textTitle = TextEditingController();
-  TextEditingController _textAuthor = TextEditingController();
-  TextEditingController _textPublisher = TextEditingController();
-  TextEditingController _textPrice = TextEditingController();
-  TextEditingController _textSynopsys = TextEditingController();
-  TextEditingController _textEdition = TextEditingController();
+  final TextEditingController _textISBN = TextEditingController();
+  final TextEditingController _textTitle = TextEditingController();
+  final TextEditingController _textAuthor = TextEditingController();
+  final TextEditingController _textPublisher = TextEditingController();
+  final TextEditingController _textPrice = TextEditingController();
+  final TextEditingController _textSynopsys = TextEditingController();
+  final TextEditingController _textEdition = TextEditingController();
 
   @override
   void initState() {
@@ -86,7 +87,6 @@ class _AddBookState extends State<AddBook> {
         appBar: AppBar(
           title: const Text('หนังสือ'),
         ),
-        // resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Form(
                 key: _bookInfoFormKey,
@@ -97,12 +97,10 @@ class _AddBookState extends State<AddBook> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
-                          Container(
-                              child: Column(
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              // แสดงรูป
                               Container(
                                   alignment: Alignment.center,
                                   width: double.infinity,
@@ -112,153 +110,126 @@ class _AddBookState extends State<AddBook> {
                                     child: _image != null
                                         ? Image.file(_image!, fit: BoxFit.cover)
                                         : widget.bookInfo != null
-                                        ? Image.network(widget.bookInfo!['coverImage'], fit: BoxFit.cover)
-                                        : const Text('กรุณาเลือกรูป'),
+                                            ? Image.network(
+                                                widget.bookInfo!['coverImage'],
+                                                fit: BoxFit.cover)
+                                            : const Text('กรุณาเลือกรูป'),
                                   )),
-                              // เลือกรูป
                               Center(
                                 child: ElevatedButton(
                                   onPressed: _openImagePicker,
                                   child: const Text('เลือกรูป'),
                                 ),
                               ),
-                              // ISBN
-                              Container(
-                                child: TextFormField(
-                                  // enabled: false,
-                                  controller: _textISBN,
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  decoration: InputDecoration(
-                                    labelText: 'ISBN',
-                                  ),
-                                ),
+                              TextFormField(
+                                controller: _textISBN,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                decoration:
+                                    const InputDecoration(labelText: 'ISBN'),
                               ),
                               // book name
-                              Container(
-                                child: TextFormField(
-                                  controller: _textTitle,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.next,
-                                  validator: RequiredValidator(
-                                      errorText: "กรุณากรอกชื่อหนังสือ"),
-                                  decoration: InputDecoration(
-                                    labelText: 'ชื่อหนังสือ',
-                                  ),
-                                ),
+                              TextFormField(
+                                controller: _textTitle,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                validator: RequiredValidator(
+                                    errorText: "กรุณากรอกชื่อหนังสือ"),
+                                decoration: const InputDecoration(
+                                    labelText: 'ชื่อหนังสือ'),
                               ),
-                              // Author
-                              Container(
-                                child: TextFormField(
-                                  controller: _textAuthor,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.next,
-                                  validator: RequiredValidator(
-                                      errorText: "กรุณากรอกชื่อผู้แต่ง"),
-                                  decoration: InputDecoration(
-                                    labelText: 'ชื่อผู้แต่ง',
-                                  ),
-                                ),
+                              TextFormField(
+                                controller: _textAuthor,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                validator: RequiredValidator(
+                                    errorText: "กรุณากรอกชื่อผู้แต่ง"),
+                                decoration: const InputDecoration(
+                                    labelText: 'ชื่อผู้แต่ง'),
                               ),
-                              // Publisher
-                              Container(
-                                child: TextFormField(
-                                  controller: _textPublisher,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.next,
-                                  validator: RequiredValidator(
-                                      errorText: "กรุณากรอกชื่อสำนักพิมพ์"),
-                                  decoration: InputDecoration(
-                                    labelText: 'สำนักพิมพ์',
-                                  ),
-                                ),
+                              TextFormField(
+                                controller: _textPublisher,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                validator: RequiredValidator(
+                                    errorText: "กรุณากรอกชื่อสำนักพิมพ์"),
+                                decoration: const InputDecoration(
+                                    labelText: 'สำนักพิมพ์'),
                               ),
-                              // Edition
-                              Container(
-                                child: TextFormField(
-                                  controller: _textEdition,
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  validator: (value) {
-                                    return value!.isEmpty
-                                        ? "กรุณากรอกครั้งที่พิมพ์"
-                                        : int.parse(value) > 0
-                                            ? null
-                                            : "ครั้งที่พิมพ์ต้องมากกว่า 0";
-                                  },
-                                  decoration: InputDecoration(
-                                    labelText: 'ครั้งที่พิมพ์',
-                                  ),
-                                ),
-                              ),
-                              // price
-                              Container(
-                                child: TextFormField(
-                                  controller: _textPrice,
-                                  keyboardType: TextInputType.number,
-                                  textInputAction: TextInputAction.next,
-                                  validator: (value) {
-                                    return value!.isEmpty
-                                        ? "กรุณากรอกราคา"
-                                        : int.parse(value) > 0
-                                            ? null
-                                            : "ราคาต้องมากกว่า 0";
-                                  },
-                                  decoration: InputDecoration(
-                                    labelText: 'ราคาตามปก',
-                                  ),
-                                ),
-                              ),
-                              // type
-                              SizedBox(height: 10,),
-                              Container(
-                                // width: double.infinity,
-                                width: MediaQuery.of(context).size.width,
-                                  child: AutocompleteLabel<String>(
-                                fieldViewBuilder: (context,
-                                    textEditingController,
-                                    focusNode,
-                                    onFieldSubmitted) {
-                                  return ConstrainedBox(
-                                    constraints: BoxConstraints(minWidth: 68),
-                                    child: DryIntrinsicWidth(
-                                      child: Padding(
-                                        padding: EdgeInsets.all(5),
-                                        child: TextFormField(
-                                          strutStyle: StrutStyle(height: 1.0),
-                                          decoration: InputDecoration(
-                                            contentPadding: EdgeInsets.zero,
-                                            isDense: true,
-                                            border: InputBorder.none,
-                                            // hintText: "เพิ่ม",
-                                            labelText: "ประเภท",
-                                          ),
-                                          controller: textEditingController,
-                                          textInputAction: TextInputAction.next,
-                                          onEditingComplete: onFieldSubmitted,
-                                        ),
-                                      ),
-                                    ),
-                                  );
+                              TextFormField(
+                                controller: _textEdition,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                validator: (value) {
+                                  return value!.isEmpty
+                                      ? "กรุณากรอกครั้งที่พิมพ์"
+                                      : int.parse(value) > 0
+                                          ? null
+                                          : "ครั้งที่พิมพ์ต้องมากกว่า 0";
                                 },
-                                autocompleteLabelController: typeOption,
-                              )),
-                              // เรื่องย่อ
-                              Container(
-                                child: TextFormField(
-                                  controller: _textSynopsys,
-                                  keyboardType: TextInputType.text,
-                                  textInputAction: TextInputAction.next,
-                                  maxLines: 3,
-                                  decoration: InputDecoration(
-                                    labelText: 'เรื่องย่อ',
-                                  ),
-                                ),
+                                decoration: const InputDecoration(
+                                    labelText: 'ครั้งที่พิมพ์'),
                               ),
-                              // ปุ่มบันทึก
+                              TextFormField(
+                                controller: _textPrice,
+                                keyboardType: TextInputType.number,
+                                textInputAction: TextInputAction.next,
+                                validator: (value) {
+                                  return value!.isEmpty
+                                      ? "กรุณากรอกราคา"
+                                      : int.parse(value) > 0
+                                          ? null
+                                          : "ราคาต้องมากกว่า 0";
+                                },
+                                decoration: const InputDecoration(
+                                    labelText: 'ราคาตามปก'),
+                              ),
+                              const SizedBox(height: 10),
+                              SizedBox(
+                                  width: MediaQuery.of(context).size.width,
+                                  child: AutocompleteLabel<String>(
+                                    fieldViewBuilder: (context,
+                                        textEditingController,
+                                        focusNode,
+                                        onFieldSubmitted) {
+                                      return ConstrainedBox(
+                                        constraints:
+                                            const BoxConstraints(minWidth: 68),
+                                        child: DryIntrinsicWidth(
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: TextFormField(
+                                              strutStyle:
+                                                  const StrutStyle(height: 1.0),
+                                              decoration: const InputDecoration(
+                                                contentPadding: EdgeInsets.zero,
+                                                isDense: true,
+                                                border: InputBorder.none,
+                                                labelText: "ประเภท",
+                                              ),
+                                              controller: textEditingController,
+                                              textInputAction:
+                                                  TextInputAction.next,
+                                              onEditingComplete:
+                                                  onFieldSubmitted,
+                                            ),
+                                          ),
+                                        ),
+                                      );
+                                    },
+                                    autocompleteLabelController: typeOption,
+                                  )),
+                              TextFormField(
+                                controller: _textSynopsys,
+                                keyboardType: TextInputType.text,
+                                textInputAction: TextInputAction.next,
+                                maxLines: 3,
+                                decoration: const InputDecoration(
+                                    labelText: 'เรื่องย่อ'),
+                              ),
                               Container(
-                                  margin:
-                                      EdgeInsets.only(top: 16.0, bottom: 16.0),
+                                  margin: const EdgeInsets.only(
+                                      top: 16.0, bottom: 16.0),
                                   child: ElevatedButton(
                                       onPressed: () async {
                                         if (_bookInfoFormKey.currentState!
@@ -266,71 +237,98 @@ class _AddBookState extends State<AddBook> {
                                           try {
                                             if (widget.bookInfo == null) {
                                               await BookController()
-                                                .addNewBook(
-                                                    widget.accType,
-                                                    _textISBN.text,
-                                                    _textTitle.text,
-                                                    _textAuthor.text,
-                                                    _textPublisher.text,
-                                                    int.parse(_textEdition.text),
-                                                    int.parse(_textPrice.text),
-                                                    typeOption!.values,
-                                                    _textSynopsys.text,
-                                                    _image)
-                                                .then((value) => showDialog(
-                                                    context: context,
-                                                    builder: (_) => AlertDialog(
-                                                          title: Text(
-                                                              widget.accType == "ADMIN" ? "เสร็จสิ้น" : "รอการยืนยันจากผู้ดูแล"),
-                                                          content: Text(
-                                                              widget.accType == "ADMIN" ? "เพิ่มข้อมูลหนังสือใหม่เสร็จสิ้น" : 'ส่งข้อมูลเสร็จสิ้น รอการยืนยันจากผู้ดูแล'),
-                                                          actions: <Widget>[
-                                                            TextButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              BottomBar(
-                                                                                accType: widget.accType,
-                                                                                tab: "PROFILE",
-                                                                              )),
-                                                                );
-                                                              },
-                                                              child: const Text(
-                                                                  'ตกลง'),
-                                                            ),
-                                                          ],
-                                                        )));
+                                                  .addNewBook(
+                                                      widget.accType,
+                                                      _textISBN.text,
+                                                      _textTitle.text,
+                                                      _textAuthor.text,
+                                                      _textPublisher.text,
+                                                      int.parse(
+                                                          _textEdition.text),
+                                                      int.parse(
+                                                          _textPrice.text),
+                                                      typeOption!.values,
+                                                      _textSynopsys.text,
+                                                      _image)
+                                                  .then((value) => showDialog(
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          AlertDialog(
+                                                            title: Text(widget
+                                                                        .accType ==
+                                                                    "ADMIN"
+                                                                ? "เสร็จสิ้น"
+                                                                : "รอการยืนยันจากผู้ดูแล"),
+                                                            content: Text(widget
+                                                                        .accType ==
+                                                                    "ADMIN"
+                                                                ? "เพิ่มข้อมูลหนังสือใหม่เสร็จสิ้น"
+                                                                : 'ส่งข้อมูลเสร็จสิ้น รอการยืนยันจากผู้ดูแล'),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            BottomBar(
+                                                                              accType: widget.accType,
+                                                                              tab: "PROFILE",
+                                                                            )),
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        'ตกลง'),
+                                                              ),
+                                                            ],
+                                                          )));
                                             } else {
-                                              await BookController().updateBookInfo('${widget.bookInfo!['isbn']}_${widget.bookInfo!['edition']}', _textTitle.text, _textAuthor.text, _textPublisher.text, int.parse(_textPrice.text), widget.bookInfo!['types'], typeOption!.values, _textSynopsys.text, widget.bookInfo!['coverImage'], _image)
-                                                .then((value) => showDialog(
-                                                    context: context,
-                                                    builder: (_) => AlertDialog(
-                                                          title: Text("เสร็จสิ้น"),
-                                                          content: Text("อัพเดทข้อมูลหนังสือเสร็จสิ้น"),
-                                                          actions: <Widget>[
-                                                            TextButton(
-                                                              onPressed:
-                                                                  () async {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                      builder:
-                                                                          (context) =>
-                                                                              BottomBar(
-                                                                                accType: widget.accType,
-                                                                                tab: "PROFILE",
-                                                                              )),
-                                                                );
-                                                              },
-                                                              child: const Text(
-                                                                  'ตกลง'),
-                                                            ),
-                                                          ],
-                                                        )));
+                                              await BookController()
+                                                  .updateBookInfo(
+                                                      '${widget.bookInfo!['isbn']}_${widget.bookInfo!['edition']}',
+                                                      _textTitle.text,
+                                                      _textAuthor.text,
+                                                      _textPublisher.text,
+                                                      int.parse(
+                                                          _textPrice.text),
+                                                      widget.bookInfo!['types'],
+                                                      typeOption!.values,
+                                                      _textSynopsys.text,
+                                                      widget.bookInfo![
+                                                          'coverImage'],
+                                                      _image)
+                                                  .then((value) => showDialog(
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          AlertDialog(
+                                                            title: const Text(
+                                                                "เสร็จสิ้น"),
+                                                            content: const Text(
+                                                                "อัพเดทข้อมูลหนังสือเสร็จสิ้น"),
+                                                            actions: <Widget>[
+                                                              TextButton(
+                                                                onPressed:
+                                                                    () async {
+                                                                  Navigator
+                                                                      .push(
+                                                                    context,
+                                                                    MaterialPageRoute(
+                                                                        builder: (context) =>
+                                                                            BottomBar(
+                                                                              accType: widget.accType,
+                                                                              tab: "PROFILE",
+                                                                            )),
+                                                                  );
+                                                                },
+                                                                child:
+                                                                    const Text(
+                                                                        'ตกลง'),
+                                                              ),
+                                                            ],
+                                                          )));
                                             }
                                           } on FirebaseException catch (e) {
                                             print(e.code);
@@ -339,7 +337,7 @@ class _AddBookState extends State<AddBook> {
                                                 builder: (_) => AlertDialog(
                                                         title: Text(e.message
                                                             .toString()),
-                                                        content: Text(
+                                                        content: const Text(
                                                             "เกิดข้อผิดพลาดในการทำงาน กรุณาลองใหม่"),
                                                         actions: <Widget>[
                                                           TextButton(
@@ -354,18 +352,23 @@ class _AddBookState extends State<AddBook> {
                                         }
                                       },
                                       style: ElevatedButton.styleFrom(
-                                          fixedSize: Size(
-                                              400, 40), // specify width, height
+                                          fixedSize: const Size(400, 40),
                                           shape: RoundedRectangleBorder(
                                               borderRadius:
                                                   BorderRadius.circular(
                                             10,
                                           ))),
-                                      child: Text(widget.bookInfo == null ? "บันทึก" : widget.bookInfo!['approveStatus'] ? "บันทึก" : "อนุมัติ",
-                                          style: TextStyle(
-                                              fontSize: 20)))), //button: login
+                                      child: Text(
+                                          widget.bookInfo == null
+                                              ? "บันทึก"
+                                              : widget.bookInfo![
+                                                      'approveStatus']
+                                                  ? "บันทึก"
+                                                  : "อนุมัติ",
+                                          style:
+                                              const TextStyle(fontSize: 20)))),
                             ],
-                          ))
+                          )
                         ],
                       ),
                     ),

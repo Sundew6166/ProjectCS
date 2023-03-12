@@ -25,18 +25,16 @@ class _HistoryPageState extends State<HistoryPage> {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              subtitle: Text(
-                "\tชื่อหนังสือ",
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-              trailing:
-                  Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-                const Text("วันเดือนปีที่ทำรายการ",
-                    style: TextStyle(color: Colors.grey, fontSize: 15)),
-                const Text("ยอดรวม .... บาท",
-                    style: TextStyle(color: Colors.grey, fontSize: 15)),
-              ]),
+              subtitle: const Text("\tชื่อหนังสือ",
+                  maxLines: 2, overflow: TextOverflow.ellipsis),
+              trailing: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const <Widget>[
+                    Text("วันเดือนปีที่ทำรายการ",
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                    Text("ยอดรวม .... บาท",
+                        style: TextStyle(color: Colors.grey, fontSize: 15)),
+                  ]),
             );
           }),
     );

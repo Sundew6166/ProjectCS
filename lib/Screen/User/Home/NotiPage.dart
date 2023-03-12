@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_book/Screen/User/Hub/PaymentPage.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -16,30 +17,33 @@ class _NotificationPageState extends State<NotificationPage> {
           title: const Text('แจ้งเตือน'),
         ),
         body: Container(
-            color: Color(0xfff5f3e8),
+            color: const Color(0xfff5f3e8),
             child: ListView.builder(
                 itemCount: 6,
                 itemBuilder: (BuildContext context, int index) {
                   return GestureDetector(
-                    // TODO: go to review page when noti of approve
-                    // TODO: noti คนขายไปส่งของ
-                    // TODO: go to payment page
+                      // TODO: go to review page when noti of approve
+                      // TODO: noti คนขายไปส่งของ
+                      // TODO: go to payment page
                       onTap: () => Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => PaymentPage()),
+                                builder: (context) => const PaymentPage()),
                           ),
-                      child: Container(
+                      child: SizedBox(
                           height: 100,
                           child: Card(
                             child: ListTile(
-                              leading: Icon(Icons.circle_notifications, size: 40,),
+                              leading: const Icon(
+                                Icons.circle_notifications,
+                                size: 40,
+                              ),
                               title: Text(
                                 "แจ้งเตือน $index",
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
-                              subtitle: Text(
+                              subtitle: const Text(
                                 "\tรายละเอียดต่างๆ",
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,

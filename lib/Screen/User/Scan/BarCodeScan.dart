@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_book/Service/BookController.dart';
-import 'package:my_book/Service/SaleController.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'dart:developer';
 
@@ -8,6 +6,9 @@ import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
 import 'package:my_book/Screen/BottomBar.dart';
+
+import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class BarCodeScan extends StatefulWidget {
   BarCodeScan({super.key, required this.type});
@@ -23,7 +24,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
   List<String> editions = [];
   bool hasBook = false;
   bool hasSale = false;
-  Map<String,dynamic>? bookInfo;
+  Map<String, dynamic>? bookInfo;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
@@ -32,15 +33,11 @@ class _BarCodeScanState extends State<BarCodeScan> {
   @override
   void reassemble() {
     super.reassemble();
-    // if (Platform.isAndroid) {
-    //   controller!.pauseCamera();
-    // }
-    // controller!.resumeCamera();
   }
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
+    return WillPopScope(
         onWillPop: () async => false,
         child: Scaffold(
             appBar: AppBar(
@@ -48,7 +45,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
               title: const Text("แสกนบาร์โค้ด"),
             ),
             body: Container(
-              color: Color(0xfff5f3e8),
+              color: const Color(0xfff5f3e8),
               child: Column(
                 children: <Widget>[
                   Expanded(flex: 4, child: _buildQrView(context)),
@@ -70,13 +67,11 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                     onPressed: () async {
                                       await controller?.toggleFlash();
                                       setState(() {});
-                                      // Navigator.push(context, MaterialPageRoute(builder: (context) => ReviewPage(isbn: "9786162783807", edition: "1")));
                                     },
                                     child: FutureBuilder(
                                       future: controller?.getFlashStatus(),
                                       builder: (context, snapshot) {
-                                        // return Text('Flash: ${snapshot.data}');
-                                        return Text('แฟลช');
+                                        return const Text('แฟลช');
                                       },
                                     )),
                               ),
@@ -91,9 +86,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                       future: controller?.getCameraInfo(),
                                       builder: (context, snapshot) {
                                         if (snapshot.data != null) {
-                                          // return Text(
-                                          //     'Camera facing ${describeEnum(snapshot.data!)}');
-                                          return Text('สลับกล้อง');
+                                          return const Text('สลับกล้อง');
                                         } else {
                                           return const Text('กำลังโหลด');
                                         }
@@ -140,10 +133,13 @@ class _BarCodeScanState extends State<BarCodeScan> {
         editions = await BookController().getEditionsBook(result!);
         if (editions.isNotEmpty) {
           dropdownValue = editions.first;
-          bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
-          hasBook = await BookController().checkHasBook(result!, dropdownValue!);
+          bookInfo =
+              await BookController().getBookInfo(result!, dropdownValue!);
+          hasBook =
+              await BookController().checkHasBook(result!, dropdownValue!);
           if (hasBook)
-            hasSale = await SaleController().checkHasSale(result!, dropdownValue!);
+            hasSale =
+                await SaleController().checkHasSale(result!, dropdownValue!);
           else
             hasSale = false;
         } else {
@@ -151,174 +147,233 @@ class _BarCodeScanState extends State<BarCodeScan> {
           hasBook = false;
           hasSale = false;
         }
-        if (widget.type == "ADMIN" && bookInfo == null){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, isbn: result)))
-            .then((value) => controller.resumeCamera());
+        if (widget.type == "ADMIN" && bookInfo == null) {
+          Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AddBook(accType: widget.type, isbn: result)))
+              .then((value) => controller.resumeCamera());
         } else {
           showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-                  // title: const Text("เสร็จสิ้น"),
-                  content: bookInfo != null ? bookInfo!['approveStatus'] ? Container(
-                      height: 160,
-                      width: 320,
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ClipRRect(
-                              borderRadius:
-                                  BorderRadius.circular(5), // Image border
-                              child: Image.network(bookInfo!['coverImage'], height: 120, width: 80)
-                            ),
-                            Expanded(
-                              child: Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 16),
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(bookInfo!['title'],
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                            style: TextStyle(fontSize: 18)),
-                                        Text(
-                                          "\n${bookInfo!['isbn']}",
-                                          overflow: TextOverflow.ellipsis,
-                                        ),
-                                        InkWell(
-                                          splashColor: const Color(0xff795e35)
-                                              .withOpacity(0.5),
-                                          onTap: () => {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => ReviewPage(bookInfo: bookInfo!, hasBook: hasBook, hasSale: hasSale)),
-                                            )
-                                          },
-                                          child: Text(
-                                            'รายละเอียดอื่น',
-                                            style: TextStyle(
-                                                color: const Color(0xff795e35),
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ),
-                                        Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              Text('ครั้งที่พิมพ์: '),
-                                              DropdownButton<String>(
-                                                value: dropdownValue,
-                                                icon: const Icon(
-                                                    Icons.arrow_downward),
-                                                elevation: 16,
-                                                style: const TextStyle(
-                                                    color: Color(0xff795e35)),
-                                                underline: Container(
-                                                  height: 2,
-                                                  color: Color(0xff795e35),
-                                                ),
-                                                onChanged: (String? value) {
-                                                  setState(() async {
-                                                    dropdownValue = value!;
-                                                    bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
-                                                    hasBook = await BookController().checkHasBook(result!, dropdownValue!);
-                                                    if (hasBook)
-                                                      hasSale = await SaleController().checkHasSale(result!, dropdownValue!);
-                                                    else
-                                                      hasSale = false;
-                                                  });
-                                                },
-                                                items: editions.map<
-                                                        DropdownMenuItem<
-                                                            String>>(
-                                                    (String value) {
-                                                  return DropdownMenuItem<
-                                                      String>(
-                                                    value: value,
-                                                    child: Text(value),
-                                                  );
-                                                }).toList(),
-                                              )
-                                            ])
-                                      ])),
-                            ),
-                          ]))
-                          : Text('หนังสือเล่มนี้กำลังรอการอนุมัติ\nกรุณาลองใหม่ในภายหลัง')
-                          : Text('ยังไม่มีข้อมูลของหนังสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
-                  actions: <Widget>[
-                    if (widget.type == "ADMIN")
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, bookInfo: bookInfo, )))
-                          .then((value) {
+              context: context,
+              builder: (_) => AlertDialog(
+                    content: bookInfo != null
+                        ? bookInfo!['approveStatus']
+                            ? SizedBox(
+                                height: 160,
+                                width: 320,
+                                child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(5),
+                                          child: Image.network(
+                                              bookInfo!['coverImage'],
+                                              height: 120,
+                                              width: 80)),
+                                      Expanded(
+                                        child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16),
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(bookInfo!['title'],
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
+                                                      style: const TextStyle(
+                                                          fontSize: 18)),
+                                                  Text("\n${bookInfo!['isbn']}",
+                                                      overflow: TextOverflow
+                                                          .ellipsis),
+                                                  InkWell(
+                                                    splashColor:
+                                                        const Color(0xff795e35)
+                                                            .withOpacity(0.5),
+                                                    onTap: () => {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                ReviewPage(
+                                                                    bookInfo:
+                                                                        bookInfo!,
+                                                                    hasBook:
+                                                                        hasBook,
+                                                                    hasSale:
+                                                                        hasSale)),
+                                                      )
+                                                    },
+                                                    child: const Text(
+                                                        'รายละเอียดอื่น',
+                                                        style: TextStyle(
+                                                            color: Color(
+                                                                0xff795e35),
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .bold)),
+                                                  ),
+                                                  Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: <Widget>[
+                                                        const Text(
+                                                            'ครั้งที่พิมพ์: '),
+                                                        DropdownButton<String>(
+                                                          value: dropdownValue,
+                                                          icon: const Icon(Icons
+                                                              .arrow_downward),
+                                                          elevation: 16,
+                                                          style: const TextStyle(
+                                                              color: Color(
+                                                                  0xff795e35)),
+                                                          underline: Container(
+                                                              height: 2,
+                                                              color: const Color(
+                                                                  0xff795e35)),
+                                                          onChanged:
+                                                              (String? value) {
+                                                            setState(() async {
+                                                              dropdownValue =
+                                                                  value!;
+                                                              bookInfo = await BookController()
+                                                                  .getBookInfo(
+                                                                      result!,
+                                                                      dropdownValue!);
+                                                              hasBook = await BookController()
+                                                                  .checkHasBook(
+                                                                      result!,
+                                                                      dropdownValue!);
+                                                              if (hasBook)
+                                                                hasSale = await SaleController()
+                                                                    .checkHasSale(
+                                                                        result!,
+                                                                        dropdownValue!);
+                                                              else
+                                                                hasSale = false;
+                                                            });
+                                                          },
+                                                          items: editions.map<
+                                                              DropdownMenuItem<
+                                                                  String>>((String
+                                                              value) {
+                                                            return DropdownMenuItem<
+                                                                String>(
+                                                              value: value,
+                                                              child:
+                                                                  Text(value),
+                                                            );
+                                                          }).toList(),
+                                                        )
+                                                      ])
+                                                ])),
+                                      ),
+                                    ]))
+                            : const Text(
+                                'หนังสือเล่มนี้กำลังรอการอนุมัติ\nกรุณาลองใหม่ในภายหลัง')
+                        : const Text(
+                            'ยังไม่มีข้อมูลของหนังสือเล่มนี้\nช่วยเพิ่มคลังหนังสือของพวกเรา'),
+                    actions: <Widget>[
+                      if (widget.type == "ADMIN")
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddBook(
+                                          accType: widget.type,
+                                          bookInfo: bookInfo,
+                                        ))).then((value) {
+                              controller.resumeCamera();
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          child: Text(bookInfo!['approveStatus']
+                              ? 'แก้ไขข้อมูล'
+                              : 'ไปอนุมัติข้อมูล'),
+                        )
+                      else if (editions.isEmpty)
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => AddBook(
+                                        accType: widget.type,
+                                        isbn: result))).then((value) {
+                              controller.resumeCamera();
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          child: const Text('เพิ่มข้อมูล'),
+                        )
+                      else if (!bookInfo!['approveStatus'])
+                        TextButton(
+                          onPressed: () {
                             controller.resumeCamera();
                             Navigator.of(context).pop();
-                          });
-                        },
-                        child: Text(bookInfo!['approveStatus'] ? 'แก้ไขข้อมูล' : 'ไปอนุมัติข้อมูล'),
-                      )
-                    else if (editions.isEmpty)
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddBook(accType: widget.type, isbn: result)))
-                          .then((value) {
-                            controller.resumeCamera();
-                            Navigator.of(context).pop();
-                          });
-                        },
-                        child: const Text('เพิ่มข้อมูล'),
-                      )
-                    else if (!bookInfo!['approveStatus'])
+                          },
+                          child: const Text('ตกลง'),
+                        )
+                      else if (hasSale)
+                        TextButton(
+                          onPressed: () {
+                            // Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale(bookInfo: bookInfo!)))
+                            // .then((value) {
+                            //   controller.resumeCamera();
+                            //   Navigator.of(context).pop();
+                            // });
+                          },
+                          child: const Text('กำลังขาย'),
+                        )
+                      else if (hasBook)
+                        TextButton(
+                          onPressed: () {
+                            Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            AddSale(bookInfo: bookInfo!)))
+                                .then((value) {
+                              controller.resumeCamera();
+                              Navigator.of(context).pop();
+                            });
+                          },
+                          child: const Text('ขาย'),
+                        )
+                      else
+                        TextButton(
+                          onPressed: () async {
+                            await BookController()
+                                .addBookToLibrary(bookInfo!['isbn'],
+                                    bookInfo!['edition'].toString())
+                                .then((value) => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => BottomBar(
+                                            accType: widget.type,
+                                            tab: "PROFILE"))));
+                          },
+                          child: const Text('เพิ่มไปคลังหนังสือ'),
+                        ),
                       TextButton(
                         onPressed: () {
                           controller.resumeCamera();
                           Navigator.of(context).pop();
                         },
-                        child: const Text('ตกลง'),
-                      )
-                    else if (hasSale)
-                      TextButton(
-                        onPressed: () {
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale(bookInfo: bookInfo!)))
-                          // .then((value) {
-                          //   controller.resumeCamera();
-                          //   Navigator.of(context).pop();
-                          // });
-                        },
-                        child: const Text('กำลังขาย'),
-                      )
-                    else if (hasBook)
-                      TextButton(
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => AddSale(bookInfo: bookInfo!)))
-                          .then((value) {
-                            controller.resumeCamera();
-                            Navigator.of(context).pop();
-                          });
-                        },
-                        child: const Text('ขาย'),
-                      )
-                    else
-                      TextButton(
-                        onPressed: () async {
-                          await BookController().addBookToLibrary(bookInfo!['isbn'], bookInfo!['edition'].toString())
-                            .then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: widget.type, tab: "PROFILE"))));
-                        },
-                        child: const Text('เพิ่มไปคลังหนังสือ'),
-                      )
-                    ,
-                    TextButton(
-                      onPressed: () {
-                        controller.resumeCamera();
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('ยกเลิก'),
-                    ),
-                  ],
-                ));
+                        child: const Text('ยกเลิก'),
+                      ),
+                    ],
+                  ));
         }
       });
     });

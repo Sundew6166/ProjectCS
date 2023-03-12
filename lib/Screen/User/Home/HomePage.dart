@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
+
 import 'package:my_book/Screen/User/Home/RecPostTab.dart';
 import 'package:my_book/Screen/User/Home/SaleTab.dart';
 import 'package:my_book/Screen/User/Home/SearchPage.dart';
 import 'package:my_book/Screen/User/Home/NotiPage.dart';
+
 import 'package:my_book/Service/PostController.dart';
 import 'package:my_book/Service/SaleController.dart';
 
@@ -40,20 +42,17 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) => DefaultTabController(
       length: 2,
-      child: new WillPopScope(
+      child: WillPopScope(
           onWillPop: () async => false,
           child: sales != null
               ? Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
                     centerTitle: false,
-                    title: Text(
-                      "My Book",
-                    ),
-                    // leading: Image.asset("images/logo.PNG"),
+                    title: const Text("My Book"),
                     actions: [
                       IconButton(
-                        icon: Icon(Icons.notifications),
+                        icon: const Icon(Icons.notifications),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -63,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                       IconButton(
-                        icon: Icon(Icons.search),
+                        icon: const Icon(Icons.search),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -73,13 +72,9 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
                     ],
-                    bottom: new TabBar(tabs: [
-                      Tab(
-                        text: 'โพสต์',
-                      ),
-                      Tab(
-                        text: 'ขาย',
-                      ),
+                    bottom: const TabBar(tabs: [
+                      Tab(text: 'โพสต์'),
+                      Tab(text: 'ขาย'),
                     ]),
                   ),
                   body: TabBarView(
@@ -92,13 +87,10 @@ class _HomePageState extends State<HomePage> {
               : Container(
                   width: MediaQuery.of(context).size.width,
                   height: MediaQuery.of(context).size.height,
-                  color: Color(0xfff5f3e8),
+                  color: Colors.white,
                   child: Center(
-                    child: LoadingAnimationWidget.twistingDots(
-                      leftDotColor: const Color(0xFF1A1A3F),
-                      rightDotColor: const Color(0xFFEA3799),
-                      size: 50,
-                    ),
+                    child: Lottie.network(
+                        'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
                   ),
                 )));
 }

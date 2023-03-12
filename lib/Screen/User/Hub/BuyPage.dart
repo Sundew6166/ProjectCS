@@ -7,14 +7,13 @@ import 'package:my_book/Service/SaleController.dart';
 class BuyPage extends StatefulWidget {
   BuyPage({super.key, required this.saleInfo});
 
-  Map<String,dynamic> saleInfo;
+  Map<String, dynamic> saleInfo;
 
   @override
   State<BuyPage> createState() => _BuyPageState();
 }
 
 class _BuyPageState extends State<BuyPage> {
-  // bool buttonenabled = false;
   bool canBuy = false;
   bool statusBuy = false;
 
@@ -26,7 +25,10 @@ class _BuyPageState extends State<BuyPage> {
 
   setCanBuy() async {
     if (widget.saleInfo['seller'] != FirebaseAuth.instance.currentUser!.uid) {
-      await BookController().checkHasBook(widget.saleInfo['book']['isbn'], widget.saleInfo['book']['edition'].toString()).then((value) {
+      await BookController()
+          .checkHasBook(widget.saleInfo['book']['isbn'],
+              widget.saleInfo['book']['edition'].toString())
+          .then((value) {
         setState(() {
           canBuy = !value;
         });
@@ -43,109 +45,136 @@ class _BuyPageState extends State<BuyPage> {
         resizeToAvoidBottomInset: false,
         body: SingleChildScrollView(
             child: Container(
-                color: Color(0xfff5f3e8),
+                color: const Color(0xfff5f3e8),
                 alignment: Alignment.topCenter,
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     ImageProduct(urlImage: widget.saleInfo['image']),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     Container(
-                        margin: EdgeInsets.symmetric(
+                        margin: const EdgeInsets.symmetric(
                           horizontal: 10,
                         ),
                         color: Colors.white,
                         child: Column(children: [
                           BookName(title: widget.saleInfo['book']['title']),
                           Author(author: widget.saleInfo['book']['author']),
-                          Publisher(publisher: widget.saleInfo['book']['publisher']),
+                          Publisher(
+                              publisher: widget.saleInfo['book']['publisher']),
                           Type(types: widget.saleInfo['book']['types']),
-                          Selling_Price(sellingPrice: widget.saleInfo['sellingPrice'].toString()),
-                          DeliveryFee(deliveryFee: widget.saleInfo['deliveryFee'].toString()),
-                          Synopsys(synopsys: widget.saleInfo['book']['synopsys']),
+                          Selling_Price(
+                              sellingPrice:
+                                  widget.saleInfo['sellingPrice'].toString()),
+                          DeliveryFee(
+                              deliveryFee:
+                                  widget.saleInfo['deliveryFee'].toString()),
+                          Synopsys(
+                              synopsys: widget.saleInfo['book']['synopsys']),
                           Detail(detail: widget.saleInfo['detail']),
                         ])),
                     Container(
-                        margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                        margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: ElevatedButton(
-                            onPressed: (canBuy) ? () {
-                                showDialog(
-                                  context: context,
-                                  builder: (_) => AlertDialog(
-                                      title: const Text("ยืนยันการซื้อหนังสือ"),
-                                      content:
-                                          Text('${widget.saleInfo['book']['title']}\nราคารวม ${widget.saleInfo['sellingPrice'] + widget.saleInfo['deliveryFee']} บาท'),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context, 'ยกเลิก'),
-                                          child: const Text('ยกเลิก'),
-                                        ),
-                                        TextButton(
-                                          onPressed: () async {
-                                            try {
-                                              await SaleController().buyBook(widget.saleInfo['id'])
-                                                .then((value) {
-                                                  setState(() {
-                                                    statusBuy = value;
-                                                  });
-                                                  if (statusBuy) {
-                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: 'USER', tab: "HOME")));
-                                                  } else {
-                                                    showDialog(
-                                                      context: context,
-                                                      builder: (_) =>
-                                                          AlertDialog(
-                                                              title: Text("ไม่สามารถซื้อได้ในขณะนี้"),
-                                                              content: Text("มีคนอื่นกำลังซื้ออยู่"),
-                                                              actions: <Widget>[
-                                                                TextButton(
-                                                                  onPressed: () => Navigator.of(context)..pop()..pop()..pop(),
-                                                                  child: const Text('ตกลง'),
-                                                                )
-                                                              ]
-                                                          )
-                                                    );
-                                                  }
-                                                });
-                                            } on FirebaseException catch (e) {
-                                              print(e.code);
-                                              showDialog(
-                                                  context: context,
-                                                  builder: (_) =>
-                                                      AlertDialog(
-                                                          title: Text(e
-                                                              .message
-                                                              .toString()),
-                                                          content: Text(
-                                                              "เกิดข้อผิดพลาดในการซื้อหนังสือ กรุณาลองใหม่"),
-                                                          actions: <
-                                                              Widget>[
-                                                            TextButton(
-                                                              onPressed:
-                                                                  () =>
-                                                                      Navigator.pop(context),
-                                                              child: const Text(
-                                                                  'ตกลง'),
-                                                            )
-                                                          ]));
-                                            }
-                                          },
-                                          child: const Text('ตกลง'),
-                                        ),
-                                      ],
-                                    ));
-                            } : null,
+                            onPressed: (canBuy)
+                                ? () {
+                                    showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: const Text(
+                                                  "ยืนยันการซื้อหนังสือ"),
+                                              content: Text(
+                                                  '${widget.saleInfo['book']['title']}\nราคารวม ${widget.saleInfo['sellingPrice'] + widget.saleInfo['deliveryFee']} บาท'),
+                                              actions: <Widget>[
+                                                TextButton(
+                                                  onPressed: () =>
+                                                      Navigator.pop(
+                                                          context, 'ยกเลิก'),
+                                                  child: const Text('ยกเลิก'),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    try {
+                                                      await SaleController()
+                                                          .buyBook(widget
+                                                              .saleInfo['id'])
+                                                          .then((value) {
+                                                        setState(() {
+                                                          statusBuy = value;
+                                                        });
+                                                        if (statusBuy) {
+                                                          Navigator.push(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) =>
+                                                                      BottomBar(
+                                                                          accType:
+                                                                              'USER',
+                                                                          tab:
+                                                                              "HOME")));
+                                                        } else {
+                                                          showDialog(
+                                                              context: context,
+                                                              builder: (_) =>
+                                                                  AlertDialog(
+                                                                      title: const Text(
+                                                                          "ไม่สามารถซื้อได้ในขณะนี้"),
+                                                                      content:
+                                                                          const Text(
+                                                                              "มีคนอื่นกำลังซื้ออยู่"),
+                                                                      actions: <
+                                                                          Widget>[
+                                                                        TextButton(
+                                                                          onPressed: () => Navigator.of(
+                                                                              context)
+                                                                            ..pop()
+                                                                            ..pop()
+                                                                            ..pop(),
+                                                                          child:
+                                                                              const Text('ตกลง'),
+                                                                        )
+                                                                      ]));
+                                                        }
+                                                      });
+                                                    } on FirebaseException catch (e) {
+                                                      print(e.code);
+                                                      showDialog(
+                                                          context: context,
+                                                          builder: (_) =>
+                                                              AlertDialog(
+                                                                  title: Text(e
+                                                                      .message
+                                                                      .toString()),
+                                                                  content:
+                                                                      const Text(
+                                                                          "เกิดข้อผิดพลาดในการซื้อหนังสือ กรุณาลองใหม่"),
+                                                                  actions: <
+                                                                      Widget>[
+                                                                    TextButton(
+                                                                      onPressed:
+                                                                          () =>
+                                                                              Navigator.pop(context),
+                                                                      child: const Text(
+                                                                          'ตกลง'),
+                                                                    )
+                                                                  ]));
+                                                    }
+                                                  },
+                                                  child: const Text('ตกลง'),
+                                                ),
+                                              ],
+                                            ));
+                                  }
+                                : null,
                             style: ElevatedButton.styleFrom(
-                                fixedSize:
-                                    Size(100, 40), // specify width, height
+                                fixedSize: const Size(100, 40),
                                 shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
                                   10,
                                 ))),
-                            child:
-                                Text("ซื้อ", style: TextStyle(fontSize: 20)))),
+                            child: const Text("ซื้อ",
+                                style: TextStyle(fontSize: 20)))),
                   ],
                 ))));
   }
@@ -157,10 +186,10 @@ class ImageProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300,
       child: ClipRRect(
-        borderRadius: BorderRadius.circular(5), // Image border
+        borderRadius: BorderRadius.circular(5),
         child: Image.network(urlImage),
       ),
     );
@@ -174,10 +203,9 @@ class BookName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: const EdgeInsets.only(top: 20.0),
       padding: const EdgeInsets.all(8),
       child: Center(
-        child: Text(title, style: TextStyle(fontSize: 20)),
+        child: Text(title, style: const TextStyle(fontSize: 20)),
       ),
     );
   }
@@ -193,21 +221,17 @@ class Selling_Price extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ราคาขาย : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ราคาขาย : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('${sellingPrice} บาท',
-                    style: TextStyle(fontSize: 16, color: Colors.red)),
-              ),
+              child: Text('$sellingPrice บาท',
+                  style: const TextStyle(fontSize: 16, color: Colors.red)),
             ),
           ),
         ],
@@ -226,23 +250,19 @@ class Author extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ชื่อผู้แต่ง : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ชื่อผู้แต่ง : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text(author,
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
+              child: Text(author,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  )),
             ),
           ),
         ],
@@ -261,23 +281,19 @@ class Publisher extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('สำนักพิมพ์ : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('สำนักพิมพ์ : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text(publisher,
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
+              child: Text(publisher,
+                  style: const TextStyle(
+                    fontSize: 16,
+                  )),
             ),
           ),
         ],
@@ -296,23 +312,19 @@ class DeliveryFee extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ค่าจัดส่ง : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ค่าจัดส่ง : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('${deliveryFee} บาท',
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
+              child: Text('$deliveryFee บาท',
+                  style: const TextStyle(
+                    fontSize: 16,
+                  )),
             ),
           ),
         ],
@@ -331,12 +343,10 @@ class Type extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ประเภทหนังสือ : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ประเภทหนังสือ : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Wrap(
@@ -351,17 +361,15 @@ class Type extends StatelessWidget {
 
   Widget _buildChip(String label) {
     return Chip(
-      labelPadding: EdgeInsets.all(2.0),
+      labelPadding: const EdgeInsets.all(2.0),
       label: Text(
         label,
-        style: TextStyle(
-          color: Colors.black,
-        ),
+        style: const TextStyle(color: Colors.black),
       ),
-      backgroundColor: Color(0xffadd1dc),
+      backgroundColor: const Color(0xffadd1dc),
       elevation: 6.0,
       shadowColor: Colors.grey[60],
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
     );
   }
 }
@@ -376,22 +384,15 @@ class Synopsys extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Column(
         children: <Widget>[
-          Container(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('เรื่องย่อ : ', style: TextStyle(fontSize: 16)),
-              ),
-            ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text('เรื่องย่อ : ', style: TextStyle(fontSize: 16)),
           ),
           Container(
             margin: const EdgeInsets.only(top: 10.0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text(synopsys,
-                    style: TextStyle(fontSize: 16)),
-              ),
+              child: Text(synopsys, style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -410,23 +411,15 @@ class Detail extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Column(
         children: <Widget>[
-          Container(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child:
-                    Text('รายละเอียดอื่น ๆ : ', style: TextStyle(fontSize: 16)),
-              ),
-            ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text('รายละเอียดอื่น ๆ : ', style: TextStyle(fontSize: 16)),
           ),
           Container(
             margin: const EdgeInsets.only(top: 10.0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text(detail,
-                    style: TextStyle(fontSize: 16)),
-              ),
+              child: Text(detail, style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],

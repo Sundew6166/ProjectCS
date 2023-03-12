@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
+
 import 'package:my_book/Screen/User/Home/HomePage.dart';
 import 'package:my_book/Screen/User/Scan/BarCodeScan.dart';
 import 'package:my_book/Screen/User/Profile/ProfilePage.dart';
-
 import 'package:my_book/Screen/Admin/HomeAdmin.dart';
 import 'package:my_book/Screen/Admin/ProfileAdmin.dart';
 
 class BottomBar extends StatefulWidget {
-  // const BottomBar({super.key});
-  BottomBar({Key? key, required this.accType, required this.tab}) : super(key: key);
+  BottomBar({Key? key, required this.accType, required this.tab})
+      : super(key: key);
 
   String accType;
   String tab;
@@ -20,22 +20,26 @@ class BottomBar extends StatefulWidget {
 class _BottomBarState extends State<BottomBar> {
   int currentIndex = 0;
 
-  static List<Widget> _userOptions = <Widget>[
-    HomePage(),
+  static final List<Widget> _userOptions = <Widget>[
+    const HomePage(),
     BarCodeScan(type: "USER"),
-    Profile(),
+    const Profile(),
   ];
 
-  static List<Widget> _adminOptions = <Widget>[
-    HomeAdmin(),
+  static final List<Widget> _adminOptions = <Widget>[
+    const HomeAdmin(),
     BarCodeScan(type: "ADMIN"),
-    ProfileAdmin(),
+    const ProfileAdmin(),
   ];
 
   @override
   void initState() {
     String tab = widget.tab;
-    currentIndex = tab == "PROFILE" ? 2 : tab == "BARCODESCAN" ? 1 : 0;
+    currentIndex = tab == "PROFILE"
+        ? 2
+        : tab == "BARCODESCAN"
+            ? 1
+            : 0;
     super.initState();
   }
 
@@ -54,22 +58,14 @@ class _BottomBarState extends State<BottomBar> {
             : _adminOptions.elementAt(currentIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'หน้าแรก'),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'หน้าแรก',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.qr_code_scanner),
-            label: 'สแกน',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'โปรไฟล์',
-          ),
+              icon: Icon(Icons.qr_code_scanner), label: 'สแกน'),
+          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'โปรไฟล์'),
         ],
         selectedItemColor: Colors.white,
-        backgroundColor: Color(0xff795e35),
+        backgroundColor: const Color(0xff795e35),
         unselectedItemColor: Colors.white38,
         currentIndex: currentIndex,
         onTap: _onItemTapped,

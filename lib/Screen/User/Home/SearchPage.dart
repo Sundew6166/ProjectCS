@@ -33,20 +33,21 @@ class _SearchPageState extends State<SearchPage> {
                       ),
                       hintText: '\tค้นหา...',
                       border: InputBorder.none,
-                      contentPadding: EdgeInsets.only(left: 3.0, top: 3.0)),
+                      contentPadding:
+                          const EdgeInsets.only(left: 3.0, top: 3.0)),
                 ),
               ),
             ),
             actions: [
           IconButton(
-            icon: Icon(Icons.search),
+            icon: const Icon(Icons.search),
             onPressed: () {
-              // print(data.text);
               data.text.trim().isNotEmpty
                   ? Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => TabSearch(data: data.text)),
+                        builder: (context) => TabSearch(data: data.text),
+                      ),
                     )
                   : Fluttertoast.showToast(
                       msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",

@@ -1,14 +1,13 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:my_book/Screen/User/Scan/AddSale.dart';
+
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/ReviewController.dart';
 
-// มาจาก หนังสือแนะนำ หนังสือในคลัง ค้นหาหนังสือ
 class ReviewPage extends StatefulWidget {
   ReviewPage(
       {super.key,
@@ -54,12 +53,12 @@ class _ReviewPageState extends State<ReviewPage> {
         body: SingleChildScrollView(
             child: widget.bookInfo != null && reviews != null
                 ? Container(
-                    color: Color(0xfff5f3e8),
+                    color: const Color(0xfff5f3e8),
                     alignment: Alignment.topCenter,
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Row(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -88,7 +87,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                           builder: (_) => AlertDialog(
                                                 title: const Text(
                                                     "ลบออกจากคลังหนังสือ"),
-                                                content: Text(
+                                                content: const Text(
                                                     'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
                                                 actions: <Widget>[
                                                   TextButton(
@@ -124,8 +123,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                                                     title: Text(e
                                                                         .message
                                                                         .toString()),
-                                                                    content: Text(
-                                                                        "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                                                                    content:
+                                                                        const Text(
+                                                                            "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
                                                                     actions: <
                                                                         Widget>[
                                                                       TextButton(
@@ -161,7 +161,7 @@ class _ReviewPageState extends State<ReviewPage> {
                                             builder: (_) => AlertDialog(
                                                     title: Text(
                                                         e.message.toString()),
-                                                    content: Text(
+                                                    content: const Text(
                                                         "เกิดข้อผิดพลาดในการเพิ่มหนังสือเข้าคลัง กรุณาลองใหม่"),
                                                     actions: <Widget>[
                                                       TextButton(
@@ -174,12 +174,9 @@ class _ReviewPageState extends State<ReviewPage> {
                                                     ]));
                                       }
                                     }
-                                    // print(_isBookOn);
                                   }),
                                 ),
-                                SizedBox(
-                                  height: 20,
-                                ),
+                                const SizedBox(height: 20),
                                 if (widget.hasBook)
                                   IconButton(
                                       icon: Icon(
@@ -202,11 +199,9 @@ class _ReviewPageState extends State<ReviewPage> {
                             )
                           ],
                         ),
-                        SizedBox(height: 20),
+                        const SizedBox(height: 20),
                         Container(
-                          margin: EdgeInsets.symmetric(
-                            horizontal: 10,
-                          ),
+                          margin: const EdgeInsets.symmetric(horizontal: 10),
                           color: Colors.white,
                           child: Column(
                             children: [
@@ -232,13 +227,10 @@ class _ReviewPageState extends State<ReviewPage> {
                 : Container(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
-                    color: Color(0xfff5f3e8),
+                    color: Colors.white,
                     child: Center(
-                      child: LoadingAnimationWidget.twistingDots(
-                        leftDotColor: const Color(0xFF1A1A3F),
-                        rightDotColor: const Color(0xFFEA3799),
-                        size: 50,
-                      ),
+                      child: Lottie.network(
+                          'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
                     ),
                   )));
   }
@@ -250,7 +242,7 @@ class ImageProduct extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 300,
       child: ClipRRect(
         borderRadius: BorderRadius.circular(5), // Image border
@@ -267,10 +259,9 @@ class BookName extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // margin: const EdgeInsets.only(top: 20.0),
       padding: const EdgeInsets.all(8),
       child: Center(
-        child: Text(title, style: TextStyle(fontSize: 20)),
+        child: Text(title, style: const TextStyle(fontSize: 20)),
       ),
     );
   }
@@ -286,23 +277,16 @@ class Author extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ชื่อผู้แต่ง : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ชื่อผู้แต่ง : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text(author,
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
+              child: Text(author, style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -321,23 +305,16 @@ class Edition extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ครั้งที่พิมพ์ : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ครั้งที่พิมพ์ : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text(edition,
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
+              child: Text(edition, style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -356,23 +333,16 @@ class Publisher extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('สำนักพิมพ์ : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('สำนักพิมพ์ : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text(publisher,
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
+              child: Text(publisher, style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -391,23 +361,16 @@ class Price extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ราคาปก : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ราคาปก : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Container(
-                child: Text('${price} บาท',
-                    style: TextStyle(
-                      fontSize: 16,
-                    )),
-              ),
+              child: Text('$price บาท', style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -426,12 +389,10 @@ class Type extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('ประเภทหนังสือ : ', style: TextStyle(fontSize: 16)),
-              ),
+              child: Text('ประเภทหนังสือ : ', style: TextStyle(fontSize: 16)),
             ),
           ),
           Wrap(
@@ -446,17 +407,12 @@ class Type extends StatelessWidget {
 
   Widget _buildChip(String label) {
     return Chip(
-      labelPadding: EdgeInsets.all(2.0),
-      label: Text(
-        label,
-        style: TextStyle(
-          color: Colors.black,
-        ),
-      ),
-      backgroundColor: Color(0xffadd1dc),
+      labelPadding: const EdgeInsets.all(2.0),
+      label: Text(label, style: const TextStyle(color: Colors.black)),
+      backgroundColor: const Color(0xffadd1dc),
       elevation: 6.0,
       shadowColor: Colors.grey[60],
-      padding: EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(8.0),
     );
   }
 }
@@ -471,21 +427,15 @@ class Synopsys extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Column(
         children: <Widget>[
-          Container(
-            child: Align(
-              alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text('เรื่องย่อ : ', style: TextStyle(fontSize: 16)),
-              ),
-            ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text('เรื่องย่อ : ', style: TextStyle(fontSize: 16)),
           ),
           Container(
             margin: const EdgeInsets.only(top: 10.0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Container(
-                child: Text(synopsys, style: TextStyle(fontSize: 16)),
-              ),
+              child: Text(synopsys, style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -514,104 +464,86 @@ class _WriteReviewState extends State<WriteReview> {
   double rate = 0.0;
 
   Widget rateReview(reviews) {
-    return Container(
-      // padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      child: ListView.builder(
-        itemCount: widget.reviews.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return ClipRRect(
-              borderRadius: BorderRadius.circular(15), // Image border
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                margin: EdgeInsets.symmetric(vertical: 3),
-                decoration: BoxDecoration(
-                  color: Color(0xffadd1dc),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+    return ListView.builder(
+      itemCount: widget.reviews.length,
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return ClipRRect(
+            borderRadius: BorderRadius.circular(15),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+              margin: const EdgeInsets.symmetric(vertical: 3),
+              decoration: const BoxDecoration(color: Color(0xffadd1dc)),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundImage:
+                            NetworkImage('${widget.reviews[index]['Image']}'),
+                        backgroundColor: const Color(0xffadd1dc),
+                        radius: 12,
+                      ),
+                      Text('\t${widget.reviews[index]['CreateBy']}',
+                          style: const TextStyle(fontSize: 14)),
+                    ],
+                  ),
+                  const SizedBox(height: 5),
+                  Text('\t${widget.reviews[index]['Detail_Review']}',
+                      style: const TextStyle(fontSize: 14)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 5),
+                    child: Row(
                       children: [
-                        CircleAvatar(
-                          backgroundImage:
-                              NetworkImage('${widget.reviews[index]['Image']}'),
-                          backgroundColor: Color(0xffadd1dc),
-                          radius: 12,
-                        ),
-                        Text('\t${widget.reviews[index]['CreateBy']}',
-                            style: TextStyle(fontSize: 14)),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text('\t${widget.reviews[index]['Detail_Review']}',
-                        style: TextStyle(fontSize: 14)),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 5),
-                      child: Row(
-                        children: [
-                          RatingBarIndicator(
-                            itemSize: 20,
-                            rating: widget.reviews[index]['Rating'].toDouble(),
-                            itemCount: 5,
-                            itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
-                            itemBuilder: (context, index) {
-                              switch (index) {
-                                case 0:
-                                  return Icon(
+                        RatingBarIndicator(
+                          itemSize: 20,
+                          rating: widget.reviews[index]['Rating'].toDouble(),
+                          itemCount: 5,
+                          itemPadding:
+                              const EdgeInsets.symmetric(horizontal: 2.0),
+                          itemBuilder: (context, index) {
+                            switch (index) {
+                              case 0:
+                                return const Icon(
                                     Icons.sentiment_very_dissatisfied,
-                                    color: Colors.red,
-                                  );
-                                case 1:
-                                  return Icon(
-                                    Icons.sentiment_dissatisfied,
-                                    color: Colors.redAccent,
-                                  );
-                                case 2:
-                                  return Icon(
-                                    Icons.sentiment_neutral,
-                                    color: Colors.amber,
-                                  );
-                                case 3:
-                                  return Icon(
-                                    Icons.sentiment_satisfied,
-                                    color: Colors.lightGreen,
-                                  );
-                                default:
-                                  return Icon(
+                                    color: Colors.red);
+                              case 1:
+                                return const Icon(Icons.sentiment_dissatisfied,
+                                    color: Colors.redAccent);
+                              case 2:
+                                return const Icon(Icons.sentiment_neutral,
+                                    color: Colors.amber);
+                              case 3:
+                                return const Icon(Icons.sentiment_satisfied,
+                                    color: Colors.lightGreen);
+                              default:
+                                return const Icon(
                                     Icons.sentiment_very_satisfied,
-                                    color: Colors.green,
-                                  );
-                              }
-                            },
-                          ),
-                          SizedBox(width: 20),
-                          Row(
-                            children: [
-                              Text(
-                                '${widget.reviews[index]['Rating']}',
-                                style: TextStyle(
+                                    color: Colors.green);
+                            }
+                          },
+                        ),
+                        const SizedBox(width: 20),
+                        Row(
+                          children: [
+                            Text('${widget.reviews[index]['Rating']}',
+                                style: const TextStyle(
                                     color: Color(0xff795e35),
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                '/ 5.0',
+                                    fontWeight: FontWeight.bold)),
+                            Text('/ 5.0',
                                 style: TextStyle(
                                     color: Colors.grey[500],
-                                    fontWeight: FontWeight.bold),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
+                                    fontWeight: FontWeight.bold))
+                          ],
+                        )
+                      ],
                     ),
-                  ],
-                ),
-              ));
-        },
-      ),
+                  ),
+                ],
+              ),
+            ));
+      },
     );
   }
 
@@ -619,53 +551,42 @@ class _WriteReviewState extends State<WriteReview> {
   Widget build(BuildContext context) {
     return Container(
       alignment: Alignment.center,
-      padding: EdgeInsets.all(20),
+      padding: const EdgeInsets.all(20),
       child: Column(
         children: [
           Row(
             children: [
               CircleAvatar(
                 backgroundImage: NetworkImage(user!.photoURL.toString()),
-                backgroundColor: Color(0xffadd1dc),
+                backgroundColor: const Color(0xffadd1dc),
                 radius: 20,
               ),
               Text('\t${user!.displayName.toString()}',
-                  style: TextStyle(fontSize: 16)),
-              SizedBox(width: 20),
+                  style: const TextStyle(fontSize: 16)),
+              const SizedBox(width: 20),
               RatingBar.builder(
                 itemSize: 40,
                 minRating: 1,
                 initialRating: rate,
-                // direction: Axis.horizontal,
                 itemCount: 5,
-                itemPadding: EdgeInsets.symmetric(horizontal: 2.0),
+                itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
                 itemBuilder: (context, index) {
                   switch (index) {
                     case 0:
-                      return Icon(
-                        Icons.sentiment_very_dissatisfied,
-                        color: Colors.red,
-                      );
+                      return const Icon(Icons.sentiment_very_dissatisfied,
+                          color: Colors.red);
                     case 1:
-                      return Icon(
-                        Icons.sentiment_dissatisfied,
-                        color: Colors.redAccent,
-                      );
+                      return const Icon(Icons.sentiment_dissatisfied,
+                          color: Colors.redAccent);
                     case 2:
-                      return Icon(
-                        Icons.sentiment_neutral,
-                        color: Colors.amber,
-                      );
+                      return const Icon(Icons.sentiment_neutral,
+                          color: Colors.amber);
                     case 3:
-                      return Icon(
-                        Icons.sentiment_satisfied,
-                        color: Colors.lightGreen,
-                      );
+                      return const Icon(Icons.sentiment_satisfied,
+                          color: Colors.lightGreen);
                     default:
-                      return Icon(
-                        Icons.sentiment_very_satisfied,
-                        color: Colors.green,
-                      );
+                      return const Icon(Icons.sentiment_very_satisfied,
+                          color: Colors.green);
                   }
                 },
                 onRatingUpdate: (rating) {
@@ -674,18 +595,18 @@ class _WriteReviewState extends State<WriteReview> {
               ),
             ],
           ),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           TextField(
             controller: textarea,
             keyboardType: TextInputType.multiline,
             maxLines: 8,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,
                 hintText: "พิมพ์ข้อความลงในนี้...",
                 focusedBorder: OutlineInputBorder(
                     borderSide:
-                        BorderSide(width: 2, color: const Color(0xff795e35)))),
+                        BorderSide(width: 2, color: Color(0xff795e35)))),
           ),
           ElevatedButton(
               onPressed: () async {
@@ -709,13 +630,12 @@ class _WriteReviewState extends State<WriteReview> {
                         context: context,
                         builder: (_) => AlertDialog(
                                 title: Text(e.message.toString()),
-                                content: Text(
+                                content: const Text(
                                     "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
                                 actions: <Widget>[
                                   TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text('ตกลง'),
-                                  )
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text('ตกลง'))
                                 ]));
                   }
                   textarea.clear();
@@ -723,20 +643,19 @@ class _WriteReviewState extends State<WriteReview> {
                 } else {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('กรุณาคะแนนหนังสือ',
-                          style: TextStyle(fontSize: 18)),
-                      backgroundColor: Colors.red,
-                    ),
+                        content: Text('กรุณาคะแนนหนังสือ',
+                            style: TextStyle(fontSize: 18)),
+                        backgroundColor: Colors.red),
                   );
                 }
               },
               style: ElevatedButton.styleFrom(
-                  fixedSize: Size(400, 40),
+                  fixedSize: const Size(400, 40),
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(
                     10,
                   ))),
-              child: Text("รีวิว", style: TextStyle(fontSize: 20))),
+              child: const Text("รีวิว", style: TextStyle(fontSize: 20))),
           rateReview(widget.reviews)
         ],
       ),

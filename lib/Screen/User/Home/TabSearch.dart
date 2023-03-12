@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:my_book/Screen/User/Home/BookSearch.dart';
-import 'package:my_book/Screen/User/Home/RecPostTab.dart';
-
 import 'package:my_book/Screen/User/Home/SaleTab.dart';
+import 'package:my_book/Screen/User/Profile/PostTab.dart';
+
 import 'package:my_book/Service/SearchController.dart';
 
 class TabSearch extends StatefulWidget {
@@ -52,43 +52,40 @@ class _TabSearchState extends State<TabSearch> {
   Widget build(BuildContext context) => DefaultTabController(
         length: 3,
         child: posts != null && books != null && sales != null
-            // child: posts != null && books != null
             ? Scaffold(
                 appBar: AppBar(
                   title: Container(
-                    // width: double.infinity,
                     height: 40,
                     decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(5)),
-                    // child: Center(
-                      child: TextField(
-                        controller: _controller,
-                        keyboardType: TextInputType.multiline,
-                        decoration: InputDecoration(
-                            suffixIcon: IconButton(
-                              icon: const Icon(Icons.clear),
-                              onPressed: () {
-                                _controller.clear();
-                              },
-                            ),
-                            hintText: '\tค้นหา...',
-                            border: InputBorder.none,
-                            contentPadding: EdgeInsets.only(left: 3.0, top: 3.0)
-                        ),
-                      ),
-                    // ),
+                    child: TextField(
+                      controller: _controller,
+                      keyboardType: TextInputType.multiline,
+                      decoration: InputDecoration(
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () {
+                              _controller.clear();
+                            },
+                          ),
+                          hintText: '\tค้นหา...',
+                          border: InputBorder.none,
+                          contentPadding:
+                              const EdgeInsets.only(left: 3.0, top: 3.0)),
+                    ),
                   ),
                   actions: [
                     IconButton(
-                      icon: Icon(Icons.search),
+                      icon: const Icon(Icons.search),
                       onPressed: () {
                         _controller.text.trim().isNotEmpty
                             ? Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        TabSearch(data: _controller.text)),
+                                  builder: (context) =>
+                                      TabSearch(data: _controller.text),
+                                ),
                               )
                             : Fluttertoast.showToast(
                                 msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
@@ -101,7 +98,7 @@ class _TabSearchState extends State<TabSearch> {
                       },
                     ),
                   ],
-                  bottom: new TabBar(tabs: [
+                  bottom: const TabBar(tabs: [
                     Tab(text: 'หนังสือ'),
                     Tab(text: 'โพสต์'),
                     Tab(text: 'ซื้อ'),
@@ -110,7 +107,7 @@ class _TabSearchState extends State<TabSearch> {
                 body: TabBarView(
                   children: [
                     BookSearch(books: books!),
-                    PostSection(posts: posts!),
+                    PostTab(posts: posts!),
                     SaleTab(sales: sales!),
                   ],
                 ),
@@ -118,12 +115,10 @@ class _TabSearchState extends State<TabSearch> {
             : Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,
-                color: Color(0xfff5f3e8),
+                color: Colors.white,
                 child: Center(
-                  child: LoadingAnimationWidget.twistingDots(
-                      leftDotColor: const Color(0xFF1A1A3F),
-                      rightDotColor: const Color(0xFFEA3799),
-                      size: 50),
+                  child: Lottie.network(
+                      'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
                 ),
               ),
       );

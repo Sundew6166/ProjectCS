@@ -1,9 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:my_book/Service/AccountController.dart';
 import 'dart:io';
+
+import 'package:my_book/Service/AccountController.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -27,7 +27,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
         print(_image);
       });
     } else {
-      // print("No image selected");
       ScaffoldMessenger.of(context)
           .showSnackBar(const SnackBar(content: Text('คุณยังไม่ได้เลือกรูป')));
     }
@@ -63,7 +62,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   ),
                   const SizedBox(height: 20),
                   Container(
-                      margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
+                      margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
                       child: ElevatedButton(
                           onPressed: () async {
                             if (_image != null) {
@@ -74,7 +73,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                         context: context,
                                         builder: (_) => AlertDialog(
                                               title: const Text("เสร็จสิ้น"),
-                                              content: Text(
+                                              content: const Text(
                                                   'การแก้ไขโปรไฟล์ของคุณเสร็จสิ้น'),
                                               actions: <Widget>[
                                                 TextButton(
@@ -92,7 +91,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                     context: context,
                                     builder: (_) => AlertDialog(
                                             title: Text(e.message.toString()),
-                                            content: Text(
+                                            content: const Text(
                                                 "เกิดข้อผิดพลาดในการแก้ไขโปรไฟล์ กรุณาลองใหม่"),
                                             actions: <Widget>[
                                               TextButton(
@@ -103,20 +102,19 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                             ]));
                               }
                             } else {
-                              // print("No image selected");
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text('คุณยังไม่ได้เลือกรูป')));
                             }
                           },
                           style: ElevatedButton.styleFrom(
-                              fixedSize: Size(400, 40), // specify width, height
+                              fixedSize: const Size(400, 40),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(
                                 10,
                               ))),
-                          child: Text("บันทึก",
-                              style: TextStyle(fontSize: 20)))), //button: login
+                          child: const Text("บันทึก",
+                              style: TextStyle(fontSize: 20)))),
                 ],
               ))),
     );

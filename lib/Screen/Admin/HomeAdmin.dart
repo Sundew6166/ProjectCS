@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:my_book/Screen/User/Hub/Social.dart';
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
+
 import 'package:my_book/Service/PostController.dart';
 
 class HomeAdmin extends StatefulWidget {
@@ -35,15 +36,15 @@ class _HomeAdminState extends State<HomeAdmin> {
 
   @override
   Widget build(BuildContext context) {
-    return new WillPopScope(
+    return WillPopScope(
         onWillPop: () async {
           final difference = DateTime.now().difference(timeBackPressed);
-          final isExitWarning = difference >= Duration(seconds: 2);
+          final isExitWarning = difference >= const Duration(seconds: 2);
 
           timeBackPressed = DateTime.now();
 
           if (isExitWarning) {
-            final msg = 'กดอีกครั้งเพื่อออกจากแอพ';
+            const msg = 'กดอีกครั้งเพื่อออกจากแอพ';
             Fluttertoast.showToast(msg: msg, fontSize: 18);
 
             return false;
@@ -53,90 +54,71 @@ class _HomeAdminState extends State<HomeAdmin> {
             return true;
           }
         },
-        child: Scaffold(
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              centerTitle: false,
-              title: Text(
-                "My Book",
-              ),
-            ),
-            resizeToAvoidBottomInset: false,
-            body: SingleChildScrollView(
-                child: Container(
-                    // width: MediaQuery.of(context).size.width,
-                    // height: MediaQuery.of(context).size.height,
-                    color: Color(0xfff5f3e8),
-                    // padding: EdgeInsets.all(5),
-                    child: Column(
-                      children: <Widget>[
-                        if (posts != null)
-                          PostSection(
-                            posts: posts!,
-                          )
-                        else
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height,
-                            color: Color(0xfff5f3e8),
-                            child: Center(
-                              child: LoadingAnimationWidget.twistingDots(
-                                leftDotColor: const Color(0xFF1A1A3F),
-                                rightDotColor: const Color(0xFFEA3799),
-                                size: 50,
-                              ),
-                            ),
-                          )
-                      ],
-                    ))),
-            floatingActionButton:
-                SpeedDial(child: Icon(Icons.more_vert), children: [
-              SpeedDialChild(
-                child: Icon(
-                  Icons.add,
-                  color: Color(0xff795e35),
-                  size: 35,
+        child: posts != null
+            ? Scaffold(
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  centerTitle: false,
+                  title: const Text("My Book"),
                 ),
-                label: 'สร้างโพสต์',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => PostPage()),
+                body: Container(
+                  color: const Color(0xfff5f3e8),
+                  child: PostSec(posts: posts!),
                 ),
-              ),
-              SpeedDialChild(
-                child: Icon(
-                  Icons.book,
-                  color: Color(0xff795e35),
-                  size: 35,
-                ),
-                label: 'เพิ่มหนังสือใหม่',
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => AddBook(accType: "ADMIN")),
-                ),
-              ),
-            ])));
+                floatingActionButton: SpeedDial(children: [
+                  SpeedDialChild(
+                    child: const Icon(
+                      Icons.add,
+                      color: Color(0xff795e35),
+                      size: 35,
+                    ),
+                    label: 'สร้างโพสต์',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const PostPage()),
+                    ),
+                  ),
+                  SpeedDialChild(
+                    child: const Icon(
+                      Icons.book,
+                      color: Color(0xff795e35),
+                      size: 35,
+                    ),
+                    label: 'เพิ่มหนังสือใหม่',
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddBook(accType: "ADMIN")),
+                    ),
+                  ),
+                ], child: const Icon(Icons.more_vert)))
+            : Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Colors.white,
+                child: Center(
+                    child: Lottie.network(
+                        'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json')),
+              ));
   }
 }
 
-class PostSection extends StatefulWidget {
-  // const PostSection({super.key});
-  PostSection({Key? key, required this.posts}) : super(key: key);
+class PostSec extends StatefulWidget {
+  PostSec({Key? key, required this.posts}) : super(key: key);
 
   List<dynamic> posts;
 
   @override
-  State<PostSection> createState() => _PostSectionState();
+  State<PostSec> createState() => _PostSecState();
 }
 
-class _PostSectionState extends State<PostSection> {
+class _PostSecState extends State<PostSec> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Color(0xfff5f3e8),
+        color: const Color(0xfff5f3e8),
         height: MediaQuery.of(context).size.height,
-        padding: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         child: ListView.builder(
           itemCount: widget.posts.length,
           shrinkWrap: true,
@@ -145,42 +127,38 @@ class _PostSectionState extends State<PostSection> {
                 onTap: () => Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => SocialPage(
-                                posts: widget.posts[i],
-                              )),
+                          builder: (context) =>
+                              SocialPage(posts: widget.posts[i])),
                     ),
-                child: Container(
+                child: SizedBox(
                     height: 90,
                     child: Card(
                         child: Padding(
-                            padding: EdgeInsets.all(7),
+                            padding: const EdgeInsets.all(7),
                             child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   CircleAvatar(
                                     backgroundImage: NetworkImage(
                                         '${widget.posts[i]['Image']}'),
-                                    backgroundColor: Color(0xffadd1dc),
+                                    backgroundColor: const Color(0xffadd1dc),
                                     radius: 30,
                                   ),
                                   Expanded(
                                     child: Padding(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 10,
-                                        ),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 10),
                                         child: Column(
                                             crossAxisAlignment:
                                                 CrossAxisAlignment.start,
                                             children: [
                                               Text(
                                                   '${widget.posts[i]['CreateBy']}',
-                                                  // Text("ชื่อคนอื่น",
-                                                  style:
-                                                      TextStyle(fontSize: 18)),
+                                                  style: const TextStyle(
+                                                      fontSize: 18)),
                                               Text(
                                                 '${widget.posts[i]['Detail_Post']}',
                                                 maxLines: 2,
-                                                // "รายละเอียดโพสต์",
                                                 overflow: TextOverflow.ellipsis,
                                               )
                                             ])),
