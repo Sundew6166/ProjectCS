@@ -16,6 +16,7 @@ class BuyPage extends StatefulWidget {
 class _BuyPageState extends State<BuyPage> {
   // bool buttonenabled = false;
   bool canBuy = false;
+  bool statusBuy = false;
 
   @override
   void initState() {
@@ -25,7 +26,7 @@ class _BuyPageState extends State<BuyPage> {
 
   setCanBuy() async {
     if (widget.saleInfo['seller'] != FirebaseAuth.instance.currentUser!.uid) {
-      await BookController().checkHasBook(widget.saleInfo['book']['isbn'], widget.saleInfo['book']['edition']).then((value) {
+      await BookController().checkHasBook(widget.saleInfo['book']['isbn'], widget.saleInfo['book']['edition'].toString()).then((value) {
         setState(() {
           canBuy = !value;
         });
@@ -85,7 +86,29 @@ class _BuyPageState extends State<BuyPage> {
                                           onPressed: () async {
                                             try {
                                               await SaleController().buyBook(widget.saleInfo['id'])
-                                                .then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: 'USER', tab: "PROFILE"))));
+                                                .then((value) {
+                                                  setState(() {
+                                                    statusBuy = value;
+                                                  });
+                                                  if (statusBuy) {
+                                                    Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: 'USER', tab: "HOME")));
+                                                  } else {
+                                                    showDialog(
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          AlertDialog(
+                                                              title: Text("ไม่สามารถซื้อได้ในขณะนี้"),
+                                                              content: Text("มีคนอื่นกำลังซื้ออยู่"),
+                                                              actions: <Widget>[
+                                                                TextButton(
+                                                                  onPressed: () => Navigator.of(context)..pop()..pop()..pop(),
+                                                                  child: const Text('ตกลง'),
+                                                                )
+                                                              ]
+                                                          )
+                                                    );
+                                                  }
+                                                });
                                             } on FirebaseException catch (e) {
                                               print(e.code);
                                               showDialog(
@@ -96,7 +119,7 @@ class _BuyPageState extends State<BuyPage> {
                                                               .message
                                                               .toString()),
                                                           content: Text(
-                                                              "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                                                              "เกิดข้อผิดพลาดในการซื้อหนังสือ กรุณาลองใหม่"),
                                                           actions: <
                                                               Widget>[
                                                             TextButton(

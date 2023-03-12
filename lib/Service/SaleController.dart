@@ -107,14 +107,19 @@ class SaleController {
     return output;
   }
 
-  Future<void> buyBook(String idSale) async {
+  Future<bool> buyBook(String idSale) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
-    await db.collection('sales').doc(idSale).update({
-      "buyer": user!.uid,
-      "saleStatus": "B",
-      "updateDateTime": Timestamp.now()
-    });
+    var docSnap = await db.collection('sales').doc(idSale).get();
+    if (docSnap.data()!['saleStatus'] == "N") {
+      await db.collection('sales').doc(idSale).update({
+        "buyer": user!.uid,
+        "saleStatus": "B",
+        "updateDateTime": Timestamp.now()
+      });
+      return true;
+    }
+    return false;
   }
 }
