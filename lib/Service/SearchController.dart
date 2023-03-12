@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/BookController.dart';
 
 class SearchController {
@@ -8,19 +9,22 @@ class SearchController {
     User? user = FirebaseAuth.instance.currentUser;
     final db = FirebaseFirestore.instance;
     List<dynamic> output = [];
-    await db.collection('posts').get().then((value) {
+    await db.collection('posts').get().then((value) async {
       for (var element in value.docs) {
         if (element['Detail_Post'].toLowerCase().contains(item.toLowerCase())) {
+          Map<String, dynamic> acc = await AccountController()
+              .getAnotherProfile(element.data()['CreateBy']);
           DateTime now = (element.data()['Create_DateTime_Post']).toDate();
           String formattedDate = DateFormat('yyyy/MM/dd\nkk:mm').format(now);
           Map<String, dynamic> temp = {
             'ID': element.id,
             "Create_DateTime_Post": formattedDate,
             "Detail_Post": element.data()['Detail_Post'],
-            "CreateBy": user!.displayName.toString(),
-            'Image': user.photoURL.toString()
+            "CreateBy": acc['username'],
+            'Image': acc['imageURL']
           };
           output.add(temp);
+          // print(temp);
         }
       }
     });

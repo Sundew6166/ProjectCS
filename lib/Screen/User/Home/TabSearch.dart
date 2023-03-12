@@ -28,7 +28,6 @@ class _TabSearchState extends State<TabSearch> {
     super.initState();
     _controller = TextEditingController(text: widget.data);
     setData();
-    // print(widget.data);
   }
 
   setData() async {
