@@ -42,10 +42,6 @@ class BookCard extends StatelessWidget {
           return GestureDetector(
               onTap: () async {
                 var bookInfo = books[index];
-                await BookController()
-                    .getTypesOfBook(
-                        '${bookInfo!['isbn']}_${bookInfo['edition']}')
-                    .then((value) => bookInfo.addAll({"types": value}));
                 var hasBook = await BookController()
                     .checkHasBook(bookInfo!['isbn'], bookInfo['edition'].toString());
                 var hasSale;

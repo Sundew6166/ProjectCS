@@ -95,7 +95,7 @@ class BookController {
         .get()
         .then((querySnapshot) async {
       for (var docSnap in querySnapshot.docs) {
-        print(docSnap.data()['type']);
+        // print(docSnap.data()['type']);
         await db
             .collection('book_types')
             .doc(docSnap.data()['type'])
@@ -219,10 +219,12 @@ class BookController {
           .collection('books')
           .where('approveStatus', isEqualTo: true)
           .get()
-          .then((querySnapshot) {
+          .then((querySnapshot) async {
         for (var docSnap in querySnapshot.docs) {
           var data = docSnap.data();
           data['createDateTime'] = data['updateDateTime'];
+          await getTypesOfBook(docSnap.id)
+              .then((value) => data.addAll({"types": value}));
           output.add(data);
         }
       });
@@ -240,9 +242,11 @@ class BookController {
                 .collection('books')
                 .doc(docSnap.data()['book'])
                 .get()
-                .then((value) {
+                .then((value) async {
               var data = value.data();
               data!['createDateTime'] = docSnap.data()['createDateTime'];
+              await getTypesOfBook(docSnap.id)
+              .then((value) => data.addAll({"types": value}));
               output.add(data);
             });
         }
