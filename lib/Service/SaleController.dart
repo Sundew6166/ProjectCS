@@ -42,6 +42,7 @@ class SaleController {
         for (var docSnap in querySnapshot.docs) {
           var data = docSnap.data();
           data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm').format(data['createDateTime'].toDate());
+          data['id'] = docSnap.id;
           var idSplit = data['book'].split("_");
           await BookController().getBookInfo(idSplit[0], idSplit[1])
             .then((value) => data['book'] = {
@@ -81,10 +82,12 @@ class SaleController {
     List<Map<String,dynamic>?> output = [];
 
     await db.collection('sales')
+      .where('saleStatus', isEqualTo: "N")
       .get().then((querySnapshot) async {
         for (var docSnap in querySnapshot.docs) {
           var data = docSnap.data();
           data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm').format(data['createDateTime'].toDate());
+          data['id'] = docSnap.id;
           var idSplit = data['book'].split("_");
           await BookController().getBookInfo(idSplit[0], idSplit[1])
             .then((value) => data['book'] = {
@@ -104,4 +107,14 @@ class SaleController {
     return output;
   }
 
+  Future<void> buyBook(String idSale) async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+
+    await db.collection('sales').doc(idSale).update({
+      "buyer": user!.uid,
+      "saleStatus": "B",
+      "updateDateTime": Timestamp.now()
+    });
+  }
 }

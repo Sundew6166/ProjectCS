@@ -18,17 +18,7 @@ class BookController {
     return output;
   }
 
-  Future<void> addNewBook(
-      String accType,
-      String isbn,
-      String title,
-      String author,
-      String publisher,
-      int edition,
-      int price,
-      List<String> types,
-      String synopsys,
-      File? coverImage) async {
+  Future<void> addNewBook(String accType, String isbn, String title, String author, String publisher, int edition, int price, List<String> types, String synopsys, File? coverImage) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
@@ -177,17 +167,7 @@ class BookController {
     return hasBook;
   }
 
-  Future<void> updateBookInfo(
-      String idBook,
-      String title,
-      String author,
-      String publisher,
-      int price,
-      List<String> oldTypes,
-      List<String> newTypes,
-      String synopsys,
-      String oldCoverImage,
-      File? newCoverImage) async {
+  Future<void> updateBookInfo(String idBook, String title, String author, String publisher, int price, List<String> oldTypes, List<String> newTypes, String synopsys, String oldCoverImage, File? newCoverImage) async {
     final db = FirebaseFirestore.instance;
 
     String downloadURL = newCoverImage == null
@@ -230,8 +210,7 @@ class BookController {
     linkTypeAndBook(idBook, newTypes);
   }
 
-  Future<List<Map<String, dynamic>?>> getAllBookInLibrary(
-      String accType) async {
+  Future<List<Map<String, dynamic>?>> getAllBookInLibrary(String accType) async {
     final db = FirebaseFirestore.instance;
     List<Map<String, dynamic>?> output = [];
 

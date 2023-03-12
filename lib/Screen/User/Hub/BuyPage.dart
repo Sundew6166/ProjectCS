@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class BuyPage extends StatefulWidget {
   BuyPage({super.key, required this.saleInfo});
@@ -13,6 +15,23 @@ class BuyPage extends StatefulWidget {
 
 class _BuyPageState extends State<BuyPage> {
   // bool buttonenabled = false;
+  bool canBuy = false;
+
+  @override
+  void initState() {
+    setCanBuy();
+    super.initState();
+  }
+
+  setCanBuy() async {
+    if (widget.saleInfo['seller'] != FirebaseAuth.instance.currentUser!.uid) {
+      await BookController().checkHasBook(widget.saleInfo['book']['isbn'], widget.saleInfo['book']['edition']).then((value) {
+        setState(() {
+          canBuy = !value;
+        });
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,13 +68,13 @@ class _BuyPageState extends State<BuyPage> {
                     Container(
                         margin: EdgeInsets.only(top: 16.0, bottom: 16.0),
                         child: ElevatedButton(
-                            onPressed: (widget.saleInfo['seller'] == FirebaseAuth.instance.currentUser!.uid) ? null : () {
+                            onPressed: (canBuy) ? () {
                                 showDialog(
                                   context: context,
                                   builder: (_) => AlertDialog(
                                       title: const Text("ยืนยันการซื้อหนังสือ"),
                                       content:
-                                          Text('ชื่อหนังสือ\nราคารวม XXXX บาท'),
+                                          Text('${widget.saleInfo['book']['title']}\nราคารวม ${widget.saleInfo['sellingPrice'] + widget.saleInfo['deliveryFee']} บาท'),
                                       actions: <Widget>[
                                         TextButton(
                                           onPressed: () =>
@@ -63,19 +82,38 @@ class _BuyPageState extends State<BuyPage> {
                                           child: const Text('ยกเลิก'),
                                         ),
                                         TextButton(
-                                          onPressed: () => Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      BottomBar(
-                                                        accType: 'USER',
-                                                        tab: "PROFILE",
-                                                      ))),
+                                          onPressed: () async {
+                                            try {
+                                              await SaleController().buyBook(widget.saleInfo['id'])
+                                                .then((value) => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: 'USER', tab: "PROFILE"))));
+                                            } on FirebaseException catch (e) {
+                                              print(e.code);
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (_) =>
+                                                      AlertDialog(
+                                                          title: Text(e
+                                                              .message
+                                                              .toString()),
+                                                          content: Text(
+                                                              "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                                                          actions: <
+                                                              Widget>[
+                                                            TextButton(
+                                                              onPressed:
+                                                                  () =>
+                                                                      Navigator.pop(context),
+                                                              child: const Text(
+                                                                  'ตกลง'),
+                                                            )
+                                                          ]));
+                                            }
+                                          },
                                           child: const Text('ตกลง'),
                                         ),
                                       ],
                                     ));
-                            },
+                            } : null,
                             style: ElevatedButton.styleFrom(
                                 fixedSize:
                                     Size(100, 40), // specify width, height
