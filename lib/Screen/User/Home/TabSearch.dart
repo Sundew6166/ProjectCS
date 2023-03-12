@@ -6,7 +6,6 @@ import 'package:my_book/Screen/User/Home/BookSearch.dart';
 import 'package:my_book/Screen/User/Home/RecPostTab.dart';
 
 import 'package:my_book/Screen/User/Home/SaleTab.dart';
-import 'package:my_book/Service/PostController.dart';
 import 'package:my_book/Service/SearchController.dart';
 
 class TabSearch extends StatefulWidget {
@@ -22,6 +21,7 @@ class _TabSearchState extends State<TabSearch> {
   TextEditingController _controller = TextEditingController();
   List<dynamic>? posts;
   List<dynamic>? books;
+  List<dynamic>? sales;
 
   @override
   void initState() {
@@ -31,6 +31,11 @@ class _TabSearchState extends State<TabSearch> {
   }
 
   setData() async {
+    await SearchController().getSales(_controller.text).then((value) {
+      setState(() {
+        sales = value;
+      });
+    });
     await SearchController().getBooks(_controller.text).then((value) {
       setState(() {
         books = value;
@@ -45,86 +50,81 @@ class _TabSearchState extends State<TabSearch> {
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
-      length: 3,
-      child: posts != null
-          ? Scaffold(
-              appBar: AppBar(
-                title: Container(
-                  // width: double.infinity,
-                  height: 40,
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Center(
-                    child: TextField(
-                      controller: _controller,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _controller.clear();
-                            },
-                          ),
-                          hintText: '\tค้นหา...',
-                          border: InputBorder.none),
+        length: 3,
+        child: posts != null && books != null && sales != null
+            // child: posts != null && books != null
+            ? Scaffold(
+                appBar: AppBar(
+                  title: Container(
+                    // width: double.infinity,
+                    height: 40,
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(5)),
+                    // child: Center(
+                      child: TextField(
+                        controller: _controller,
+                        keyboardType: TextInputType.multiline,
+                        decoration: InputDecoration(
+                            suffixIcon: IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _controller.clear();
+                              },
+                            ),
+                            hintText: '\tค้นหา...',
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.only(left: 3.0, top: 3.0)
+                        ),
+                      ),
+                    // ),
+                  ),
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.search),
+                      onPressed: () {
+                        _controller.text.trim().isNotEmpty
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        TabSearch(data: _controller.text)),
+                              )
+                            : Fluttertoast.showToast(
+                                msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.red,
+                                textColor: Colors.white,
+                                fontSize: 18.0);
+                      },
                     ),
-                  ),
+                  ],
+                  bottom: new TabBar(tabs: [
+                    Tab(text: 'หนังสือ'),
+                    Tab(text: 'โพสต์'),
+                    Tab(text: 'ซื้อ'),
+                  ]),
                 ),
-                actions: [
-                  IconButton(
-                    icon: Icon(Icons.search),
-                    onPressed: () {
-                      _controller.text.trim().isNotEmpty
-                          ? Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      TabSearch(data: _controller.text)),
-                            )
-                          : Fluttertoast.showToast(
-                              msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
-                              toastLength: Toast.LENGTH_SHORT,
-                              gravity: ToastGravity.BOTTOM,
-                              timeInSecForIosWeb: 1,
-                              backgroundColor: Colors.red,
-                              textColor: Colors.white,
-                              fontSize: 18.0);
-                    },
-                  ),
-                ],
-                bottom: new TabBar(tabs: [
-                  Tab(
-                    text: 'หนังสือ',
-                  ),
-                  Tab(
-                    text: 'โพสต์',
-                  ),
-                  Tab(
-                    text: 'ซื้อ-ขาย',
-                  ),
-                ]),
-              ),
-              body: TabBarView(
-                children: [
-                  BookSearch(books: books!),
-                  PostSection(
-                    posts: posts!,
-                  ),
-                  SaleTab(),
-                ],
-              ),
-            )
-          : Container(
-              width: MediaQuery.of(context).size.width,
-              height: MediaQuery.of(context).size.height,
-              color: Color(0xfff5f3e8),
-              child: Center(
-                child: LoadingAnimationWidget.twistingDots(
-                  leftDotColor: const Color(0xFF1A1A3F),
-                  rightDotColor: const Color(0xFFEA3799),
-                  size: 50,
+                body: TabBarView(
+                  children: [
+                    BookSearch(books: books!),
+                    PostSection(posts: posts!),
+                    SaleTab(sales: sales!),
+                  ],
+                ),
+              )
+            : Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height,
+                color: Color(0xfff5f3e8),
+                child: Center(
+                  child: LoadingAnimationWidget.twistingDots(
+                      leftDotColor: const Color(0xFF1A1A3F),
+                      rightDotColor: const Color(0xFFEA3799),
+                      size: 50),
                 ),
               ),
-            ));
+      );
 }

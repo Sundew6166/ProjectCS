@@ -18,7 +18,6 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
         appBar: AppBar(
             title: Container(
-              // width: double.infinity,
               height: 40,
               decoration: BoxDecoration(
                   color: Colors.white, borderRadius: BorderRadius.circular(5)),
@@ -33,7 +32,8 @@ class _SearchPageState extends State<SearchPage> {
                         },
                       ),
                       hintText: '\tค้นหา...',
-                      border: InputBorder.none),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(left: 3.0, top: 3.0)),
                 ),
               ),
             ),

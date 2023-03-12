@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class SearchController {
   Future<List<dynamic>> getPosts(String item) async {
@@ -34,7 +35,6 @@ class SearchController {
   }
 
   Future<List<dynamic>> getBooks(String item) async {
-    User? user = FirebaseAuth.instance.currentUser;
     List<dynamic> allBook = await BookController().getAllBookInLibrary('ADMIN');
     item = item.toLowerCase();
 
@@ -45,6 +45,26 @@ class SearchController {
           element['author'].toLowerCase().contains(item) ||
           element['synopsys'].toLowerCase().contains(item)) {
         // print(element);
+        output.add(element);
+      }
+    }
+    return output;
+  }
+
+  Future<List<dynamic>> getSales(String item) async {
+  // Future<void> getSales(String item) async {
+    List<dynamic> allBook = await SaleController().getAllSale();
+    item = item.toLowerCase();
+
+    List<dynamic> output = [];
+
+    for (var element in allBook) {
+      // print('>>>>>> ${element['detail']}');
+      if (element['book']['title'].toLowerCase().contains(item) ||
+          element['book']['author'].toLowerCase().contains(item) ||
+          element['book']['synopsys'].toLowerCase().contains(item) ||
+          element['detail'].toLowerCase().contains(item)) {
+        // print('>>>>>> $element');
         output.add(element);
       }
     }
