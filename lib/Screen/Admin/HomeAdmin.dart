@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -34,24 +36,20 @@ class _HomeAdminState extends State<HomeAdmin> {
     });
   }
 
+  var presscount = 0;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
         onWillPop: () async {
-          final difference = DateTime.now().difference(timeBackPressed);
-          final isExitWarning = difference >= const Duration(seconds: 2);
-
-          timeBackPressed = DateTime.now();
-
-          if (isExitWarning) {
-            const msg = 'กดอีกครั้งเพื่อออกจากแอพ';
-            Fluttertoast.showToast(msg: msg, fontSize: 18);
-
-            return false;
+          presscount++;
+          if (presscount == 2) {
+            exit(0);
           } else {
-            Fluttertoast.cancel();
-
-            return true;
+            var snackBar =
+                SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            return false;
           }
         },
         child: posts != null

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -38,12 +40,24 @@ class _HomePageState extends State<HomePage> {
       });
     });
   }
+  
+  var presscount = 0;
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
       length: 2,
       child: WillPopScope(
-          onWillPop: () async => false,
+          onWillPop: () async {
+            presscount++;
+            if (presscount == 2) {
+              exit(0);
+            } else {
+              var snackBar =
+                  SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              return false;
+            }
+          },
           child: sales != null
               ? Scaffold(
                   appBar: AppBar(

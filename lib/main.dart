@@ -1,10 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Screen/LogInPage.dart';
+import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/SaleController.dart';
 import 'package:workmanager/workmanager.dart';
 import 'firebase_options.dart';
 import 'package:flutter/material.dart';
 
-import 'package:my_book/Screen/RegisterPage.dart';
+
+String type = "";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -14,6 +18,7 @@ void main() async {
   Workmanager().initialize(
     callbackDispatcher,
     isInDebugMode: true);
+  type = await AccountController().getAccountType();
   runApp(MyApp());
 }
 
@@ -36,7 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: RegisterScreen(),
+      home: type != "" ? BottomBar(accType: type, tab: "HOME") : LogInPage(),
       theme: ThemeData(colorSchemeSeed: const Color(0xff795e35)),
     );
   }

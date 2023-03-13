@@ -43,7 +43,8 @@ class AccountController {
   Future<String> getAccountType() async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
-    final docSnap = await db.collection('accounts').doc(user!.uid).get();
+    if (user == null) return "";
+    final docSnap = await db.collection('accounts').doc(user.uid).get();
     return docSnap.data()!['type'];
   }
 
