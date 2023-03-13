@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/ImageController.dart';
+import 'package:workmanager/workmanager.dart';
 
 class SaleController {
   Future<void> addSale(
@@ -127,8 +128,36 @@ class SaleController {
         "saleStatus": "B",
         "updateDateTime": Timestamp.now()
       });
+      print("setTimeout");
+      Workmanager().registerOneOffTask(idSale, "paymentTimeout", initialDelay: Duration(minutes: 2), inputData: {'idSale': idSale});
       return true;
     }
     return false;
+  }
+
+  Future<void> paymentTimeout(String idSale) async {
+    final db = FirebaseFirestore.instance;
+
+    var docSnap = await db.collection('sales').doc(idSale).get();
+    if (docSnap.data()!['saleStatus'] == "B") {
+      await db.collection('sales').doc(idSale).update({
+        "buyer": "",
+        "saleStatus": "N",
+        "updateDateTime": Timestamp.now()
+      });
+    }
+  }
+
+  Future<void> informPayment(String idSale) async {
+    final db = FirebaseFirestore.instance;
+
+    var docSnap = await db.collection('sales').doc(idSale).get();
+    if (docSnap.data()!['saleStatus'] == "B") {
+      Workmanager().cancelByUniqueName(idSale);
+      await db.collection('sales').doc(idSale).update({
+        "saleStatus": "Y",
+        "updateDateTime": Timestamp.now()
+      });
+    }
   }
 }
