@@ -129,7 +129,7 @@ class SaleController {
         "updateDateTime": Timestamp.now()
       });
       print("setTimeout");
-      Workmanager().registerOneOffTask(idSale, "paymentTimeout", initialDelay: Duration(minutes: 2), inputData: {'idSale': idSale});
+      Workmanager().registerOneOffTask(idSale, "paymentTimeout", initialDelay: Duration(minutes: 5), inputData: {'idSale': idSale});
       return true;
     }
     return false;
@@ -148,16 +148,16 @@ class SaleController {
     }
   }
 
-  Future<void> informPayment(String idSale) async {
-    final db = FirebaseFirestore.instance;
+  // Future<void> informPayment(String idSale) async {
+  //   final db = FirebaseFirestore.instance;
 
-    var docSnap = await db.collection('sales').doc(idSale).get();
-    if (docSnap.data()!['saleStatus'] == "B") {
-      Workmanager().cancelByUniqueName(idSale);
-      await db.collection('sales').doc(idSale).update({
-        "saleStatus": "Y",
-        "updateDateTime": Timestamp.now()
-      });
-    }
-  }
+  //   var docSnap = await db.collection('sales').doc(idSale).get();
+  //   if (docSnap.data()!['saleStatus'] == "B") {
+  //     Workmanager().cancelByUniqueName(idSale);
+  //     await db.collection('sales').doc(idSale).update({
+  //       "saleStatus": "Y",
+  //       "updateDateTime": Timestamp.now()
+  //     });
+  //   }
+  // }
 }
