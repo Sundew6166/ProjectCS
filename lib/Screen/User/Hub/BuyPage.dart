@@ -43,140 +43,137 @@ class _BuyPageState extends State<BuyPage> {
           title: const Text('ซื้อ'),
         ),
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-            child: Container(
-                color: const Color(0xfff5f3e8),
-                alignment: Alignment.topCenter,
+        body: Container(
+            color: const Color(0xfff5f3e8),
+            // alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20),
-                    ImageProduct(urlImage: widget.saleInfo['image']),
-                    const SizedBox(height: 20),
-                    Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
-                        color: Colors.white,
-                        child: Column(children: [
-                          BookName(title: widget.saleInfo['book']['title']),
-                          Author(author: widget.saleInfo['book']['author']),
-                          Publisher(
-                              publisher: widget.saleInfo['book']['publisher']),
-                          Type(types: widget.saleInfo['book']['types']),
-                          Selling_Price(
-                              sellingPrice:
-                                  widget.saleInfo['sellingPrice'].toString()),
-                          DeliveryFee(
-                              deliveryFee:
-                                  widget.saleInfo['deliveryFee'].toString()),
-                          Synopsys(
-                              synopsys: widget.saleInfo['book']['synopsys']),
-                          Detail(detail: widget.saleInfo['detail']),
-                        ])),
-                    Container(
-                        margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: ElevatedButton(
-                            onPressed: (canBuy)
-                                ? () {
-                                    showDialog(
-                                        context: context,
-                                        builder: (_) => AlertDialog(
-                                              title: const Text(
-                                                  "ยืนยันการซื้อหนังสือ"),
-                                              content: Text(
-                                                  '${widget.saleInfo['book']['title']}\nราคารวม ${widget.saleInfo['sellingPrice'] + widget.saleInfo['deliveryFee']} บาท'),
-                                              actions: <Widget>[
-                                                TextButton(
-                                                  onPressed: () =>
-                                                      Navigator.pop(
-                                                          context, 'ยกเลิก'),
-                                                  child: const Text('ยกเลิก'),
-                                                ),
-                                                TextButton(
-                                                  onPressed: () async {
-                                                    try {
-                                                      await SaleController()
-                                                          .buyBook(widget
-                                                              .saleInfo['id'])
-                                                          .then((value) {
-                                                        setState(() {
-                                                          statusBuy = value;
-                                                        });
-                                                        if (statusBuy) {
-                                                          Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                  builder: (context) =>
-                                                                      BottomBar(
-                                                                          accType:
-                                                                              'USER',
-                                                                          tab:
-                                                                              "HOME")));
-                                                        } else {
-                                                          showDialog(
-                                                              context: context,
-                                                              builder: (_) =>
-                                                                  AlertDialog(
-                                                                      title: const Text(
-                                                                          "ไม่สามารถซื้อได้ในขณะนี้"),
-                                                                      content:
-                                                                          const Text(
-                                                                              "มีคนอื่นกำลังซื้ออยู่"),
-                                                                      actions: <
-                                                                          Widget>[
-                                                                        TextButton(
-                                                                          onPressed: () => Navigator.of(
-                                                                              context)
-                                                                            ..pop()
-                                                                            ..pop()
-                                                                            ..pop(),
-                                                                          child:
-                                                                              const Text('ตกลง'),
-                                                                        )
-                                                                      ]));
-                                                        }
-                                                      });
-                                                    } on FirebaseException catch (e) {
-                                                      print(e.code);
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                ImageProduct(urlImage: widget.saleInfo['image']),
+                const SizedBox(height: 20),
+                Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    color: Colors.white,
+                    child: Column(children: [
+                      BookName(title: widget.saleInfo['book']['title']),
+                      Author(author: widget.saleInfo['book']['author']),
+                      Publisher(
+                          publisher: widget.saleInfo['book']['publisher']),
+                      Type(types: widget.saleInfo['book']['types']),
+                      Selling_Price(
+                          sellingPrice:
+                              widget.saleInfo['sellingPrice'].toString()),
+                      DeliveryFee(
+                          deliveryFee:
+                              widget.saleInfo['deliveryFee'].toString()),
+                      Synopsys(synopsys: widget.saleInfo['book']['synopsys']),
+                      Detail(detail: widget.saleInfo['detail']),
+                    ])),
+                Container(
+                    margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    child: ElevatedButton(
+                        onPressed: (canBuy)
+                            ? () {
+                                showDialog(
+                                    context: context,
+                                    builder: (_) => AlertDialog(
+                                          title: const Text(
+                                              "ยืนยันการซื้อหนังสือ"),
+                                          content: Text(
+                                              '${widget.saleInfo['book']['title']}\nราคารวม ${widget.saleInfo['sellingPrice'] + widget.saleInfo['deliveryFee']} บาท'),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              onPressed: () => Navigator.pop(
+                                                  context, 'ยกเลิก'),
+                                              child: const Text('ยกเลิก'),
+                                            ),
+                                            TextButton(
+                                              onPressed: () async {
+                                                try {
+                                                  await SaleController()
+                                                      .buyBook(
+                                                          widget.saleInfo['id'])
+                                                      .then((value) {
+                                                    setState(() {
+                                                      statusBuy = value;
+                                                    });
+                                                    if (statusBuy) {
+                                                      Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  BottomBar(
+                                                                      accType:
+                                                                          'USER',
+                                                                      tab:
+                                                                          "HOME")));
+                                                    } else {
                                                       showDialog(
                                                           context: context,
                                                           builder: (_) =>
                                                               AlertDialog(
-                                                                  title: Text(e
-                                                                      .message
-                                                                      .toString()),
+                                                                  title: const Text(
+                                                                      "ไม่สามารถซื้อได้ในขณะนี้"),
                                                                   content:
                                                                       const Text(
-                                                                          "เกิดข้อผิดพลาดในการซื้อหนังสือ กรุณาลองใหม่"),
+                                                                          "มีคนอื่นกำลังซื้ออยู่"),
                                                                   actions: <
                                                                       Widget>[
                                                                     TextButton(
-                                                                      onPressed:
-                                                                          () =>
-                                                                              Navigator.pop(context),
+                                                                      onPressed: () => Navigator.of(
+                                                                          context)
+                                                                        ..pop()
+                                                                        ..pop()
+                                                                        ..pop(),
                                                                       child: const Text(
                                                                           'ตกลง'),
                                                                     )
                                                                   ]));
                                                     }
-                                                  },
-                                                  child: const Text('ตกลง'),
-                                                ),
-                                              ],
-                                            ));
-                                  }
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(100, 40),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                  10,
-                                ))),
-                            child: const Text("ซื้อ",
-                                style: TextStyle(fontSize: 20)))),
-                  ],
-                ))));
+                                                  });
+                                                } on FirebaseException catch (e) {
+                                                  print(e.code);
+                                                  showDialog(
+                                                      context: context,
+                                                      builder: (_) =>
+                                                          AlertDialog(
+                                                              title: Text(e
+                                                                  .message
+                                                                  .toString()),
+                                                              content: const Text(
+                                                                  "เกิดข้อผิดพลาดในการซื้อหนังสือ กรุณาลองใหม่"),
+                                                              actions: <Widget>[
+                                                                TextButton(
+                                                                  onPressed: () =>
+                                                                      Navigator.pop(
+                                                                          context),
+                                                                  child:
+                                                                      const Text(
+                                                                          'ตกลง'),
+                                                                )
+                                                              ]));
+                                                }
+                                              },
+                                              child: const Text('ตกลง'),
+                                            ),
+                                          ],
+                                        ));
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(100, 40),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                              10,
+                            ))),
+                        child: const Text("ซื้อ",
+                            style: TextStyle(fontSize: 20)))),
+              ],
+            ))));
   }
 }
 

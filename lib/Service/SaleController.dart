@@ -45,15 +45,19 @@ class SaleController {
     final user = FirebaseAuth.instance.currentUser;
     List<Map<String, dynamic>?> output = [];
 
-    await db.collection('sales')
-      .where('seller', isEqualTo: user!.uid)
-      .get().then((querySnapshot) async {
-        for (var docSnap in querySnapshot.docs) {
-          var data = docSnap.data();
-          data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm').format(data['createDateTime'].toDate());
-          data['id'] = docSnap.id;
-          var idSplit = data['book'].split("_");
-          await BookController().getBookInfo(idSplit[0], idSplit[1])
+    await db
+        .collection('sales')
+        .where('seller', isEqualTo: user!.uid)
+        .get()
+        .then((querySnapshot) async {
+      for (var docSnap in querySnapshot.docs) {
+        var data = docSnap.data();
+        data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm')
+            .format(data['createDateTime'].toDate());
+        data['id'] = docSnap.id;
+        var idSplit = data['book'].split("_");
+        await BookController()
+            .getBookInfo(idSplit[0], idSplit[1])
             .then((value) => data['book'] = {
                   'title': value!['title'],
                   'author': value['author'],
@@ -91,15 +95,19 @@ class SaleController {
     final db = FirebaseFirestore.instance;
     List<Map<String, dynamic>?> output = [];
 
-    await db.collection('sales')
-      .where('saleStatus', isEqualTo: "N")
-      .get().then((querySnapshot) async {
-        for (var docSnap in querySnapshot.docs) {
-          var data = docSnap.data();
-          data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm').format(data['createDateTime'].toDate());
-          data['id'] = docSnap.id;
-          var idSplit = data['book'].split("_");
-          await BookController().getBookInfo(idSplit[0], idSplit[1])
+    await db
+        .collection('sales')
+        .where('saleStatus', isEqualTo: "N")
+        .get()
+        .then((querySnapshot) async {
+      for (var docSnap in querySnapshot.docs) {
+        var data = docSnap.data();
+        data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm')
+            .format(data['createDateTime'].toDate());
+        data['id'] = docSnap.id;
+        var idSplit = data['book'].split("_");
+        await BookController()
+            .getBookInfo(idSplit[0], idSplit[1])
             .then((value) => data['book'] = {
                   'title': value!['title'],
                   'author': value['author'],
@@ -129,7 +137,8 @@ class SaleController {
         "updateDateTime": Timestamp.now()
       });
       print("setTimeout");
-      Workmanager().registerOneOffTask(idSale, "paymentTimeout", initialDelay: Duration(minutes: 5), inputData: {'idSale': idSale});
+      Workmanager().registerOneOffTask("task-identifier", "paymentTimeout",
+          initialDelay: const Duration(minutes: 1), constraints: Constraints(networkType: NetworkType.connected), inputData: {'idSale': idSale});
       return true;
     }
     return false;
@@ -140,11 +149,8 @@ class SaleController {
 
     var docSnap = await db.collection('sales').doc(idSale).get();
     if (docSnap.data()!['saleStatus'] == "B") {
-      await db.collection('sales').doc(idSale).update({
-        "buyer": "",
-        "saleStatus": "N",
-        "updateDateTime": Timestamp.now()
-      });
+      await db.collection('sales').doc(idSale).update(
+          {"buyer": "", "saleStatus": "N", "updateDateTime": Timestamp.now()});
     }
   }
 

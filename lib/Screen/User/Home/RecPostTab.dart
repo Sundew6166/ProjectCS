@@ -4,6 +4,7 @@ import 'package:lottie/lottie.dart';
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
+import 'package:my_book/Service/PostController.dart';
 
 class RecPostTab extends StatefulWidget {
   RecPostTab({super.key, required this.posts});
@@ -14,20 +15,30 @@ class RecPostTab extends StatefulWidget {
 }
 
 class _RecPostTabState extends State<RecPostTab> {
+  Future<void> reFresh() async {
+    await PostController().getPostAll().then((value) {
+      setState(() {
+        widget.posts = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.posts != null
         ? Scaffold(
-            body: Container(
-                color: const Color(0xfff5f3e8),
-                child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      children: [
-                        const RecommendSection(),
-                        PostSection(posts: widget.posts!),
-                      ],
-                    ))),
+            body: RefreshIndicator(
+                onRefresh: reFresh,
+                child: Container(
+                    color: const Color(0xfff5f3e8),
+                    child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            const RecommendSection(),
+                            PostSection(posts: widget.posts!),
+                          ],
+                        )))),
             floatingActionButton: FloatingActionButton(
               backgroundColor: const Color(0xff795e35),
               child: const Icon(Icons.add),

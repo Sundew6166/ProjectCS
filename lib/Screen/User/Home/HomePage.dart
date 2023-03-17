@@ -88,7 +88,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                     bottom: const TabBar(tabs: [
                       Tab(text: 'โพสต์'),
-                      Tab(text: 'ขาย'),
+                      Tab(text: 'ซื้อ'),
                     ]),
                   ),
                   body: TabBarView(
