@@ -94,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   body: TabBarView(
                     children: [
                       RecPostTab(posts: posts!),
-                      SaleTab(sales: sales!),
+                      SaleTab(sales: sales!, page: 'home',),
                     ],
                   ),
                 )

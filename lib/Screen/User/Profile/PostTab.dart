@@ -13,7 +13,10 @@ class PostTab extends StatefulWidget {
 class _PostTabState extends State<PostTab> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return widget.posts != null? Container(
+          padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
+            child: const Text("ไม่มีโพสต์", style: TextStyle(fontSize: 18)))
+        : Scaffold(
         body: Container(
       height: MediaQuery.of(context).size.height,
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),

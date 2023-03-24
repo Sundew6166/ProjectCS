@@ -33,68 +33,75 @@ class _StockTabState extends State<StockTab> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: Container(
-      height: MediaQuery.of(context).size.height,
-      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-      color: const Color(0xfff5f3e8),
-      child: ListView.builder(
-        itemCount: bookList.length,
-        shrinkWrap: true,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-              onTap: () async {
-                var bookInfo = bookList[index]!;
-                if (widget.accType == "ADMIN") {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => AddBook(
-                              accType: widget.accType, bookInfo: bookInfo)));
-                } else {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ReviewPage(
-                              bookInfo: bookInfo,
-                              hasBook: true,
-                              hasSale: false)));
-                }
+    return bookList.isEmpty
+        ? Container(
+          padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
+            child: const Text("ไม่มีหนังสือ", style: TextStyle(fontSize: 18)))
+        : Container(
+            height: MediaQuery.of(context).size.height,
+            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            color: const Color(0xfff5f3e8),
+            child: ListView.builder(
+              itemCount: bookList.length,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return GestureDetector(
+                    onTap: () async {
+                      var bookInfo = bookList[index]!;
+                      if (widget.accType == "ADMIN") {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AddBook(
+                                    accType: widget.accType,
+                                    bookInfo: bookInfo)));
+                      } else {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ReviewPage(
+                                    bookInfo: bookInfo,
+                                    hasBook: true,
+                                    hasSale: false)));
+                      }
+                    },
+                    child: SizedBox(
+                        height: 100,
+                        child: Card(
+                            child: Padding(
+                                padding: const EdgeInsets.all(7),
+                                child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(5),
+                                        child: Image.network(
+                                            bookList[index]!['coverImage']),
+                                      ),
+                                      Expanded(
+                                        child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 16),
+                                            child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                      bookList[index]!['title'],
+                                                      style: const TextStyle(
+                                                          fontSize: 18)),
+                                                  Expanded(
+                                                      child: Text(
+                                                    bookList[index]!['isbn'],
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ))
+                                                ])),
+                                      ),
+                                    ])))));
               },
-              child: SizedBox(
-                  height: 100,
-                  child: Card(
-                      child: Padding(
-                          padding: const EdgeInsets.all(7),
-                          child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: Image.network(
-                                      bookList[index]!['coverImage']),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16),
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(bookList[index]!['title'],
-                                                style: const TextStyle(
-                                                    fontSize: 18)),
-                                            Expanded(
-                                                child: Text(
-                                              bookList[index]!['isbn'],
-                                              overflow: TextOverflow.ellipsis,
-                                            ))
-                                          ])),
-                                ),
-                              ])))));
-        },
-      ),
-    ));
+            ),
+          );
   }
 }

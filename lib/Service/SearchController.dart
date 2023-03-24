@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
@@ -45,14 +47,16 @@ class SearchController {
           element['author'].toLowerCase().contains(item) ||
           element['synopsys'].toLowerCase().contains(item) ||
           element['publisher'].toLowerCase().contains(item)) {
+        output.add(element);
+      } else {
         for (var data in element['types']) {
           if (data.toLowerCase().contains(item)) {
-            print(data);
             output.add(element);
           }
         }
       }
     }
+    print(output);
     return output;
   }
 
@@ -68,16 +72,17 @@ class SearchController {
           element['book']['author'].toLowerCase().contains(item) ||
           element['book']['publisher'].toLowerCase().contains(item) ||
           element['book']['synopsys'].toLowerCase().contains(item) ||
-          // element['book']['types'].contains(item) ||
           element['detail'].toLowerCase().contains(item)) {
+        output.add(element);
+      } else {
         for (var data in element['book']['types']) {
           if (data.toLowerCase().contains(item)) {
-            // print(data);
             output.add(element);
           }
         }
       }
     }
+    // print(output);
     return output;
   }
 }
