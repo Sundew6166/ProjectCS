@@ -18,8 +18,9 @@ class _BookSearchState extends State<BookSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: widget.books.isEmpty
-            ? const Center(
-                child: Text("ไม่มีหนังสือ", style: TextStyle(fontSize: 18)))
+            ? Container(
+            padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
+            child: const Text("ไม่มีหนังสือ", style: TextStyle(fontSize: 18)))
             : Container(
                 color: const Color(0xfff5f3e8),
                 child: BookCard(books: widget.books),
@@ -82,11 +83,10 @@ class BookCard extends StatelessWidget {
                                 Text(books[index]['title'],
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 18)),
-                                const SizedBox(height: 5),
+                                    style: const TextStyle(fontSize: 16)),
                                 Text(
                                   books[index]['author'],
-                                  style: const TextStyle(fontSize: 15),
+                                  style: const TextStyle(fontSize: 14),
                                 ),
                               ]))
                     ],

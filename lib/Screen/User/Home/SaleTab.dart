@@ -36,8 +36,9 @@ class _SaleTabState extends State<SaleTab> {
     return RefreshIndicator(
       onRefresh: reFresh,
       child: widget.sales.isEmpty
-          ? const Center(
-              child: Text("ไม่มีการขาย", style: TextStyle(fontSize: 18)))
+          ? Container(
+              padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
+              child: const Text("ไม่มีการขาย", style: TextStyle(fontSize: 18)))
           : Container(
               color: const Color(0xfff5f3e8),
               child: SizedBox(
@@ -81,7 +82,6 @@ class _SaleTabState extends State<SaleTab> {
                                               overflow: TextOverflow.ellipsis,
                                               style: const TextStyle(
                                                   fontSize: 18)),
-                                          const SizedBox(height: 5),
                                           Text(
                                             '${widget.sales[index]['sellingPrice']}฿',
                                             style: const TextStyle(

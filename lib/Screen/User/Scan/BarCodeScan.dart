@@ -133,13 +133,13 @@ class _BarCodeScanState extends State<BarCodeScan> {
         editions = await BookController().getEditionsBook(result!);
         if (editions.isNotEmpty) {
           dropdownValue = editions.first;
+          editions.add('เพิ่ม');
           bookInfo =
               await BookController().getBookInfo(result!, dropdownValue!);
           hasBook =
               await BookController().checkHasBook(result!, dropdownValue!);
           if (hasBook)
-            hasSale =
-                await SaleController().checkHasSale(result!, dropdownValue!);
+            hasSale = await SaleController().checkHasSale(result!, dropdownValue!);
           else
             hasSale = false;
         } else {
@@ -242,25 +242,48 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                                                   0xff795e35)),
                                                           onChanged:
                                                               (String? value) {
-                                                            setState(() async {
-                                                              dropdownValue =
-                                                                  value!;
-                                                              bookInfo = await BookController()
-                                                                  .getBookInfo(
-                                                                      result!,
-                                                                      dropdownValue!);
-                                                              hasBook = await BookController()
-                                                                  .checkHasBook(
-                                                                      result!,
-                                                                      dropdownValue!);
-                                                              if (hasBook)
-                                                                hasSale = await SaleController()
-                                                                    .checkHasSale(
+                                                            if (value ==
+                                                                'เพิ่ม') {
+                                                              Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) =>
+                                                                          AddBook(
+                                                                            accType:
+                                                                                widget.type,
+                                                                            bookInfo:
+                                                                                bookInfo,
+                                                                          ))).then(
+                                                                  (value) {
+                                                                controller
+                                                                    .resumeCamera();
+                                                                Navigator.of(
+                                                                        context)
+                                                                    .pop();
+                                                              });
+                                                            } else {
+                                                              setState(
+                                                                  () async {
+                                                                dropdownValue =
+                                                                    value!;
+                                                                bookInfo = await BookController()
+                                                                    .getBookInfo(
                                                                         result!,
                                                                         dropdownValue!);
-                                                              else
-                                                                hasSale = false;
-                                                            });
+                                                                hasBook = await BookController()
+                                                                    .checkHasBook(
+                                                                        result!,
+                                                                        dropdownValue!);
+                                                                if (hasBook)
+                                                                  hasSale = await SaleController()
+                                                                      .checkHasSale(
+                                                                          result!,
+                                                                          dropdownValue!);
+                                                                else
+                                                                  hasSale =
+                                                                      false;
+                                                              });
+                                                            }
                                                           },
                                                           items: editions.map<
                                                               DropdownMenuItem<

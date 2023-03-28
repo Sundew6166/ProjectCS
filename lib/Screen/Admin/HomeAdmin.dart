@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:lottie/lottie.dart';
 
@@ -28,7 +27,7 @@ class _HomeAdminState extends State<HomeAdmin> {
     super.initState();
   }
 
-  setPosts() async {
+  Future<void> setPosts() async {
     await PostController().getPostAll().then((value) {
       setState(() {
         posts = value;
@@ -47,7 +46,7 @@ class _HomeAdminState extends State<HomeAdmin> {
             exit(0);
           } else {
             var snackBar =
-                SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
+                const SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             return false;
           }
@@ -60,9 +59,22 @@ class _HomeAdminState extends State<HomeAdmin> {
                   title: const Text("My Book"),
                 ),
                 body: Container(
-                  color: const Color(0xfff5f3e8),
-                  child: PostSec(posts: posts!),
-                ),
+                    color: const Color(0xfff5f3e8),
+                    child: RefreshIndicator(
+                      onRefresh: setPosts,
+                      child: posts!.isEmpty
+                          ? const CustomScrollView(
+                              slivers: <Widget>[
+                                SliverFillRemaining(
+                                  child: Center(
+                                    child: Text("ไม่มีโพสต์",
+                                        style: TextStyle(fontSize: 18)),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : PostSec(posts: posts!),
+                    )),
                 floatingActionButton: SpeedDial(children: [
                   SpeedDialChild(
                     child: const Icon(
@@ -113,59 +125,52 @@ class PostSec extends StatefulWidget {
 class _PostSecState extends State<PostSec> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: const Color(0xfff5f3e8),
-        height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-        child: ListView.builder(
-          itemCount: widget.posts.length,
-          shrinkWrap: true,
-          itemBuilder: (context, i) {
-            return GestureDetector(
-                onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              SocialPage(posts: widget.posts[i])),
-                    ),
-                child: SizedBox(
-                    height: 90,
-                    child: Card(
-                        child: Padding(
-                            padding: const EdgeInsets.all(7),
-                            child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CircleAvatar(
-                                    backgroundImage: NetworkImage(
-                                        '${widget.posts[i]['Image']}'),
-                                    backgroundColor: const Color(0xffadd1dc),
-                                    radius: 30,
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 10),
-                                        child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Text(
-                                                  '${widget.posts[i]['CreateBy']}',
-                                                  style: const TextStyle(
-                                                      fontSize: 18)),
-                                              Text(
-                                                '${widget.posts[i]['Detail_Post']}',
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                              )
-                                            ])),
-                                  ),
-                                  Text(
-                                      '${widget.posts[i]['Create_DateTime_Post']}',
-                                      textAlign: TextAlign.right),
-                                ])))));
-          },
-        ));
+    return ListView.builder(
+      itemCount: widget.posts.length,
+      shrinkWrap: true,
+      itemBuilder: (context, i) {
+        return GestureDetector(
+            onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SocialPage(posts: widget.posts[i])),
+                ),
+            child: SizedBox(
+                height: 90,
+                child: Card(
+                    child: Padding(
+                        padding: const EdgeInsets.all(7),
+                        child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CircleAvatar(
+                                backgroundImage:
+                                    NetworkImage('${widget.posts[i]['Image']}'),
+                                backgroundColor: const Color(0xffadd1dc),
+                                radius: 30,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 10),
+                                    child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text('${widget.posts[i]['CreateBy']}',
+                                              style: const TextStyle(
+                                                  fontSize: 18)),
+                                          Text(
+                                            '${widget.posts[i]['Detail_Post']}',
+                                            maxLines: 2,
+                                            overflow: TextOverflow.ellipsis,
+                                          )
+                                        ])),
+                              ),
+                              Text('${widget.posts[i]['Create_DateTime_Post']}',
+                                  textAlign: TextAlign.right),
+                            ])))));
+      },
+    );
   }
 }

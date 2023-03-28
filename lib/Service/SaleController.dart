@@ -138,7 +138,10 @@ class SaleController {
       });
       print("setTimeout");
       Workmanager().registerOneOffTask("task-identifier", "paymentTimeout",
-          initialDelay: const Duration(minutes: 1), constraints: Constraints(networkType: NetworkType.connected), inputData: {'idSale': idSale});
+          initialDelay: const Duration(seconds: 10),
+          constraints: Constraints(networkType: NetworkType.connected),
+          inputData: {'idSale': idSale});
+      print('1 this line ->>>>>>>');
       return true;
     }
     return false;

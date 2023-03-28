@@ -3,51 +3,34 @@ import 'package:flutter/material.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/AddBook.dart';
 
-import 'package:my_book/Service/BookController.dart';
-
 class StockTab extends StatefulWidget {
-  StockTab({super.key, required this.accType});
+  StockTab({super.key, required this.accType, required this.bookList});
 
   String accType;
+  List<dynamic> bookList;
 
   @override
   State<StockTab> createState() => _StockTabState();
 }
 
 class _StockTabState extends State<StockTab> {
-  List<Map<String, dynamic>?> bookList = [];
-
-  @override
-  void initState() {
-    setBookList();
-    super.initState();
-  }
-
-  setBookList() async {
-    await BookController().getAllBookInLibrary(widget.accType).then((value) {
-      setState(() {
-        bookList.addAll(value);
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return bookList.isEmpty
+    return widget.bookList.isEmpty
         ? Container(
-          padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
+            padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
             child: const Text("ไม่มีหนังสือ", style: TextStyle(fontSize: 18)))
         : Container(
             height: MediaQuery.of(context).size.height,
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+            // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             color: const Color(0xfff5f3e8),
             child: ListView.builder(
-              itemCount: bookList.length,
+              itemCount: widget.bookList.length,
               shrinkWrap: true,
               itemBuilder: (context, index) {
                 return GestureDetector(
                     onTap: () async {
-                      var bookInfo = bookList[index]!;
+                      var bookInfo = widget.bookList[index]!;
                       if (widget.accType == "ADMIN") {
                         Navigator.push(
                             context,
@@ -76,8 +59,8 @@ class _StockTabState extends State<StockTab> {
                                     children: [
                                       ClipRRect(
                                         borderRadius: BorderRadius.circular(5),
-                                        child: Image.network(
-                                            bookList[index]!['coverImage']),
+                                        child: Image.network(widget
+                                            .bookList[index]!['coverImage']),
                                       ),
                                       Expanded(
                                         child: Padding(
@@ -88,12 +71,14 @@ class _StockTabState extends State<StockTab> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                      bookList[index]!['title'],
+                                                      widget.bookList[index]![
+                                                          'title'],
                                                       style: const TextStyle(
                                                           fontSize: 18)),
                                                   Expanded(
                                                       child: Text(
-                                                    bookList[index]!['isbn'],
+                                                    widget.bookList[index]![
+                                                        'isbn'],
                                                     overflow:
                                                         TextOverflow.ellipsis,
                                                   ))
