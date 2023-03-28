@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_book/Service/ImageController.dart';
+import 'package:my_book/Service/NotificationController.dart';
 import 'package:my_book/Service/SaleController.dart';
 
 class BookController {
@@ -37,7 +38,7 @@ class BookController {
       "synopsys": synopsys,
       "updateDateTime": Timestamp.now(),
       "approveStatus": accType == "ADMIN" ? true : false,
-      "createBy": user!.uid
+      "createBy": accType == "ADMIN" ? "ADMIN" : user!.uid
     };
 
     await db.collection('books').doc(id).set(data);
@@ -167,7 +168,7 @@ class BookController {
     return hasBook;
   }
 
-  Future<void> updateBookInfo(String idBook, String title, String author, String publisher, int price, List<String> oldTypes, List<String> newTypes, String synopsys, String oldCoverImage, File? newCoverImage) async {
+  Future<void> updateBookInfo(String idBook, String title, String author, String publisher, int price, List<String> oldTypes, List<String> newTypes, String synopsys, String oldCoverImage, File? newCoverImage, String createBy) async {
     final db = FirebaseFirestore.instance;
 
     String downloadURL = newCoverImage == null
@@ -185,29 +186,34 @@ class BookController {
     };
     await db.collection('books').doc(idBook).update(data);
 
-    for (var type in oldTypes) {
-      if (newTypes.contains(type)) {
-        oldTypes.remove(type);
-        newTypes.remove(type);
+    List<String> toRemove =[];
+    oldTypes.forEach((element) {
+      if (newTypes.contains(element)) {
+        toRemove.add(element);
       }
-    }
+    });
+    oldTypes.removeWhere((element) => toRemove.contains(element));
+    newTypes.removeWhere((element) => toRemove.contains(element));
     for (var type in oldTypes) {
       await db
           .collection('book_types')
           .where('name', isEqualTo: type)
           .get()
           .then((docType) {
-        db
-            .collection('b_has_bt')
-            .where('book', isEqualTo: idBook)
-            .where('type', isEqualTo: docType.docs[0].id)
-            .get()
-            .then((value) {
-          db.collection('b_has_bt').doc(value.docs[0].id).delete();
-        });
-      });
+            db.collection('b_has_bt')
+              .where('book', isEqualTo: idBook)
+              .where('type', isEqualTo: docType.docs[0].id)
+              .get()
+              .then((value) {
+                db.collection('b_has_bt').doc(value.docs[0].id).delete();
+              });
+          });
     }
     linkTypeAndBook(idBook, newTypes);
+
+    if (createBy != "ADMIN") {
+      await NotificationController().createNotification("A", idBook, createBy);
+    }
   }
 
   Future<List<Map<String, dynamic>?>> getAllBookInLibrary(String accType) async {

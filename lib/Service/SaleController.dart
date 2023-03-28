@@ -5,17 +5,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/ImageController.dart';
+import 'package:my_book/Service/NotificationController.dart';
 import 'package:workmanager/workmanager.dart';
 
 class SaleController {
-  Future<void> addSale(
-      String idBook,
-      String detail,
-      String sellingPrice,
-      String deliveryFee,
-      String bank,
-      String bankAccountNumber,
-      File image) async {
+  Future<void> addSale(String idBook, String detail, String sellingPrice, String deliveryFee, String bank, String bankAccountNumber, File image) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
@@ -49,22 +43,9 @@ class SaleController {
       .where('seller', isEqualTo: user!.uid)
       .get().then((querySnapshot) async {
         for (var docSnap in querySnapshot.docs) {
-          var data = docSnap.data();
-          data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm').format(data['createDateTime'].toDate());
-          data['id'] = docSnap.id;
-          var idSplit = data['book'].split("_");
-          await BookController().getBookInfo(idSplit[0], idSplit[1])
-            .then((value) => data['book'] = {
-                  'title': value!['title'],
-                  'author': value['author'],
-                  'publisher': value['publisher'],
-                  'isbn': value['isbn'],
-                  'edition': value['edition'],
-                  'synopsys': value['synopsys'],
-                  'types': value['types']
-                });
-        output.add(data);
-      }
+          var data = await getBookInfo(docSnap.data(), docSnap.id);
+          output.add(data);
+        }
     });
     output.sort((a, b) => b!['createDateTime'].compareTo(a!['createDateTime']));
 
@@ -95,26 +76,32 @@ class SaleController {
       .where('saleStatus', isEqualTo: "N")
       .get().then((querySnapshot) async {
         for (var docSnap in querySnapshot.docs) {
-          var data = docSnap.data();
-          data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm').format(data['createDateTime'].toDate());
-          data['id'] = docSnap.id;
-          var idSplit = data['book'].split("_");
-          await BookController().getBookInfo(idSplit[0], idSplit[1])
-            .then((value) => data['book'] = {
-                  'title': value!['title'],
-                  'author': value['author'],
-                  'publisher': value['publisher'],
-                  'isbn': value['isbn'],
-                  'edition': value['edition'],
-                  'synopsys': value['synopsys'],
-                  'types': value['types']
-                });
-        output.add(data);
-      }
-    });
+          var data = await getBookInfo(docSnap.data(), docSnap.id);
+          output.add(data);
+        }
+      });
     output.sort((a, b) => b!['createDateTime'].compareTo(a!['createDateTime']));
 
     return output;
+  }
+
+  Future<Map<String, dynamic>?> getBookInfo(Map<String, dynamic>? data, String id) async {
+    if (data != null) {
+      data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm').format(data['createDateTime'].toDate());
+      data['id'] = id;
+      var idSplit = data['book'].split("_");
+      await BookController().getBookInfo(idSplit[0], idSplit[1])
+        .then((value) => data['book'] = {
+              'title': value!['title'],
+              'author': value['author'],
+              'publisher': value['publisher'],
+              'isbn': value['isbn'],
+              'edition': value['edition'],
+              'synopsys': value['synopsys'],
+              'types': value['types']
+            });
+    }
+    return data;
   }
 
   Future<bool> buyBook(String idSale) async {
@@ -128,6 +115,7 @@ class SaleController {
         "saleStatus": "B",
         "updateDateTime": Timestamp.now()
       });
+      await NotificationController().createNotification("P", idSale, user.uid);
       print("setTimeout");
       Workmanager().registerOneOffTask(idSale, "paymentTimeout", initialDelay: Duration(minutes: 5), inputData: {'idSale': idSale});
       return true;
@@ -148,16 +136,18 @@ class SaleController {
     }
   }
 
-  // Future<void> informPayment(String idSale) async {
-  //   final db = FirebaseFirestore.instance;
-
-  //   var docSnap = await db.collection('sales').doc(idSale).get();
-  //   if (docSnap.data()!['saleStatus'] == "B") {
-  //     Workmanager().cancelByUniqueName(idSale);
-  //     await db.collection('sales').doc(idSale).update({
-  //       "saleStatus": "Y",
-  //       "updateDateTime": Timestamp.now()
-  //     });
-  //   }
-  // }
+  Future<void> informPayment(String idSale, File paymentSlip) async {
+    final db = FirebaseFirestore.instance;
+    String downloadURL = await ImageController().uploadToFireStorage(paymentSlip, "slip_"+idSale);
+    var docSnap = await db.collection('sales').doc(idSale).get();
+    if (docSnap.data()!['saleStatus'] == "B") {
+      Workmanager().cancelByUniqueName(idSale);
+      await db.collection('sales').doc(idSale).update({
+        "paymentSlip": downloadURL,
+        "saleStatus": "Y",
+        "updateDateTime": Timestamp.now()
+      });
+      await NotificationController().createNotification("S", idSale, docSnap.data()!['seller']);
+    }
+  }
 }

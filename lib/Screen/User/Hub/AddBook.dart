@@ -292,14 +292,13 @@ class _AddBookState extends State<AddBook> {
                                                       _textTitle.text,
                                                       _textAuthor.text,
                                                       _textPublisher.text,
-                                                      int.parse(
-                                                          _textPrice.text),
+                                                      int.parse(_textPrice.text),
                                                       widget.bookInfo!['types'],
                                                       typeOption!.values,
                                                       _textSynopsys.text,
-                                                      widget.bookInfo![
-                                                          'coverImage'],
-                                                      _image)
+                                                      widget.bookInfo!['coverImage'],
+                                                      _image,
+                                                      widget.bookInfo!['createBy'])
                                                   .then((value) => showDialog(
                                                       context: context,
                                                       builder: (_) =>
@@ -361,8 +360,7 @@ class _AddBookState extends State<AddBook> {
                                       child: Text(
                                           widget.bookInfo == null
                                               ? "บันทึก"
-                                              : widget.bookInfo![
-                                                      'approveStatus']
+                                              : widget.bookInfo!['approveStatus']
                                                   ? "บันทึก"
                                                   : "อนุมัติ",
                                           style:

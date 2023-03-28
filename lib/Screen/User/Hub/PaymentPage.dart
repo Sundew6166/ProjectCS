@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Service/SaleController.dart';
 
 class PaymentPage extends StatefulWidget {
-  const PaymentPage({super.key});
+  PaymentPage({super.key, required this.saleInfo});
+
+  Map<String, dynamic> saleInfo;
 
   @override
   State<PaymentPage> createState() => _PaymentPageState();
@@ -33,7 +37,8 @@ class _PaymentPageState extends State<PaymentPage> {
         appBar: AppBar(
           title: const Text('แจ้งชำระเงิน'),
         ),
-        body: Container(
+        body: SingleChildScrollView(
+          child: Container(
             color: const Color(0xfff5f3e8),
             alignment: Alignment.topCenter,
             child: Column(
@@ -44,10 +49,10 @@ class _PaymentPageState extends State<PaymentPage> {
                         horizontal: 10, vertical: 10),
                     color: Colors.white,
                     child: Column(children: [
-                      BookName(),
-                      DeliveryFee(),
-                      Address(),
-                      Total(),
+                      BookName(title: widget.saleInfo['title'], price: widget.saleInfo['sellingPrice']),
+                      DeliveryFee(deliveryFee: widget.saleInfo['deliveryFee']),
+                      Address(deliveryInfo: widget.saleInfo['deliveryInfo']),
+                      Total(total: widget.saleInfo['sellingPrice'] + widget.saleInfo['deliveryFee']),
                     ])),
                 PaymentSlip(),
                 const SizedBox(height: 20),
@@ -70,14 +75,44 @@ class _PaymentPageState extends State<PaymentPage> {
                 ),
                 const SizedBox(height: 40),
                 ElevatedButton(
-                    onPressed: (() => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => BottomBar(
-                                    accType: 'USER',
-                                    tab: "PROFILE",
-                                  )),
-                        )),
+                    onPressed: (() async {
+                      if (_image != null) {
+                        try {
+                          await SaleController().informPayment(widget.saleInfo['idSales'], _image!)
+                              .then((value) => showDialog(
+                                context: context,
+                                builder: (_) =>
+                                    AlertDialog(
+                                      title: Text("เสร็จสิ้น"),
+                                      content: Text("แจ้งชำระเงินเสร็จสิ้น อย่าลืมเพิ่มหนังสือเข้าคลังหลังจากได้รับหนังสือแล้ว"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: 'USER', tab: "PROFILE"))),
+                                          child: const Text('ตกลง'),
+                                        ),
+                                      ],
+                                    )));
+                        } on FirebaseException catch (e) {
+                          print(e.code);
+                          showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                    title: Text(e.message
+                                        .toString()),
+                                    content: const Text(
+                                        "เกิดข้อผิดพลาดในการทำงาน กรุณาลองใหม่"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(
+                                                context),
+                                        child: const Text(
+                                            'ตกลง'),
+                                      )
+                                    ]));
+                        }
+                      }
+                    }),
                     style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(
@@ -86,27 +121,31 @@ class _PaymentPageState extends State<PaymentPage> {
                     child:
                         const Text("บันทึก", style: TextStyle(fontSize: 20))),
               ],
-            )));
+            ))));
   }
 }
 
 class BookName extends StatelessWidget {
+  BookName({super.key, required this.title, required this.price});
+  String title;
+  int price;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
-        children: const <Widget>[
+        children: <Widget>[
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('ชื่อหนังสือ', style: TextStyle(fontSize: 20)),
+              child: Text(title, style: TextStyle(fontSize: 20)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text('500 บ.',
+              child: Text('${price} บ.',
                   style: TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
@@ -117,12 +156,15 @@ class BookName extends StatelessWidget {
 }
 
 class DeliveryFee extends StatelessWidget {
+  DeliveryFee({super.key, required this.deliveryFee});
+  int deliveryFee;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
-        children: const <Widget>[
+        children: <Widget>[
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
@@ -132,7 +174,7 @@ class DeliveryFee extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text('20 บ.',
+              child: Text('${deliveryFee} บ.',
                   style: TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
@@ -143,20 +185,23 @@ class DeliveryFee extends StatelessWidget {
 }
 
 class Address extends StatelessWidget {
+  Address({super.key, required this.deliveryInfo});
+  String deliveryInfo;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Column(
-        children: const <Widget>[
+        children: <Widget>[
           Align(
             alignment: Alignment.centerLeft,
-            child: Text('ที่อยู่', style: TextStyle(fontSize: 20)),
+            child: Text('ข้อมูลการจัดส่ง', style: TextStyle(fontSize: 20)),
           ),
           Align(
             alignment: Alignment.centerRight,
             child: Text(
-                '\tหมู่ที่ 7 4 ถ. ลาดปลาเค้า แขวงจรเข้บัว เขตลาดพร้าว กรุงเทพมหานคร 10230',
+                deliveryInfo,
                 style: TextStyle(fontSize: 20)),
           ),
         ],
@@ -166,12 +211,15 @@ class Address extends StatelessWidget {
 }
 
 class Total extends StatelessWidget {
+  Total({super.key, required this.total});
+  int total;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Row(
-        children: const <Widget>[
+        children: <Widget>[
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
@@ -181,7 +229,7 @@ class Total extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text('520 บ.',
+              child: Text('${total} บ.',
                   style: TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
