@@ -32,7 +32,7 @@ class _ReviewPageState extends State<ReviewPage> {
     super.initState();
   }
 
-  setData() async {
+  Future<void> setData() async {
     await ReviewController()
         .getReview(
             widget.bookInfo['edition'].toString(), widget.bookInfo['isbn'])
@@ -45,17 +45,19 @@ class _ReviewPageState extends State<ReviewPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('รีวิวหนังสือ'),
-        ),
-        resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-            child: widget.bookInfo != null && reviews != null
-                ? Container(
+    return widget.bookInfo != null && reviews != null
+        ? Scaffold(
+            appBar: AppBar(
+              title: const Text('รีวิวหนังสือ'),
+            ),
+            resizeToAvoidBottomInset: false,
+            body: RefreshIndicator(
+                onRefresh: setData,
+                child: Container(
                     color: const Color(0xfff5f3e8),
                     alignment: Alignment.topCenter,
-                    child: Column(
+                    child: SingleChildScrollView(
+                        child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const SizedBox(height: 20),
@@ -223,16 +225,16 @@ class _ReviewPageState extends State<ReviewPage> {
                             isbn: widget.bookInfo['isbn'],
                             reviews: reviews!),
                       ],
-                    ))
-                : Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    color: Colors.white,
-                    child: Center(
-                      child: Lottie.network(
-                          'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
-                    ),
-                  )));
+                    )))))
+        : Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: Center(
+              child: Lottie.network(
+                  'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
+            ),
+          );
   }
 }
 

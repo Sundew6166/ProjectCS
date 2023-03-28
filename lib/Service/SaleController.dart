@@ -117,7 +117,11 @@ class SaleController {
       });
       await NotificationController().createNotification("P", idSale, user.uid);
       print("setTimeout");
-      Workmanager().registerOneOffTask(idSale, "paymentTimeout", initialDelay: Duration(minutes: 5), inputData: {'idSale': idSale});
+      Workmanager().registerOneOffTask("task-identifier", "paymentTimeout",
+          initialDelay: const Duration(seconds: 10),
+          constraints: Constraints(networkType: NetworkType.connected),
+          inputData: {'idSale': idSale});
+      print('1 this line ->>>>>>>');
       return true;
     }
     return false;
@@ -128,11 +132,8 @@ class SaleController {
 
     var docSnap = await db.collection('sales').doc(idSale).get();
     if (docSnap.data()!['saleStatus'] == "B") {
-      await db.collection('sales').doc(idSale).update({
-        "buyer": "",
-        "saleStatus": "N",
-        "updateDateTime": Timestamp.now()
-      });
+      await db.collection('sales').doc(idSale).update(
+          {"buyer": "", "saleStatus": "N", "updateDateTime": Timestamp.now()});
     }
   }
 

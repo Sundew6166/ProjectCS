@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottie/lottie.dart';
@@ -6,6 +8,7 @@ import 'package:my_book/Screen/Admin/SettingAdmin.dart';
 import 'package:my_book/Screen/User/Profile/StockTab.dart';
 import 'package:my_book/Screen/User/Profile/PostTab.dart';
 import 'package:my_book/Screen/Admin/ApproveTab.dart';
+import 'package:my_book/Service/BookController.dart';
 
 import 'package:my_book/Service/PostController.dart';
 
@@ -19,20 +22,56 @@ class ProfileAdmin extends StatefulWidget {
 class _ProfileAdminState extends State<ProfileAdmin>
     with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
-  List<dynamic>? posts;
+  List<dynamic>? postList;
+  List<dynamic>? bookList;
+  List<dynamic>? approveList;
 
   @override
   void initState() {
-    setPosts();
+    setData();
     super.initState();
   }
 
-  setPosts() async {
+  setData() async {
     await PostController().getMyPost().then((value) {
       setState(() {
-        posts = value;
+        postList = value;
       });
     });
+    await BookController().getAllBookInLibrary('ADMIN').then((value) {
+      setState(() {
+        bookList = value;
+      });
+    });
+    await BookController().getAllBookPendingApproval().then((value) {
+      setState(() {
+        approveList = value;
+      });
+    });
+  }
+
+  var presscount = 0;
+
+  Widget profile() {
+    return SizedBox(
+        height: 120,
+        child: Column(
+          children: [
+            const SizedBox(height: 5),
+            Center(
+                child: CircleAvatar(
+              backgroundImage: NetworkImage(user!.photoURL.toString()),
+              backgroundColor: const Color(0xffadd1dc),
+              radius: 40,
+            )),
+            const SizedBox(height: 5),
+            Center(
+                child: Text(
+              user!.displayName.toString(),
+              style: const TextStyle(fontSize: 18),
+            )),
+          ],
+        ));
   }
 
   @override
@@ -40,8 +79,18 @@ class _ProfileAdminState extends State<ProfileAdmin>
     TabController tabController = TabController(length: 3, vsync: this);
 
     return WillPopScope(
-        onWillPop: () async => false,
-        child: posts != null
+        onWillPop: () async {
+          presscount++;
+          if (presscount == 2) {
+            exit(0);
+          } else {
+            var snackBar =
+                const SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            return false;
+          }
+        },
+        child: postList != null && bookList != null && approveList != null
             ? Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
@@ -66,21 +115,7 @@ class _ProfileAdminState extends State<ProfileAdmin>
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          const SizedBox(height: 10),
-                          Center(
-                              child: CircleAvatar(
-                            backgroundImage:
-                                NetworkImage(user!.photoURL.toString()),
-                            backgroundColor: const Color(0xffadd1dc),
-                            radius: 40,
-                          )),
-                          const SizedBox(height: 10),
-                          Center(
-                              child: Text(
-                            user!.displayName.toString(),
-                            style: const TextStyle(fontSize: 18),
-                          )),
-                          const SizedBox(height: 10),
+                          profile(),
                           SizedBox(
                             height: 35,
                             child: TabBar(
@@ -91,32 +126,20 @@ class _ProfileAdminState extends State<ProfileAdmin>
                                 unselectedLabelColor: const Color(0xffadd1dc),
                                 controller: tabController,
                                 tabs: const [
-                                  Tab(
-                                      icon: Icon(
-                                    Icons.book,
-                                    size: 30,
-                                  )),
-                                  Tab(
-                                      icon: Icon(
-                                    Icons.message,
-                                    size: 30,
-                                  )),
-                                  Tab(
-                                      icon: Icon(
-                                    Icons.check_circle,
-                                    size: 30,
-                                  ))
+                                  Tab(icon: Icon(Icons.book, size: 30)),
+                                  Tab(icon: Icon(Icons.message, size: 30)),
+                                  Tab(icon: Icon(Icons.check_circle, size: 30))
                                 ]),
                           ),
-                          Container(
-                            color: const Color(0xfff5f3e8),
-                            height: MediaQuery.of(context).size.height,
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height- 266,
                             child: TabBarView(
                                 controller: tabController,
                                 children: [
-                                  StockTab(accType: "ADMIN"),
-                                  PostTab(posts: posts!),
-                                  const ApproveTab(),
+                                  StockTab(
+                                      accType: "ADMIN", bookList: bookList!),
+                                  PostTab(posts: postList!),
+                                  ApproveTab(approveList: approveList!),
                                 ]),
                           )
                         ],

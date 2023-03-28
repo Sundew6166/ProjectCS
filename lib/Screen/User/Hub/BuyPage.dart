@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_book/Screen/BottomBar.dart';
+import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/SaleController.dart';
 
@@ -16,6 +17,7 @@ class BuyPage extends StatefulWidget {
 class _BuyPageState extends State<BuyPage> {
   bool canBuy = false;
   bool statusBuy = false;
+  late String address;
 
   @override
   void initState() {
@@ -25,6 +27,11 @@ class _BuyPageState extends State<BuyPage> {
 
   setCanBuy() async {
     if (widget.saleInfo['seller'] != FirebaseAuth.instance.currentUser!.uid) {
+      await AccountController().getDeliveryInformation().then((value) {
+        setState(() {
+          address = value['address'];
+        });
+      });
       await BookController()
           .checkHasBook(widget.saleInfo['book']['isbn'],
               widget.saleInfo['book']['edition'].toString())
@@ -43,43 +50,57 @@ class _BuyPageState extends State<BuyPage> {
           title: const Text('ซื้อ'),
         ),
         resizeToAvoidBottomInset: false,
-        body: SingleChildScrollView(
-            child: Container(
-                color: const Color(0xfff5f3e8),
-                alignment: Alignment.topCenter,
+        body: Container(
+            color: const Color(0xfff5f3e8),
+            // alignment: Alignment.topCenter,
+            child: SingleChildScrollView(
                 child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 20),
-                    ImageProduct(urlImage: widget.saleInfo['image']),
-                    const SizedBox(height: 20),
-                    Container(
-                        margin: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                        ),
-                        color: Colors.white,
-                        child: Column(children: [
-                          BookName(title: widget.saleInfo['book']['title']),
-                          Author(author: widget.saleInfo['book']['author']),
-                          Publisher(
-                              publisher: widget.saleInfo['book']['publisher']),
-                          Type(types: widget.saleInfo['book']['types']),
-                          Selling_Price(
-                              sellingPrice:
-                                  widget.saleInfo['sellingPrice'].toString()),
-                          DeliveryFee(
-                              deliveryFee:
-                                  widget.saleInfo['deliveryFee'].toString()),
-                          Synopsys(
-                              synopsys: widget.saleInfo['book']['synopsys']),
-                          Detail(detail: widget.saleInfo['detail']),
-                        ])),
-                    Container(
-                        margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
-                        child: ElevatedButton(
-                            onPressed: (canBuy)
-                                ? () {
-                                    showDialog(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                ImageProduct(urlImage: widget.saleInfo['image']),
+                const SizedBox(height: 20),
+                Container(
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                    ),
+                    color: Colors.white,
+                    child: Column(children: [
+                      BookName(title: widget.saleInfo['book']['title']),
+                      Author(author: widget.saleInfo['book']['author']),
+                      Publisher(
+                          publisher: widget.saleInfo['book']['publisher']),
+                      Type(types: widget.saleInfo['book']['types']),
+                      Selling_Price(
+                          sellingPrice:
+                              widget.saleInfo['sellingPrice'].toString()),
+                      DeliveryFee(
+                          deliveryFee:
+                              widget.saleInfo['deliveryFee'].toString()),
+                      Synopsys(synopsys: widget.saleInfo['book']['synopsys']),
+                      Detail(detail: widget.saleInfo['detail']),
+                    ])),
+                Container(
+                    margin: const EdgeInsets.only(top: 16.0, bottom: 16.0),
+                    child: ElevatedButton(
+                        onPressed: (canBuy)
+                            ? () {
+                                address.isEmpty
+                                    ? showDialog(
+                                        context: context,
+                                        builder: (_) => AlertDialog(
+                                              title: const Text(
+                                                  "ไม่สามารถสั่งซื้อได้"),
+                                              content: const Text(
+                                                  "กรุณากรอกที่อยู่เพื่อจัดส่งก่อนทำรายการใหม่อีกครั้ง"),
+                                              actions: [
+                                                TextButton(
+                                                    onPressed: () =>
+                                                        Navigator.pop(context),
+                                                    child: const Text('ตกลง')),
+                                              ],
+                                            ))
+                                    : showDialog(
                                         context: context,
                                         builder: (_) => AlertDialog(
                                               title: const Text(
@@ -165,18 +186,18 @@ class _BuyPageState extends State<BuyPage> {
                                                 ),
                                               ],
                                             ));
-                                  }
-                                : null,
-                            style: ElevatedButton.styleFrom(
-                                fixedSize: const Size(100, 40),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                  10,
-                                ))),
-                            child: const Text("ซื้อ",
-                                style: TextStyle(fontSize: 20)))),
-                  ],
-                ))));
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(100, 40),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                              10,
+                            ))),
+                        child: const Text("ซื้อ",
+                            style: TextStyle(fontSize: 20)))),
+              ],
+            ))));
   }
 }
 

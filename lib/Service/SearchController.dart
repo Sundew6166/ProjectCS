@@ -1,36 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:intl/intl.dart';
-import 'package:my_book/Service/AccountController.dart';
 import 'package:my_book/Service/BookController.dart';
+import 'package:my_book/Service/PostController.dart';
 import 'package:my_book/Service/SaleController.dart';
 
 class SearchController {
   Future<List<dynamic>> getPosts(String item) async {
-    User? user = FirebaseAuth.instance.currentUser;
-    final db = FirebaseFirestore.instance;
+    List<dynamic> allPost = await PostController().getPostAll();
+    item = item.toLowerCase();
+
     List<dynamic> output = [];
-    await db.collection('posts').get().then((value) async {
-      for (var element in value.docs) {
-        if (element['Detail_Post'].toLowerCase().contains(item.toLowerCase())) {
-          Map<String, dynamic> acc = await AccountController()
-              .getAnotherProfile(element.data()['CreateBy']);
-          DateTime now = (element.data()['Create_DateTime_Post']).toDate();
-          String formattedDate = DateFormat('yyyy/MM/dd\nkk:mm').format(now);
-          Map<String, dynamic> temp = {
-            'ID': element.id,
-            "Create_DateTime_Post": formattedDate,
-            "Detail_Post": element.data()['Detail_Post'],
-            "CreateBy": acc['username'],
-            'Image': acc['imageURL']
-          };
-          output.add(temp);
-          // print(temp);
-        }
+
+    for (var element in allPost) {
+      if (element['Detail_Post'].toLowerCase().contains(item)) {
+        // print(element);
+        output.add(element);
       }
-    });
-    output.sort((a, b) =>
-        b['Create_DateTime_Post'].compareTo(a['Create_DateTime_Post']));
+    }
     return output;
   }
 
@@ -45,14 +29,16 @@ class SearchController {
           element['author'].toLowerCase().contains(item) ||
           element['synopsys'].toLowerCase().contains(item) ||
           element['publisher'].toLowerCase().contains(item)) {
+        output.add(element);
+      } else {
         for (var data in element['types']) {
           if (data.toLowerCase().contains(item)) {
-            print(data);
             output.add(element);
           }
         }
       }
     }
+    // print(output);
     return output;
   }
 
@@ -68,16 +54,17 @@ class SearchController {
           element['book']['author'].toLowerCase().contains(item) ||
           element['book']['publisher'].toLowerCase().contains(item) ||
           element['book']['synopsys'].toLowerCase().contains(item) ||
-          // element['book']['types'].contains(item) ||
           element['detail'].toLowerCase().contains(item)) {
+        output.add(element);
+      } else {
         for (var data in element['book']['types']) {
           if (data.toLowerCase().contains(item)) {
-            // print(data);
             output.add(element);
           }
         }
       }
     }
+    // print(output);
     return output;
   }
 }

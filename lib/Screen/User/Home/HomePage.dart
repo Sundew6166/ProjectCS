@@ -19,8 +19,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic>? sales;
-  List<dynamic>? posts;
+  List<dynamic>? saleList;
+  List<dynamic>? postList;
 
   @override
   void initState() {
@@ -31,16 +31,16 @@ class _HomePageState extends State<HomePage> {
   setData() async {
     await PostController().getPostAll().then((value) {
       setState(() {
-        posts = value;
+        postList = value;
       });
     });
     await SaleController().getAllSale().then((value) {
       setState(() {
-        sales = value;
+        saleList = value;
       });
     });
   }
-  
+
   var presscount = 0;
 
   @override
@@ -53,12 +53,12 @@ class _HomePageState extends State<HomePage> {
               exit(0);
             } else {
               var snackBar =
-                  SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
+                  const SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
               ScaffoldMessenger.of(context).showSnackBar(snackBar);
               return false;
             }
           },
-          child: sales != null
+          child: saleList != null && postList != null
               ? Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
@@ -88,13 +88,16 @@ class _HomePageState extends State<HomePage> {
                     ],
                     bottom: const TabBar(tabs: [
                       Tab(text: 'โพสต์'),
-                      Tab(text: 'ขาย'),
+                      Tab(text: 'ซื้อ'),
                     ]),
                   ),
                   body: TabBarView(
                     children: [
-                      RecPostTab(posts: posts!),
-                      SaleTab(sales: sales!),
+                      RecPostTab(posts: postList!),
+                      SaleTab(
+                        sales: saleList!,
+                        page: 'home',
+                      ),
                     ],
                   ),
                 )

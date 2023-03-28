@@ -24,7 +24,7 @@ class _SocialPageState extends State<SocialPage> {
     super.initState();
   }
 
-  setData() async {
+  Future<void> setData() async {
     await PostController().getComment(widget.posts!['ID']).then((value) {
       setState(() {
         comments = value;
@@ -104,64 +104,66 @@ class _SocialPageState extends State<SocialPage> {
           backgroundColor: const Color(0xff795e35),
         ),
         body: comments != null
-            ? CommentBox(
-                userImage: CommentBox.commentImageParser(
-                  imageURLorPath: NetworkImage(user!.photoURL.toString()),
-                ),
-                labelText: 'เขียนแสดงความคิดเห็น...',
-                errorText: 'ข้อมูลไม่ถูกต้อง',
-                withBorder: true,
-                sendButtonMethod: () async {
-                  if (commentController.text.isNotEmpty) {
-                    try {
-                      await PostController()
-                          .addComment(
-                              commentController.text, widget.posts!['ID'])
-                          .then((value) => Navigator.pushReplacement(
-                                context,
-                                PageRouteBuilder(
-                                  pageBuilder: (BuildContext context,
-                                      Animation<double> animation1,
-                                      Animation<double> animation2) {
-                                    return super.widget;
-                                  },
-                                  transitionDuration: Duration.zero,
-                                  reverseTransitionDuration: Duration.zero,
-                                ),
-                              ));
-                    } on FirebaseException catch (e) {
-                      showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                                  title: Text(e.message.toString()),
-                                  content: const Text(
-                                      "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
-                                  actions: <Widget>[
-                                    TextButton(
-                                      onPressed: () => Navigator.pop(context),
-                                      child: const Text('ตกลง'),
-                                    )
-                                  ]));
-                    }
+            ? RefreshIndicator(
+                onRefresh: setData,
+                child: CommentBox(
+                  userImage: CommentBox.commentImageParser(
+                    imageURLorPath: NetworkImage(user!.photoURL.toString()),
+                  ),
+                  labelText: 'เขียนแสดงความคิดเห็น...',
+                  errorText: 'ข้อมูลไม่ถูกต้อง',
+                  withBorder: true,
+                  sendButtonMethod: () async {
+                    if (commentController.text.isNotEmpty) {
+                      try {
+                        await PostController()
+                            .addComment(
+                                commentController.text, widget.posts!['ID'])
+                            .then((value) => Navigator.pushReplacement(
+                                  context,
+                                  PageRouteBuilder(
+                                    pageBuilder: (BuildContext context,
+                                        Animation<double> animation1,
+                                        Animation<double> animation2) {
+                                      return super.widget;
+                                    },
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                  ),
+                                ));
+                      } on FirebaseException catch (e) {
+                        showDialog(
+                            context: context,
+                            builder: (_) => AlertDialog(
+                                    title: Text(e.message.toString()),
+                                    content: const Text(
+                                        "เกิดข้อผิดพลาดในการส่งข้อมูล กรุณาลองใหม่"),
+                                    actions: <Widget>[
+                                      TextButton(
+                                        onPressed: () => Navigator.pop(context),
+                                        child: const Text('ตกลง'),
+                                      )
+                                    ]));
+                      }
 
-                    commentController.clear();
-                    FocusScope.of(context).unfocus();
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                          content: Text('กรุณาแสดงความเห็น',
-                              style: TextStyle(fontSize: 18)),
-                          backgroundColor: Colors.red),
-                    );
-                  }
-                },
-                commentController: commentController,
-                backgroundColor: const Color(0xff795e35),
-                textColor: Colors.white,
-                sendWidget:
-                    const Icon(Icons.send_sharp, size: 30, color: Colors.white),
-                child: commentChild(comments),
-              )
+                      commentController.clear();
+                      FocusScope.of(context).unfocus();
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('กรุณาแสดงความเห็น',
+                                style: TextStyle(fontSize: 18)),
+                            backgroundColor: Colors.red),
+                      );
+                    }
+                  },
+                  commentController: commentController,
+                  backgroundColor: const Color(0xff795e35),
+                  textColor: Colors.white,
+                  sendWidget: const Icon(Icons.send_sharp,
+                      size: 30, color: Colors.white),
+                  child: commentChild(comments),
+                ))
             : Container(
                 width: MediaQuery.of(context).size.width,
                 height: MediaQuery.of(context).size.height,

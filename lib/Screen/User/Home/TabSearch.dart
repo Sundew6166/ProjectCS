@@ -108,7 +108,7 @@ class _TabSearchState extends State<TabSearch> {
                   children: [
                     BookSearch(books: books!),
                     PostTab(posts: posts!),
-                    SaleTab(sales: sales!),
+                    SaleTab(sales: sales!, page: 'search',),
                   ],
                 ),
               )

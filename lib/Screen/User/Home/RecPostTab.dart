@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
+import 'package:my_book/Service/PostController.dart';
 
 class RecPostTab extends StatefulWidget {
   RecPostTab({super.key, required this.posts});
@@ -14,20 +17,30 @@ class RecPostTab extends StatefulWidget {
 }
 
 class _RecPostTabState extends State<RecPostTab> {
+  Future<void> reFresh() async {
+    await PostController().getPostAll().then((value) {
+      setState(() {
+        widget.posts = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return widget.posts != null
         ? Scaffold(
-            body: Container(
-                color: const Color(0xfff5f3e8),
-                child: SingleChildScrollView(
-                    padding: const EdgeInsets.all(5),
-                    child: Column(
-                      children: [
-                        const RecommendSection(),
-                        PostSection(posts: widget.posts!),
-                      ],
-                    ))),
+            body: RefreshIndicator(
+                onRefresh: reFresh,
+                child: Container(
+                    color: const Color(0xfff5f3e8),
+                    child: SingleChildScrollView(
+                        padding: const EdgeInsets.all(5),
+                        child: Column(
+                          children: [
+                            const RecommendSection(),
+                            PostSection(posts: widget.posts!),
+                          ],
+                        )))),
             floatingActionButton: FloatingActionButton(
               backgroundColor: const Color(0xff795e35),
               child: const Icon(Icons.add),
@@ -157,66 +170,67 @@ class PostSection extends StatefulWidget {
 class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
-    return widget.posts.isEmpty
-        ? const Center(
-            child: Text("ไม่มีโพสต์", style: TextStyle(fontSize: 18)))
-        : Container(
-            color: const Color(0xfff5f3e8),
-            height: MediaQuery.of(context).size.height,
-            padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-            child: ListView.builder(
-              itemCount: widget.posts.length,
-              shrinkWrap: true,
-              itemBuilder: (context, i) {
-                return GestureDetector(
-                    onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                SocialPage(posts: widget.posts[i]),
+    return Container(
+        color: const Color(0xfff5f3e8),
+        height: MediaQuery.of(context).size.height,
+        child: widget.posts.isEmpty
+            ? Container(
+                padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
+                child: const Text("ไม่มีโพสต์", style: TextStyle(fontSize: 18)))
+            : ListView.builder(
+                itemCount: widget.posts.length,
+                shrinkWrap: true,
+                itemBuilder: (context, i) {
+                  return GestureDetector(
+                      onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  SocialPage(posts: widget.posts[i]),
+                            ),
                           ),
-                        ),
-                    child: SizedBox(
-                        height: 90,
-                        child: Card(
-                            child: Padding(
-                                padding: const EdgeInsets.all(7),
-                                child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CircleAvatar(
-                                        backgroundImage: NetworkImage(
-                                            '${widget.posts[i]['Image']}'),
-                                        backgroundColor:
-                                            const Color(0xffadd1dc),
-                                        radius: 30,
-                                      ),
-                                      Expanded(
-                                        child: Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 10),
-                                            child: Column(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.start,
-                                                children: [
-                                                  Text(
-                                                      '${widget.posts[i]['CreateBy']}',
-                                                      style: const TextStyle(
-                                                          fontSize: 18)),
-                                                  Text(
-                                                    '${widget.posts[i]['Detail_Post']}',
-                                                    maxLines: 2,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  )
-                                                ])),
-                                      ),
-                                      Text(
-                                          '${widget.posts[i]['Create_DateTime_Post']}',
-                                          textAlign: TextAlign.right),
-                                    ])))));
-              },
-            ));
+                      child: SizedBox(
+                          height: 90,
+                          child: Card(
+                              child: Padding(
+                                  padding: const EdgeInsets.all(7),
+                                  child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        CircleAvatar(
+                                          backgroundImage: NetworkImage(
+                                              '${widget.posts[i]['Image']}'),
+                                          backgroundColor:
+                                              const Color(0xffadd1dc),
+                                          radius: 30,
+                                        ),
+                                        Expanded(
+                                          child: Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 10),
+                                              child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    Text(
+                                                        '${widget.posts[i]['CreateBy']}',
+                                                        style: const TextStyle(
+                                                            fontSize: 18)),
+                                                    Text(
+                                                      '${widget.posts[i]['Detail_Post']}',
+                                                      maxLines: 2,
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    )
+                                                  ])),
+                                        ),
+                                        Text(
+                                            '${widget.posts[i]['Create_DateTime_Post']}',
+                                            textAlign: TextAlign.right),
+                                      ])))));
+                },
+              ));
   }
 }
