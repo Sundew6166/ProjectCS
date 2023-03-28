@@ -22,7 +22,6 @@ class _StockTabState extends State<StockTab> {
             child: const Text("ไม่มีหนังสือ", style: TextStyle(fontSize: 18)))
         : Container(
             height: MediaQuery.of(context).size.height,
-            // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
             color: const Color(0xfff5f3e8),
             child: ListView.builder(
               itemCount: widget.bookList.length,

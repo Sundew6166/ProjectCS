@@ -37,11 +37,11 @@ class _PaymentPageState extends State<PaymentPage> {
         appBar: AppBar(
           title: const Text('แจ้งชำระเงิน'),
         ),
-        body: SingleChildScrollView(
-          child: Container(
+        body: Container(
             color: const Color(0xfff5f3e8),
             alignment: Alignment.topCenter,
-            child: Column(
+            child: SingleChildScrollView(
+                child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Container(
@@ -49,10 +49,15 @@ class _PaymentPageState extends State<PaymentPage> {
                         horizontal: 10, vertical: 10),
                     color: Colors.white,
                     child: Column(children: [
-                      BookName(title: widget.saleInfo['title'], price: widget.saleInfo['sellingPrice']),
+                      BookName(
+                          title: widget.saleInfo['title'],
+                          price: widget.saleInfo['sellingPrice']),
                       DeliveryFee(deliveryFee: widget.saleInfo['deliveryFee']),
                       Address(deliveryInfo: widget.saleInfo['deliveryInfo']),
-                      Total(total: widget.saleInfo['sellingPrice'] + widget.saleInfo['deliveryFee']),
+                      Total(
+                          total: widget.saleInfo['sellingPrice'] +
+                              widget.saleInfo['deliveryFee']),
+                      Bank(name: widget.saleInfo['bank'],number: widget.saleInfo['bankAccountNumber'])
                     ])),
                 PaymentSlip(),
                 const SizedBox(height: 20),
@@ -78,38 +83,43 @@ class _PaymentPageState extends State<PaymentPage> {
                     onPressed: (() async {
                       if (_image != null) {
                         try {
-                          await SaleController().informPayment(widget.saleInfo['idSales'], _image!)
+                          await SaleController()
+                              .informPayment(
+                                  widget.saleInfo['idSales'], _image!)
                               .then((value) => showDialog(
-                                context: context,
-                                builder: (_) =>
-                                    AlertDialog(
-                                      title: Text("เสร็จสิ้น"),
-                                      content: Text("แจ้งชำระเงินเสร็จสิ้น อย่าลืมเพิ่มหนังสือเข้าคลังหลังจากได้รับหนังสือแล้ว"),
-                                      actions: <Widget>[
-                                        TextButton(
-                                          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: 'USER', tab: "PROFILE"))),
-                                          child: const Text('ตกลง'),
-                                        ),
-                                      ],
-                                    )));
+                                  context: context,
+                                  builder: (_) => AlertDialog(
+                                        title: const Text("เสร็จสิ้น"),
+                                        content: const Text(
+                                            "แจ้งชำระเงินเสร็จสิ้น อย่าลืมเพิ่มหนังสือเข้าคลังหลังจากได้รับหนังสือแล้ว"),
+                                        actions: <Widget>[
+                                          TextButton(
+                                            onPressed: () => Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        BottomBar(
+                                                            accType: 'USER',
+                                                            tab: "PROFILE"))),
+                                            child: const Text('ตกลง'),
+                                          ),
+                                        ],
+                                      )));
                         } on FirebaseException catch (e) {
                           print(e.code);
                           showDialog(
-                            context: context,
-                            builder: (_) => AlertDialog(
-                                    title: Text(e.message
-                                        .toString()),
-                                    content: const Text(
-                                        "เกิดข้อผิดพลาดในการทำงาน กรุณาลองใหม่"),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        onPressed: () =>
-                                            Navigator.pop(
-                                                context),
-                                        child: const Text(
-                                            'ตกลง'),
-                                      )
-                                    ]));
+                              context: context,
+                              builder: (_) => AlertDialog(
+                                      title: Text(e.message.toString()),
+                                      content: const Text(
+                                          "เกิดข้อผิดพลาดในการทำงาน กรุณาลองใหม่"),
+                                      actions: <Widget>[
+                                        TextButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: const Text('ตกลง'),
+                                        )
+                                      ]));
                         }
                       }
                     }),
@@ -139,14 +149,14 @@ class BookName extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(title, style: TextStyle(fontSize: 20)),
+              child: Text(title, style: const TextStyle(fontSize: 20)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
               child: Text('${price} บ.',
-                  style: TextStyle(fontSize: 20, color: Colors.red)),
+                  style: const TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
         ],
@@ -165,7 +175,7 @@ class DeliveryFee extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text('ค่าจัดส่ง', style: TextStyle(fontSize: 20)),
@@ -175,7 +185,7 @@ class DeliveryFee extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text('${deliveryFee} บ.',
-                  style: TextStyle(fontSize: 20, color: Colors.red)),
+                  style: const TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
         ],
@@ -194,15 +204,14 @@ class Address extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Column(
         children: <Widget>[
-          Align(
+          const Align(
             alignment: Alignment.centerLeft,
             child: Text('ข้อมูลการจัดส่ง', style: TextStyle(fontSize: 20)),
           ),
           Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-                deliveryInfo,
-                style: TextStyle(fontSize: 20)),
+            alignment: Alignment.centerLeft,
+            child: Text(deliveryInfo,
+                style: const TextStyle(fontSize: 20, color: Colors.black54)),
           ),
         ],
       ),
@@ -220,7 +229,7 @@ class Total extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       child: Row(
         children: <Widget>[
-          Expanded(
+          const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text('ยอดรวม', style: TextStyle(fontSize: 20)),
@@ -230,8 +239,43 @@ class Total extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text('${total} บ.',
-                  style: TextStyle(fontSize: 20, color: Colors.red)),
+                  style: const TextStyle(fontSize: 20, color: Colors.red)),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Bank extends StatelessWidget {
+  Bank({super.key, required this.name, required this.number});
+  String name;
+  String number;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      child: Column(
+        children: <Widget>[
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text('ชื่อธนาคาร', style: TextStyle(fontSize: 20)),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(name,
+                style: const TextStyle(fontSize: 20, color: Colors.black54)),
+          ),
+          const Align(
+            alignment: Alignment.centerLeft,
+            child: Text('เลขบัญชีธนาคาร', style: TextStyle(fontSize: 20)),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Text(number,
+                style: const TextStyle(fontSize: 20, color: Colors.black54)),
           ),
         ],
       ),

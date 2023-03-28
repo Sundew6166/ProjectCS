@@ -19,7 +19,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  List<dynamic>? saleList;
   List<dynamic>? postList;
 
   @override
@@ -32,11 +31,6 @@ class _HomePageState extends State<HomePage> {
     await PostController().getPostAll().then((value) {
       setState(() {
         postList = value;
-      });
-    });
-    await SaleController().getAllSale().then((value) {
-      setState(() {
-        saleList = value;
       });
     });
   }
@@ -58,7 +52,7 @@ class _HomePageState extends State<HomePage> {
               return false;
             }
           },
-          child: saleList != null && postList != null
+          child: postList != null
               ? Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
@@ -94,10 +88,7 @@ class _HomePageState extends State<HomePage> {
                   body: TabBarView(
                     children: [
                       RecPostTab(posts: postList!),
-                      SaleTab(
-                        sales: saleList!,
-                        page: 'home',
-                      ),
+                      SaleTab(page: 'home'),
                     ],
                   ),
                 )

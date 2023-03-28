@@ -14,11 +14,11 @@ class _SaleListState extends State<SaleList> {
   List<dynamic>? saleList;
   @override
   void initState() {
-    reFresh();
+    setData();
     super.initState();
   }
 
-  Future<void> reFresh() async {
+  Future<void> setData() async {
     await SaleController().getMySale().then((value) {
       setState(() {
         saleList = value;
@@ -29,27 +29,25 @@ class _SaleListState extends State<SaleList> {
   @override
   Widget build(BuildContext context) {
     return saleList != null
-        ? RefreshIndicator(
-            onRefresh: reFresh,
-            child: saleList != null
+        ? Container(
+            child: saleList!.isEmpty
                 ? Container(
-                    padding: const EdgeInsets.fromLTRB(130, 20, 0, 0),
+                    padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
                     child: const Text("ไม่มีการขาย",
                         style: TextStyle(fontSize: 18)))
                 : Container(
                     height: MediaQuery.of(context).size.height,
-                    // padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
                     color: const Color(0xfff5f3e8),
                     child: ListView.builder(
                       itemCount: saleList!.length,
                       shrinkWrap: true,
-                      itemBuilder: (context, index) {
+                      itemBuilder: (context, i) {
                         return GestureDetector(
                             onTap: () => Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          BuyPage(saleInfo: saleList![index])),
+                                          BuyPage(saleInfo: saleList![i])),
                                 ),
                             child: SizedBox(
                                 height: 100,
@@ -64,8 +62,7 @@ class _SaleListState extends State<SaleList> {
                                                 borderRadius:
                                                     BorderRadius.circular(5),
                                                 child: Image.network(
-                                                    saleList![index]
-                                                        ['coverImage']),
+                                                    '${saleList![i]['image']}'),
                                               ),
                                               Expanded(
                                                 child: Padding(
@@ -78,16 +75,14 @@ class _SaleListState extends State<SaleList> {
                                                                 .start,
                                                         children: [
                                                           Text(
-                                                              saleList![index]
-                                                                  ['title'],
+                                                              '${saleList![i]['book']['title']}',
                                                               style:
                                                                   const TextStyle(
                                                                       fontSize:
                                                                           18)),
                                                           Expanded(
                                                               child: Text(
-                                                            saleList![index]
-                                                                ['isbn'],
+                                                            '${saleList![i]['book']['isbn']}',
                                                             overflow:
                                                                 TextOverflow
                                                                     .ellipsis,
@@ -102,10 +97,10 @@ class _SaleListState extends State<SaleList> {
         : Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: Colors.white,
+            color: const Color(0xfff5f3e8),
             child: Center(
               child: Lottie.network(
-                  'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
+                  'https://assets1.lottiefiles.com/packages/lf20_yyytgjwe.json'),
             ),
           );
   }

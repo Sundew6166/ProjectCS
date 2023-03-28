@@ -44,7 +44,9 @@ class NotificationController {
                 "book" : value.data()!['book'],
                 "buyer" : data['type'] == "S" ? value.data()!['buyer'] : user.uid,
                 "sellingPrice" : value.data()!['sellingPrice'],
-                "deliveryFee" : value.data()!['deliveryFee']
+                "deliveryFee" : value.data()!['deliveryFee'],
+                "bank" : value.data()!['bank'],
+                "bankAccountNumber" : value.data()!['bankAccountNumber']
               };
               await db.collection("books").doc(moreInfo['book']).get().then((value) {
                 moreInfo["title"] = value.data()!['title'];

@@ -1,30 +1,59 @@
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/SaleController.dart';
+import 'package:my_book/Service/SearchController.dart';
 
 class BookSearch extends StatefulWidget {
-  BookSearch({Key? key, required this.books}) : super(key: key);
-  List<dynamic> books;
+  BookSearch({Key? key, required this.text}) : super(key: key);
+  String? text;
 
   @override
   State<BookSearch> createState() => _BookSearchState();
 }
 
 class _BookSearchState extends State<BookSearch> {
+  List<dynamic>? bookList;
+  @override
+  void initState() {
+    setData();
+    super.initState();
+  }
+
+  setData() async {
+    await SearchController().getBooks(widget.text!).then((value) {
+      setState(() {
+        bookList = value;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: widget.books.isEmpty
-            ? Container(
-            padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
-            child: const Text("ไม่มีหนังสือ", style: TextStyle(fontSize: 18)))
-            : Container(
-                color: const Color(0xfff5f3e8),
-                child: BookCard(books: widget.books),
-              ));
+    return bookList != null
+        ? Scaffold(
+            body: bookList!.isEmpty
+                ? Container(
+                    padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
+                    child: const Text("ไม่มีหนังสือ",
+                        style: TextStyle(fontSize: 18)))
+                : Container(
+                    color: const Color(0xfff5f3e8),
+                    child: BookCard(books: bookList!),
+                  ))
+        : Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            color: Colors.white,
+            child: Center(
+              child: Lottie.network(
+                  'https://assets1.lottiefiles.com/packages/lf20_yyytgjwe.json'),
+            ),
+          );
+    ;
   }
 }
 

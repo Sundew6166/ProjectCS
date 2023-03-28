@@ -8,8 +8,6 @@ import 'package:my_book/Screen/User/Profile/StockTab.dart';
 import 'package:my_book/Screen/User/Profile/PostTab.dart';
 import 'package:my_book/Service/BookController.dart';
 
-import 'package:my_book/Service/PostController.dart';
-
 class Profile extends StatefulWidget {
   const Profile({super.key});
 
@@ -19,7 +17,6 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> with TickerProviderStateMixin {
   User? user = FirebaseAuth.instance.currentUser;
-  List<dynamic>? postList;
   List<dynamic>? bookList;
 
   @override
@@ -34,13 +31,9 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
         bookList = value;
       });
     });
-    await PostController().getMyPost().then((value) {
-      setState(() {
-        postList = value;
-      });
-    });
   }
-    Widget profile() {
+
+  Widget profile() {
     return SizedBox(
         height: 120,
         child: Column(
@@ -68,7 +61,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
 
     return WillPopScope(
         onWillPop: () async => false,
-        child: postList != null && bookList != null
+        child: bookList != null
             ? Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
@@ -123,7 +116,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                                     accType: "USER",
                                     bookList: bookList!,
                                   ),
-                                  PostTab(posts: postList!),
+                                  PostTab(page: 'profile'),
                                   const SaleList()
                                 ]),
                           ),

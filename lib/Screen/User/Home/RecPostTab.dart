@@ -17,6 +17,12 @@ class RecPostTab extends StatefulWidget {
 }
 
 class _RecPostTabState extends State<RecPostTab> {
+  @override
+  void initState() {
+    super.initState();
+    reFresh();
+  }
+
   Future<void> reFresh() async {
     await PostController().getPostAll().then((value) {
       setState(() {
@@ -57,9 +63,8 @@ class _RecPostTabState extends State<RecPostTab> {
             height: MediaQuery.of(context).size.height,
             color: Colors.white,
             child: Center(
-              child: Lottie.network(
-                  'https://assets10.lottiefiles.com/packages/lf20_0M2ci9pi4Y.json'),
-            ),
+                child: Lottie.network(
+                    'https://assets1.lottiefiles.com/packages/lf20_yyytgjwe.json')),
           );
   }
 }

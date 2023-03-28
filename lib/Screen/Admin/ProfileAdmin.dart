@@ -10,8 +10,6 @@ import 'package:my_book/Screen/User/Profile/PostTab.dart';
 import 'package:my_book/Screen/Admin/ApproveTab.dart';
 import 'package:my_book/Service/BookController.dart';
 
-import 'package:my_book/Service/PostController.dart';
-
 class ProfileAdmin extends StatefulWidget {
   const ProfileAdmin({super.key});
 
@@ -22,9 +20,7 @@ class ProfileAdmin extends StatefulWidget {
 class _ProfileAdminState extends State<ProfileAdmin>
     with TickerProviderStateMixin {
   final user = FirebaseAuth.instance.currentUser;
-  List<dynamic>? postList;
   List<dynamic>? bookList;
-  List<dynamic>? approveList;
 
   @override
   void initState() {
@@ -33,19 +29,9 @@ class _ProfileAdminState extends State<ProfileAdmin>
   }
 
   setData() async {
-    await PostController().getMyPost().then((value) {
-      setState(() {
-        postList = value;
-      });
-    });
     await BookController().getAllBookInLibrary('ADMIN').then((value) {
       setState(() {
         bookList = value;
-      });
-    });
-    await BookController().getAllBookPendingApproval().then((value) {
-      setState(() {
-        approveList = value;
       });
     });
   }
@@ -90,7 +76,7 @@ class _ProfileAdminState extends State<ProfileAdmin>
             return false;
           }
         },
-        child: postList != null && bookList != null && approveList != null
+        child: bookList != null 
             ? Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
@@ -132,14 +118,14 @@ class _ProfileAdminState extends State<ProfileAdmin>
                                 ]),
                           ),
                           SizedBox(
-                            height: MediaQuery.of(context).size.height- 266,
+                            height: MediaQuery.of(context).size.height - 266,
                             child: TabBarView(
                                 controller: tabController,
                                 children: [
                                   StockTab(
                                       accType: "ADMIN", bookList: bookList!),
-                                  PostTab(posts: postList!),
-                                  ApproveTab(approveList: approveList!),
+                                  PostTab(page: 'profile'),
+                                  const ApproveTab(),
                                 ]),
                           )
                         ],
