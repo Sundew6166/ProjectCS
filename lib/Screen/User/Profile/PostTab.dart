@@ -35,7 +35,8 @@ class _PostTabState extends State<PostTab> {
           postList = value;
         });
       });
-    }  }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,9 +47,8 @@ class _PostTabState extends State<PostTab> {
                     padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
                     child: const Text("ไม่มีโพสต์",
                         style: TextStyle(fontSize: 18)))
-                : Container(
+                : SizedBox(
                     height: MediaQuery.of(context).size.height,
-                    color: const Color(0xfff5f3e8),
                     child: ListView.builder(
                       itemCount: postList!.length,
                       shrinkWrap: true,

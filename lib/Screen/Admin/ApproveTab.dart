@@ -34,13 +34,19 @@ class _ApproveTabState extends State<ApproveTab> {
         ? RefreshIndicator(
             onRefresh: reFresh,
             child: approveList!.isEmpty
-                ? Container(
-                    padding: const EdgeInsets.fromLTRB(130, 20, 0, 0),
-                    child: const Text("ไม่มีการรออนุมัติ",
-                        style: TextStyle(fontSize: 18)))
-                : Container(
+                ? const CustomScrollView(
+                    slivers: <Widget>[
+                      SliverFillRemaining(
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(130, 20, 0, 0),
+                          child: Text("ไม่มีการรออนุมัติ",
+                              style: TextStyle(fontSize: 18)),
+                        ),
+                      ),
+                    ],
+                  )
+                : SizedBox(
                     height: MediaQuery.of(context).size.height,
-                    color: const Color(0xfff5f3e8),
                     child: ListView.builder(
                       itemCount: approveList!.length,
                       shrinkWrap: true,
@@ -112,7 +118,7 @@ class _ApproveTabState extends State<ApproveTab> {
         : Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: Colors.white,
+            color: const Color(0xfff5f3e8),
             child: Center(
               child: Lottie.network(
                   'https://assets1.lottiefiles.com/packages/lf20_yyytgjwe.json'),

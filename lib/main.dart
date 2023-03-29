@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: type != "" ? BottomBar(accType: type, tab: "HOME") : LogInPage(),
+      home: type != "" ? BottomBar(accType: type, tab: "HOME") : const LogInPage(),
       theme: ThemeData(colorSchemeSeed: const Color(0xff795e35)),
     );
   }

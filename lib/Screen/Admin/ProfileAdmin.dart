@@ -76,7 +76,7 @@ class _ProfileAdminState extends State<ProfileAdmin>
             return false;
           }
         },
-        child: bookList != null 
+        child: bookList != null
             ? Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,

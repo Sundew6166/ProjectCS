@@ -26,6 +26,7 @@ class _RecPostTabState extends State<RecPostTab> {
   Future<void> reFresh() async {
     await PostController().getPostAll().then((value) {
       setState(() {
+        // widget.posts!.addAll(value);
         widget.posts = value;
       });
     });
@@ -39,6 +40,7 @@ class _RecPostTabState extends State<RecPostTab> {
                 onRefresh: reFresh,
                 child: Container(
                     color: const Color(0xfff5f3e8),
+                    height: MediaQuery.of(context).size.height,
                     child: SingleChildScrollView(
                         padding: const EdgeInsets.all(5),
                         child: Column(
@@ -175,9 +177,8 @@ class PostSection extends StatefulWidget {
 class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-        color: const Color(0xfff5f3e8),
-        height: MediaQuery.of(context).size.height,
+    return SizedBox(
+        height: widget.posts.length < 4 ? 400 : widget.posts.length*90,
         child: widget.posts.isEmpty
             ? Container(
                 padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),

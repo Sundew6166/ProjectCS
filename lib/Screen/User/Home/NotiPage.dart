@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +11,6 @@ import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/NotificationController.dart';
 import 'package:my_book/Service/SaleController.dart';
 
-// TODO: Pull to refesh
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});
 
@@ -18,7 +19,7 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  List<Map<String, dynamic>?> ?notiList;
+  List<Map<String, dynamic>?>? notiList;
 
   @override
   void initState() {
@@ -45,15 +46,15 @@ class _NotificationPageState extends State<NotificationPage> {
                 onRefresh: setNotiList,
                 child: notiList!.isEmpty
                     ? const CustomScrollView(
-                              slivers: <Widget>[
-                                SliverFillRemaining(
-                                  child: Center(
-                                    child: Text("ไม่มีแจ้งเตือน",
-                                        style: TextStyle(fontSize: 18)),
-                                  ),
-                                ),
-                              ],
-                            )
+                        slivers: <Widget>[
+                          SliverFillRemaining(
+                            child: Center(
+                              child: Text("ไม่มีแจ้งเตือน",
+                                  style: TextStyle(fontSize: 18)),
+                            ),
+                          ),
+                        ],
+                      )
                     : Container(
                         color: const Color(0xfff5f3e8),
                         child: ListView.builder(
@@ -99,10 +100,18 @@ class _NotificationPageState extends State<NotificationPage> {
                                   child: SizedBox(
                                       height: 100,
                                       child: Card(
+                                        color:
+                                            notiList![index]!['isRead'] == true
+                                                ? Colors.white
+                                                : const Color(0xffe9edf8),
                                         child: ListTile(
-                                          leading: const Icon(
-                                            Icons.circle_notifications,
+                                          leading: Icon(
+                                            Icons.notifications_active,
                                             size: 40,
+                                            color:
+                                                notiList![index]!['isRead'] == true
+                                                    ? Colors.grey
+                                                    : Colors.red,
                                           ),
                                           title: Text(
                                             notiList![index]!['moreInfo']
@@ -124,16 +133,17 @@ class _NotificationPageState extends State<NotificationPage> {
                                               DateFormat('dd/MM/yyyy \n kk:mm')
                                                   .format(notiList![index]![
                                                       'dateTime']),
+                                              textAlign: TextAlign.end,
                                               style: const TextStyle(
                                                   color: Colors.grey,
-                                                  fontSize: 15)),
+                                                  fontSize: 14)),
                                         ),
                                       )));
                             }))))
         : Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
-            color: Colors.white,
+            color: const Color(0xfff5f3e8),
             child: Center(
               child: Lottie.network(
                   'https://assets1.lottiefiles.com/packages/lf20_yyytgjwe.json'),
