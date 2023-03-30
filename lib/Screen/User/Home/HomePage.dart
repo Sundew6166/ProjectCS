@@ -7,9 +7,9 @@ import 'package:my_book/Screen/User/Home/RecPostTab.dart';
 import 'package:my_book/Screen/User/Home/SaleTab.dart';
 import 'package:my_book/Screen/User/Home/SearchPage.dart';
 import 'package:my_book/Screen/User/Home/NotiPage.dart';
+import 'package:my_book/Service/NotificationController.dart';
 
 import 'package:my_book/Service/PostController.dart';
-import 'package:my_book/Service/SaleController.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,6 +20,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic>? postList;
+  List<dynamic>? notiList;
 
   @override
   void initState() {
@@ -33,6 +34,12 @@ class _HomePageState extends State<HomePage> {
         postList = value;
       });
     });
+    // await NotificationController().getNotification().then((value) {
+    //   setState(() {
+    //     notiList = value;
+    //   });
+    // });
+    // print(notiList);
   }
 
   var presscount = 0;
@@ -52,23 +59,27 @@ class _HomePageState extends State<HomePage> {
               return false;
             }
           },
-          child: postList != null
+          child: postList != null 
               ? Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
                     centerTitle: false,
                     title: const Text("My Book"),
                     actions: [
-                      IconButton(
-                        icon: const Icon(Icons.notifications),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const NotificationPage()),
-                          );
-                        },
-                      ),
+                      Badge(
+                          // isLabelVisible: notiList!.isNotEmpty ? true : false,
+                          smallSize: 10,
+                          child: IconButton(
+                            icon: const Icon(Icons.notifications),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const NotificationPage()),
+                              );
+                            },
+                          )),
                       IconButton(
                         icon: const Icon(Icons.search),
                         onPressed: () {
