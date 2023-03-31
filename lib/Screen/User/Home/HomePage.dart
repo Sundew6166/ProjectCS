@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -9,8 +10,6 @@ import 'package:my_book/Screen/User/Home/SearchPage.dart';
 import 'package:my_book/Screen/User/Home/NotiPage.dart';
 import 'package:my_book/Service/NotificationController.dart';
 
-import 'package:my_book/Service/PostController.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -20,7 +19,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic>? postList;
-  List<dynamic>? notiList;
+  String? noti;
 
   @override
   void initState() {
@@ -28,18 +27,14 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  setData() async {
-    await PostController().getPostAll().then((value) {
+  Future<void> setData() async {
+    // ถ้ามี noti ที่ยังไม่อ่านจะได้ true
+    await NotificationController().getNotiRead().then((value) {
       setState(() {
-        postList = value;
+        noti = value;
       });
     });
-    // await NotificationController().getNotification().then((value) {
-    //   setState(() {
-    //     notiList = value;
-    //   });
-    // });
-    // print(notiList);
+    print(noti);
   }
 
   var presscount = 0;
@@ -59,7 +54,7 @@ class _HomePageState extends State<HomePage> {
               return false;
             }
           },
-          child: postList != null 
+          child: noti != null
               ? Scaffold(
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
@@ -67,7 +62,8 @@ class _HomePageState extends State<HomePage> {
                     title: const Text("My Book"),
                     actions: [
                       Badge(
-                          // isLabelVisible: notiList!.isNotEmpty ? true : false,
+                          isLabelVisible: noti == "T" ? true : false,
+                          // isLabelVisible:  true,
                           smallSize: 10,
                           child: IconButton(
                             icon: const Icon(Icons.notifications),
@@ -98,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   body: TabBarView(
                     children: [
-                      RecPostTab(posts: postList!),
+                      const RecPostTab(),
                       SaleTab(page: 'home'),
                     ],
                   ),

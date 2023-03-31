@@ -19,7 +19,7 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage> {
-  List<Map<String, dynamic>?>? notiList;
+  List<dynamic>? notiList;
 
   @override
   void initState() {
@@ -33,6 +33,7 @@ class _NotificationPageState extends State<NotificationPage> {
         notiList = value;
       });
     });
+    // print(notiList);
   }
 
   @override
@@ -109,7 +110,8 @@ class _NotificationPageState extends State<NotificationPage> {
                                             Icons.notifications_active,
                                             size: 40,
                                             color:
-                                                notiList![index]!['isRead'] == true
+                                                notiList![index]!['isRead'] ==
+                                                        true
                                                     ? Colors.grey
                                                     : Colors.red,
                                           ),

@@ -52,11 +52,11 @@ class SaleController {
         .where('saleStatus', whereIn: ['N', 'B'])
         .get()
         .then((querySnapshot) async {
-      for (var docSnap in querySnapshot.docs) {
-        var data = await getBookInfo(docSnap.data(), docSnap.id);
-        output.add(data);
-      }
-    });
+          for (var docSnap in querySnapshot.docs) {
+            var data = await getBookInfo(docSnap.data(), docSnap.id);
+            output.add(data);
+          }
+        });
     output.sort((a, b) => b!['createDateTime'].compareTo(a!['createDateTime']));
 
     return output;
@@ -169,20 +169,31 @@ class SaleController {
     }
   }
 
-  Future<List<Map<String, dynamic>?>> getMyHistory() async {
+  Future<List<dynamic>?> getMyHistory() async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
-    List<Map<String, dynamic>?> output = [];
+    List<dynamic>? output = [];
 
     await db
         .collection('sales')
-        .where('seller' , isEqualTo: user!.uid)
+        .where('seller', isEqualTo: user!.uid)
         .where('saleStatus', isEqualTo: "Y")
         .get()
         .then((querySnapshot) async {
       for (var docSnap in querySnapshot.docs) {
         var data = await getBookInfo(docSnap.data(), docSnap.id);
-        output.add(data);
+        Map<String, dynamic> temp = {
+          'id': docSnap.id,
+          "updateDateTime": DateFormat('dd/MM/yyyy-kk:mm')
+              .format(docSnap['updateDateTime'].toDate()),
+          "total":
+              docSnap.data()['deliveryFee'] + docSnap.data()['sellingPrice'],
+          "title": data!['book']['title'],
+          'status': 'ขาย',
+          'createDateTime': docSnap.data()['createDateTime']
+        };
+        output.add(temp);
+        // print(temp);
       }
     });
     await db
@@ -193,7 +204,17 @@ class SaleController {
         .then((querySnapshot) async {
       for (var docSnap in querySnapshot.docs) {
         var data = await getBookInfo(docSnap.data(), docSnap.id);
-        output.add(data);
+        Map<String, dynamic> temp = {
+          'id': docSnap.id,
+          "updateDateTime": DateFormat('dd/MM/yyyy-kk:mm')
+              .format(docSnap['updateDateTime'].toDate()),
+          "total":
+              docSnap.data()['deliveryFee'] + docSnap.data()['sellingPrice'],
+          "title": data!['book']['title'],
+          'status': 'ซื้อ',
+          'createDateTime': docSnap.data()['createDateTime']
+        };
+        output.add(temp);
       }
     });
     output.sort((a, b) => b!['createDateTime'].compareTo(a!['createDateTime']));

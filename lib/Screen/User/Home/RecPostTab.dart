@@ -6,17 +6,18 @@ import 'package:lottie/lottie.dart';
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
+import 'package:my_book/Service/NotificationController.dart';
 import 'package:my_book/Service/PostController.dart';
 
 class RecPostTab extends StatefulWidget {
-  RecPostTab({super.key, required this.posts});
-  List<dynamic>? posts;
+  const RecPostTab({super.key});
 
   @override
   State<RecPostTab> createState() => _RecPostTabState();
 }
 
 class _RecPostTabState extends State<RecPostTab> {
+  List<dynamic>? postList;
   @override
   void initState() {
     super.initState();
@@ -26,15 +27,14 @@ class _RecPostTabState extends State<RecPostTab> {
   Future<void> reFresh() async {
     await PostController().getPostAll().then((value) {
       setState(() {
-        // widget.posts!.addAll(value);
-        widget.posts = value;
+        postList = value;
       });
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return widget.posts != null
+    return postList != null
         ? Scaffold(
             body: RefreshIndicator(
                 onRefresh: reFresh,
@@ -46,7 +46,7 @@ class _RecPostTabState extends State<RecPostTab> {
                         child: Column(
                           children: [
                             const RecommendSection(),
-                            PostSection(posts: widget.posts!),
+                            PostSection(postList: postList!),
                           ],
                         )))),
             floatingActionButton: FloatingActionButton(
@@ -167,8 +167,8 @@ class RecommendCard extends StatelessWidget {
 }
 
 class PostSection extends StatefulWidget {
-  PostSection({Key? key, required this.posts}) : super(key: key);
-  List<dynamic> posts;
+  PostSection({Key? key, required this.postList}) : super(key: key);
+  List<dynamic> postList;
 
   @override
   State<PostSection> createState() => _PostSectionState();
@@ -178,13 +178,13 @@ class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: widget.posts.length < 4 ? 400 : widget.posts.length*90,
-        child: widget.posts.isEmpty
+        height: widget.postList.length < 4 ? 400 : widget.postList.length*90,
+        child: widget.postList.isEmpty
             ? Container(
                 padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
                 child: const Text("ไม่มีโพสต์", style: TextStyle(fontSize: 18)))
             : ListView.builder(
-                itemCount: widget.posts.length,
+                itemCount: widget.postList.length,
                 shrinkWrap: true,
                 itemBuilder: (context, i) {
                   return GestureDetector(
@@ -192,7 +192,7 @@ class _PostSectionState extends State<PostSection> {
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
-                                  SocialPage(posts: widget.posts[i]),
+                                  SocialPage(posts: widget.postList[i]),
                             ),
                           ),
                       child: SizedBox(
@@ -206,7 +206,7 @@ class _PostSectionState extends State<PostSection> {
                                       children: [
                                         CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                              '${widget.posts[i]['Image']}'),
+                                              '${widget.postList[i]['Image']}'),
                                           backgroundColor:
                                               const Color(0xffadd1dc),
                                           radius: 30,
@@ -221,11 +221,11 @@ class _PostSectionState extends State<PostSection> {
                                                       CrossAxisAlignment.start,
                                                   children: [
                                                     Text(
-                                                        '${widget.posts[i]['CreateBy']}',
+                                                        '${widget.postList[i]['CreateBy']}',
                                                         style: const TextStyle(
                                                             fontSize: 18)),
                                                     Text(
-                                                      '${widget.posts[i]['Detail_Post']}',
+                                                      '${widget.postList[i]['Detail_Post']}',
                                                       maxLines: 2,
                                                       overflow:
                                                           TextOverflow.ellipsis,
@@ -233,7 +233,7 @@ class _PostSectionState extends State<PostSection> {
                                                   ])),
                                         ),
                                         Text(
-                                            '${widget.posts[i]['Create_DateTime_Post']}',
+                                            '${widget.postList[i]['Create_DateTime_Post']}',
                                             textAlign: TextAlign.right),
                                       ])))));
                 },

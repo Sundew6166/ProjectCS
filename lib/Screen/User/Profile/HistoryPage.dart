@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:my_book/Service/SaleController.dart';
 
@@ -28,7 +27,6 @@ class _HistoryPageState extends State<HistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    // return Container();
     return historyList != null
         ? Scaffold(
             appBar: AppBar(
@@ -55,20 +53,18 @@ class _HistoryPageState extends State<HistoryPage> {
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          subtitle: Text('\t${historyList![index]['book']['title']}',
-                              maxLines: 2, overflow: TextOverflow.ellipsis),
+                          subtitle: Text(
+                              '\t${historyList![index]['status'] + ': ' + historyList![index]['title']}',
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis),
                           trailing: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: <Widget>[
-                                Text(
-                                    DateFormat('dd/MM/yyyy-kk:mm').format(
-                                        historyList![0]['updateDateTime']
-                                            .toDate()),
+                                Text(historyList![index]['updateDateTime'],
                                     style: const TextStyle(
                                         color: Colors.grey, fontSize: 15)),
-                                Text(
-                                    '${historyList![index]['deliveryFee'] + historyList![index]['sellingPrice']}฿',
+                                Text('${historyList![index]['total']}฿',
                                     style: const TextStyle(
                                         color: Colors.grey, fontSize: 15)),
                               ]),
