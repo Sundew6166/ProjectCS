@@ -1,12 +1,9 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
-import 'package:my_book/Service/NotificationController.dart';
 import 'package:my_book/Service/PostController.dart';
 
 class RecPostTab extends StatefulWidget {
@@ -81,37 +78,21 @@ class RecommendSection extends StatelessWidget {
       children: [
         const Text(
           "แนะนำสำหรับคุณ",
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(fontSize: 20),
         ),
         const SizedBox(height: 5),
         Container(
-            height: 180,
-            width: 400,
-            color: const Color(0xffadd1dc),
-            child: SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child:
-                  Column(mainAxisAlignment: MainAxisAlignment.start, children: [
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  children: const [
-                    RecommendCard(),
-                    RecommendCard(),
-                    RecommendCard(),
-                    RecommendCard(),
-                  ],
-                ),
-                Wrap(
-                  alignment: WrapAlignment.start,
-                  children: const [
-                    RecommendCard(),
-                    RecommendCard(),
-                    RecommendCard(),
-                    RecommendCard(),
-                  ],
-                )
-              ]),
-            )),
+          height: 220,
+          width: 400,
+          color: const Color(0xffadd1dc),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+              itemCount: 5,
+              shrinkWrap: true,
+              itemBuilder: (context, i) {
+                return const RecommendCard();
+              }),
+        )
       ],
     );
   }
@@ -126,43 +107,45 @@ class RecommendCard extends StatelessWidget {
         onTap: () => Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      ReviewPage(bookInfo: {}, hasBook: false, hasSale: false)),
+                  builder: (context) => ReviewPage(
+                      bookInfo: const {}, hasBook: false, hasSale: false)),
             ),
         child: SizedBox(
-            height: 90,
-            width: 220,
-            child: Card(
-                child: Padding(
-                    padding: const EdgeInsets.all(7),
-                    child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(5), // Image border
-                            child: Image.asset('images/Conan.jpg'),
-                          ),
-                          Expanded(
-                            child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 16),
-                                child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: const [
-                                      Text("ชื่อหนังสือ",
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(fontSize: 18)),
-                                      Expanded(
-                                          child: Text(
-                                        "ชื่อผู้แต่ง",
-                                        overflow: TextOverflow.ellipsis,
-                                      ))
-                                    ])),
-                          ),
-                          // Text("03.03.2002"),
-                        ])))));
+          height: 200,
+          width: 150,
+          child: Card(
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SizedBox(
+                      height: 150,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        // child: Image.network(''),
+                        child: Image.asset('images/Conan.jpg'),
+                      )),
+                  Padding(
+                      padding: const EdgeInsets.all(2),
+                      child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: const [
+                            Text(
+                                'cfgbhnkmkjuihygybjknjknfrxfvnkmihygtvjlojihuhul,',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(fontSize: 14)),
+                            Text(
+                              'ชื่อผู้แต่ง',
+                              style: TextStyle(fontSize: 12),
+                            ),
+                          ]))
+                ],
+              ),
+            ),
+          ),
+        ));
   }
 }
 
@@ -178,7 +161,7 @@ class _PostSectionState extends State<PostSection> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-        height: widget.postList.length < 4 ? 400 : widget.postList.length*90,
+        height: widget.postList.length < 4 ? 400 : widget.postList.length * 90,
         child: widget.postList.isEmpty
             ? Container(
                 padding: const EdgeInsets.fromLTRB(10, 20, 0, 0),
