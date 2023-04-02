@@ -1,4 +1,3 @@
-import 'dart:ffi';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -19,7 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   List<dynamic>? postList;
-  String? noti;
+  Map<String, dynamic>? noti;
 
   @override
   void initState() {
@@ -62,20 +61,21 @@ class _HomePageState extends State<HomePage> {
                     title: const Text("My Book"),
                     actions: [
                       Badge(
-                          isLabelVisible: noti == "T" ? true : false,
+                          isLabelVisible: noti!['newNoti'] ? true : false,
                           // isLabelVisible:  true,
                           smallSize: 10,
-                          child: IconButton(
+                          child:
+                      IconButton(
                             icon: const Icon(Icons.notifications),
                             onPressed: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) =>
-                                        const NotificationPage()),
+                                    builder: (context) => NotificationPage(notiList: noti!['notiList'])),
                               );
                             },
-                          )),
+                          )
+                      ),
                       IconButton(
                         icon: const Icon(Icons.search),
                         onPressed: () {

@@ -12,7 +12,9 @@ import 'package:my_book/Service/NotificationController.dart';
 import 'package:my_book/Service/SaleController.dart';
 
 class NotificationPage extends StatefulWidget {
-  const NotificationPage({super.key});
+  NotificationPage({super.key, required this.notiList});
+  
+  List<dynamic> notiList;
 
   @override
   State<NotificationPage> createState() => _NotificationPageState();
@@ -28,11 +30,18 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   Future<void> setNotiList() async {
-    await NotificationController().getNotification().then((value) {
+    if (widget.notiList == []) {
       setState(() {
-        notiList = value;
+        notiList = [];
+        print("setNotiList empty");
       });
-    });
+    } else {
+      await NotificationController().getNotificationInformation(widget.notiList).then((value) {
+        setState(() {
+          notiList = value;
+        });
+      });
+    }
     // print(notiList);
   }
 
