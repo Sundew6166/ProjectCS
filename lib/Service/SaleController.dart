@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -6,7 +7,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/ImageController.dart';
 import 'package:my_book/Service/NotificationController.dart';
-import 'package:workmanager/workmanager.dart';
 
 class SaleController {
   Future<void> addSale(
@@ -132,24 +132,12 @@ class SaleController {
       });
       await NotificationController().createNotification("P", idSale, user.uid);
       print("setTimeout");
-      Workmanager().registerOneOffTask("task-identifier", "paymentTimeout",
-          initialDelay: const Duration(seconds: 10),
-          constraints: Constraints(networkType: NetworkType.connected),
-          inputData: {'idSale': idSale});
-      print('1 this line ->>>>>>>');
+      FirebaseFunctions.instance.httpsCallable('paymentTimeout').call({
+        "idSale": idSale
+      });
       return true;
     }
     return false;
-  }
-
-  Future<void> paymentTimeout(String idSale) async {
-    final db = FirebaseFirestore.instance;
-
-    var docSnap = await db.collection('sales').doc(idSale).get();
-    if (docSnap.data()!['saleStatus'] == "B") {
-      await db.collection('sales').doc(idSale).update(
-          {"buyer": "", "saleStatus": "N", "updateDateTime": Timestamp.now()});
-    }
   }
 
   Future<void> informPayment(String idSale, File paymentSlip) async {
@@ -158,7 +146,6 @@ class SaleController {
         .uploadToFireStorage(paymentSlip, "slip_" + idSale);
     var docSnap = await db.collection('sales').doc(idSale).get();
     if (docSnap.data()!['saleStatus'] == "B") {
-      Workmanager().cancelByUniqueName(idSale);
       await db.collection('sales').doc(idSale).update({
         "paymentSlip": downloadURL,
         "saleStatus": "Y",

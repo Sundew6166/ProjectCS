@@ -47,13 +47,13 @@ dependencies:
   flutter_autocomplete_label: ^1.0.0
   fluttertoast: ^8.2.1
   lottie: ^2.2.0
-  workmanager: ^0.5.1
 
   http: ^0.13.5
   firebase_auth: ^4.2.9
   firebase_core: ^2.7.0
   firebase_storage: ^11.0.14
   cloud_firestore: ^4.4.3
+  cloud_functions: ^4.1.0
 
 flutter_icons:
   ios: true

@@ -32,8 +32,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
   Future<void> setNotiList() async {
     if (isRefresh) {
-      widget.notiList =
-          (await NotificationController().getNotiRead())['notiList'];
+      widget.notiList = (await NotificationController().getNotiRead())['notiList'];
     } else {
       setState(() {
         isRefresh = true;
@@ -45,9 +44,7 @@ class _NotificationPageState extends State<NotificationPage> {
       });
       print("setNotiList empty");
     } else {
-      await NotificationController()
-          .getNotificationInformation(widget.notiList)
-          .then((value) {
+      await NotificationController().getNotificationInformation(widget.notiList).then((value) {
         setState(() {
           notiList = value;
         });
@@ -104,10 +101,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   bookInfo: bookInfo,
                                                   hasBook: hasBook,
                                                   hasSale: hasSale)));
-                                    } else if (data['type'] == "P" &&
-                                        DateTime.now().isBefore(
-                                            notiList![index]!['dateTime'].add(
-                                                const Duration(minutes: 5)))) {
+                                    } else if (data['type'] == "P" && DateTime.now().isBefore(notiList![index]!['dateTime'].add(const Duration(minutes: 5)))) {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
