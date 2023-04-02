@@ -50,7 +50,9 @@ class _RecPostTabState extends State<RecPostTab> {
                         padding: const EdgeInsets.all(5),
                         child: Column(
                           children: [
-                            RecommendSection(recommendList: recommendList!,),
+                            RecommendSection(
+                              recommendList: recommendList!,
+                            ),
                             PostSection(postList: postList!),
                           ],
                         )))),
@@ -99,7 +101,9 @@ class RecommendSection extends StatelessWidget {
               itemCount: recommendList.length,
               shrinkWrap: true,
               itemBuilder: (context, i) {
-                return RecommendCard(recommendList: recommendList[i],);
+                return RecommendCard(
+                  recommendList: recommendList[i],
+                );
               }),
         )
       ],
@@ -108,7 +112,7 @@ class RecommendSection extends StatelessWidget {
 }
 
 class RecommendCard extends StatelessWidget {
-RecommendCard({Key? key, required this.recommendList}) : super(key: key);
+  RecommendCard({Key? key, required this.recommendList}) : super(key: key);
   var recommendList;
 
   @override
@@ -118,7 +122,7 @@ RecommendCard({Key? key, required this.recommendList}) : super(key: key);
               context,
               MaterialPageRoute(
                   builder: (context) => ReviewPage(
-                      bookInfo: const {}, hasBook: false, hasSale: false)),
+                      bookInfo: recommendList, hasBook: false, hasSale: false)),
             ),
         child: SizedBox(
           height: 200,
@@ -140,8 +144,7 @@ RecommendCard({Key? key, required this.recommendList}) : super(key: key);
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                                recommendList['title'],
+                            Text(recommendList['title'],
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                                 style: const TextStyle(fontSize: 14)),

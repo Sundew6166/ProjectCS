@@ -73,7 +73,9 @@ class SaleController {
         .where('book', isEqualTo: '${isbn}_${edition}')
         .get()
         .then((value) {
-      if (value.docs.isNotEmpty) hasSale = true;
+      for (var docSnap in value.docs) {
+        if (docSnap.data()['saleStatus'] != 'Y') hasSale = true;
+      }
     });
     return hasSale;
   }
@@ -132,9 +134,9 @@ class SaleController {
       });
       await NotificationController().createNotification("P", idSale, user.uid);
       print("setTimeout");
-      FirebaseFunctions.instance.httpsCallable('paymentTimeout').call({
-        "idSale": idSale
-      });
+      FirebaseFunctions.instance
+          .httpsCallable('paymentTimeout')
+          .call({"idSale": idSale});
       return true;
     }
     return false;

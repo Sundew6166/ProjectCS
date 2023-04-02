@@ -32,10 +32,10 @@ class NotificationController {
             .then((value) {
           noti['moreInfo'] = value;
         });
-      } else if (noti['type'] == "P" && DateTime.now().isAfter(noti['dateTime'].add(const Duration(minutes: 5)))) {
-        await db.collection('notification').doc(noti['id']).update({
-          'isRead': true
-        });
+      // } else if (noti['type'] == "P" && DateTime.now().isAfter(noti['dateTime'].add(const Duration(minutes: 5)))) {
+      //   await db.collection('notification').doc(noti['id']).update({
+      //     'isRead': true
+      //   });
       } else {
         await db.collection("sales").doc(noti['ref']).get()
           .then((value) async {
