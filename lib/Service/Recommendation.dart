@@ -1,10 +1,5 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/ReviewController.dart';
-import 'package:my_book/Service/SaleController.dart';
 
 class Recommendation {
   Future<List> getRecommend() async {
@@ -19,20 +14,20 @@ class Recommendation {
     for (var book in myBook) {
       var tmp = allBook.where((element) => element!['author'].toLowerCase() == book!['author'].toLowerCase());
       output.addAll(tmp);
-      for (var element in tmp) {
+      for (var element in tmp.toList()) {
         allBook.removeWhere((elementAll) => elementAll!['isbn'] == element!['isbn']);
       }
       
       tmp = allBook.where((element) => element!['publisher'].toLowerCase() == book!['publisher'].toLowerCase());
       output.addAll(tmp);
-      for (var element in tmp) {
+      for (var element in tmp.toList()) {
         allBook.removeWhere((elementAll) => elementAll!['isbn'] == element!['isbn']);
       }
 
       for (var type in book!['types']) {
         tmp = allBook.where((element) => element!['types'].contains(type));
         output.addAll(tmp);
-        for (var element in tmp) {
+        for (var element in tmp.toList()) {
           allBook.removeWhere((elementAll) => elementAll!['isbn'] == element!['isbn']);
         }
       }
@@ -67,6 +62,7 @@ class Recommendation {
       allBook.sort((a, b) => b!['updateDateTime'].compareTo(a!['updateDateTime']));
       output.addAll(allBook);
     }
+
 
     return output;
   }

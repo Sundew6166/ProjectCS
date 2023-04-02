@@ -5,6 +5,7 @@ import 'package:my_book/Screen/User/Home/PostPage.dart';
 import 'package:my_book/Screen/User/Hub/ReviewPage.dart';
 import 'package:my_book/Screen/User/Hub/Social.dart';
 import 'package:my_book/Service/PostController.dart';
+import 'package:my_book/Service/Recommendation.dart';
 
 class RecPostTab extends StatefulWidget {
   const RecPostTab({super.key});
@@ -15,6 +16,7 @@ class RecPostTab extends StatefulWidget {
 
 class _RecPostTabState extends State<RecPostTab> {
   List<dynamic>? postList;
+  List<dynamic>? recommendList;
   @override
   void initState() {
     super.initState();
@@ -27,11 +29,17 @@ class _RecPostTabState extends State<RecPostTab> {
         postList = value;
       });
     });
+    await Recommendation().getRecommend().then((value) {
+      setState(() {
+        recommendList = value;
+      });
+    });
+    // print(recommendList);
   }
 
   @override
   Widget build(BuildContext context) {
-    return postList != null
+    return postList != null && recommendList != null
         ? Scaffold(
             body: RefreshIndicator(
                 onRefresh: reFresh,
@@ -42,7 +50,7 @@ class _RecPostTabState extends State<RecPostTab> {
                         padding: const EdgeInsets.all(5),
                         child: Column(
                           children: [
-                            const RecommendSection(),
+                            RecommendSection(recommendList: recommendList!,),
                             PostSection(postList: postList!),
                           ],
                         )))),
@@ -69,7 +77,8 @@ class _RecPostTabState extends State<RecPostTab> {
 }
 
 class RecommendSection extends StatelessWidget {
-  const RecommendSection({super.key});
+  RecommendSection({Key? key, required this.recommendList}) : super(key: key);
+  List<dynamic> recommendList;
 
   @override
   Widget build(BuildContext context) {
@@ -86,11 +95,11 @@ class RecommendSection extends StatelessWidget {
           width: 400,
           color: const Color(0xffadd1dc),
           child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-              itemCount: 5,
+              scrollDirection: Axis.horizontal,
+              itemCount: recommendList.length,
               shrinkWrap: true,
               itemBuilder: (context, i) {
-                return const RecommendCard();
+                return RecommendCard(recommendList: recommendList[i],);
               }),
         )
       ],
@@ -99,7 +108,8 @@ class RecommendSection extends StatelessWidget {
 }
 
 class RecommendCard extends StatelessWidget {
-  const RecommendCard({super.key});
+RecommendCard({Key? key, required this.recommendList}) : super(key: key);
+  var recommendList;
 
   @override
   Widget build(BuildContext context) {
@@ -123,22 +133,21 @@ class RecommendCard extends StatelessWidget {
                       height: 150,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
-                        // child: Image.network(''),
-                        child: Image.asset('images/Conan.jpg'),
+                        child: Image.network(recommendList['coverImage']),
                       )),
                   Padding(
-                      padding: const EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(1),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Text(
-                                'cfgbhnkmkjuihygybjknjknfrxfvnkmihygtvjlojihuhul,',
+                                recommendList['title'],
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(fontSize: 14)),
+                                style: const TextStyle(fontSize: 14)),
                             Text(
-                              'ชื่อผู้แต่ง',
-                              style: TextStyle(fontSize: 12),
+                              recommendList['author'],
+                              style: const TextStyle(fontSize: 12),
                             ),
                           ]))
                 ],

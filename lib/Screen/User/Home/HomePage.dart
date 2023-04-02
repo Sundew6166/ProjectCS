@@ -35,7 +35,6 @@ class _HomePageState extends State<HomePage> {
       });
     });
     // print(noti);
-    await Recommendation().getRecommend();
   }
 
   var presscount = 0;
