@@ -8,6 +8,7 @@ import 'package:my_book/Screen/User/Home/SaleTab.dart';
 import 'package:my_book/Screen/User/Home/SearchPage.dart';
 import 'package:my_book/Screen/User/Home/NotiPage.dart';
 import 'package:my_book/Service/NotificationController.dart';
+import 'package:my_book/Service/Recommendation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,6 +35,7 @@ class _HomePageState extends State<HomePage> {
       });
     });
     // print(noti);
+    await Recommendation().getRecommend();
   }
 
   var presscount = 0;

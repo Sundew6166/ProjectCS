@@ -278,4 +278,32 @@ class BookController {
 
     return output;
   }
+
+  Future<List<Map<String, dynamic>?>> getAllMyBook() async {
+    final db = FirebaseFirestore.instance;
+    final user = FirebaseAuth.instance.currentUser;
+    List<Map<String, dynamic>?> output = [];
+
+    await db
+          .collection('a_has_b')
+          .where('account', isEqualTo: user!.uid)
+          .get()
+          .then((querySnapshot) async {
+        for (var docSnap in querySnapshot.docs) {
+          await db
+              .collection('books')
+              .doc(docSnap.data()['book'])
+              .get()
+              .then((value) async {
+            var data = value.data();
+            data!['createDateTime'] = docSnap.data()['createDateTime'];
+            await getTypesOfBook(docSnap.id)
+              .then((value) => data.addAll({"types": value}));
+            output.add(data);
+          });
+        }
+      });
+
+    return output;
+  }
 }

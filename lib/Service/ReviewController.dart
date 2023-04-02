@@ -51,4 +51,17 @@ class ReviewController {
 
     await db.collection('reviews').add(data);
   }
+
+  Future<List<Map<String, dynamic>>> getAllReview() async {
+    final db = FirebaseFirestore.instance;
+    List<Map<String, dynamic>> output = [];
+
+    await db.collection('reviews').get().then((querySnapshot) {
+      for (var docSnap in querySnapshot.docs) {
+        output.add(docSnap.data());
+      }
+    });
+
+    return output;
+  }
 }
