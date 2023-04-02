@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lottie/lottie.dart';
 
 import 'package:my_book/Screen/Admin/SettingAdmin.dart';
+import 'package:my_book/Screen/BottomBar.dart';
 import 'package:my_book/Screen/User/Profile/StockTab.dart';
 import 'package:my_book/Screen/User/Profile/PostTab.dart';
 import 'package:my_book/Screen/Admin/ApproveTab.dart';
@@ -66,16 +67,15 @@ class _ProfileAdminState extends State<ProfileAdmin>
 
     return WillPopScope(
         onWillPop: () async {
-          presscount++;
-          if (presscount == 2) {
-            exit(0);
-          } else {
-            var snackBar =
-                const SnackBar(content: Text('กดอีกครั้งเพื่อออกจากแอพ'));
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BottomBar(
+                        accType: "ADMIN",
+                        tab: "HOME",
+                      )));
             return false;
-          }
-        },
+          },
         child: bookList != null
             ? Scaffold(
                 appBar: AppBar(

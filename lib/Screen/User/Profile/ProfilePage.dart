@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:my_book/Screen/BottomBar.dart';
 import 'package:my_book/Screen/User/Profile/SaleList.dart';
 
 import 'package:my_book/Screen/User/Profile/SettingPage.dart';
@@ -60,7 +61,16 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
     TabController tabController = TabController(length: 3, vsync: this);
 
     return WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: () async {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BottomBar(
+                        accType: "USER",
+                        tab: "HOME",
+                      )));
+            return false;
+          },
         child: bookList != null
             ? Scaffold(
                 appBar: AppBar(

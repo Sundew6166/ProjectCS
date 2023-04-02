@@ -38,7 +38,16 @@ class _BarCodeScanState extends State<BarCodeScan> {
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
-        onWillPop: () async => false,
+        onWillPop: () async {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => BottomBar(
+                        accType: widget.type,
+                        tab: "HOME",
+                      )));
+            return false;
+          },
         child: Scaffold(
             appBar: AppBar(
               automaticallyImplyLeading: false,
