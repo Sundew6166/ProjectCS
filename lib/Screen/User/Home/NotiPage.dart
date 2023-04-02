@@ -13,7 +13,7 @@ import 'package:my_book/Service/SaleController.dart';
 
 class NotificationPage extends StatefulWidget {
   NotificationPage({super.key, required this.notiList});
-  
+
   List<dynamic> notiList;
 
   @override
@@ -22,6 +22,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   List<dynamic>? notiList;
+  bool isRefresh = false;
 
   @override
   void initState() {
@@ -30,19 +31,30 @@ class _NotificationPageState extends State<NotificationPage> {
   }
 
   Future<void> setNotiList() async {
+    if (isRefresh) {
+      widget.notiList =
+          (await NotificationController().getNotiRead())['notiList'];
+    } else {
+      setState(() {
+        isRefresh = true;
+      });
+    }
     if (widget.notiList == []) {
       setState(() {
         notiList = [];
-        print("setNotiList empty");
       });
+      print("setNotiList empty");
     } else {
-      await NotificationController().getNotificationInformation(widget.notiList).then((value) {
+      await NotificationController()
+          .getNotificationInformation(widget.notiList)
+          .then((value) {
         setState(() {
           notiList = value;
         });
       });
     }
     // print(notiList);
+    // print('----------------------------------------------------');
   }
 
   @override

@@ -19,10 +19,10 @@ class NotificationController {
     await db.collection('notifications').add(data);
   }
 
-  Future<List<Map<String, dynamic>?>> getNotificationInformation(List<dynamic> notiList) async {
+  Future<List> getNotificationInformation(List<dynamic> notiList) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
-    List<Map<String, dynamic>?> output = [];
+    // List<Map<String, dynamic>?> output = [];
 
     for (var noti in notiList) {
       noti['dateTime'] = noti['dateTime'].toDate();
@@ -68,8 +68,8 @@ class NotificationController {
       }
     }
     
-    output.sort((a, b) => b!['dateTime'].compareTo(a!['dateTime']));
-    return output;
+    notiList.sort((a, b) => b!['dateTime'].compareTo(a!['dateTime']));
+    return notiList;
   }
 
   Future<Map<String, dynamic>> getNotiRead() async {

@@ -33,7 +33,7 @@ class _HomePageState extends State<HomePage> {
         noti = value;
       });
     });
-    print(noti);
+    // print(noti);
   }
 
   var presscount = 0;
@@ -64,18 +64,18 @@ class _HomePageState extends State<HomePage> {
                           isLabelVisible: noti!['newNoti'] ? true : false,
                           // isLabelVisible:  true,
                           smallSize: 10,
-                          child:
-                      IconButton(
+                          child: IconButton(
                             icon: const Icon(Icons.notifications),
                             onPressed: () {
+                              // print(noti!['notiList']);
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => NotificationPage(notiList: noti!['notiList'])),
+                                    builder: (context) => NotificationPage(
+                                        notiList: noti!['notiList'])),
                               );
                             },
-                          )
-                      ),
+                          )),
                       IconButton(
                         icon: const Icon(Icons.search),
                         onPressed: () {
