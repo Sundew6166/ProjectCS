@@ -492,7 +492,7 @@ class _WriteReviewState extends State<WriteReview> {
                     ],
                   ),
                   const SizedBox(height: 5),
-                  Text('\t${widget.reviews[index]['Detail_Review']}',
+                  Text('${widget.reviews[index]['Detail_Review']}',
                       style: const TextStyle(fontSize: 14)),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -556,46 +556,42 @@ class _WriteReviewState extends State<WriteReview> {
       padding: const EdgeInsets.all(20),
       child: Column(
         children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(user!.photoURL.toString()),
-                backgroundColor: const Color(0xffadd1dc),
-                radius: 20,
-              ),
-              Text('\t${user!.displayName.toString()}',
-                  style: const TextStyle(fontSize: 16)),
-              const SizedBox(width: 20),
-              RatingBar.builder(
-                itemSize: 40,
-                minRating: 1,
-                initialRating: rate,
-                itemCount: 5,
-                itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
-                itemBuilder: (context, index) {
-                  switch (index) {
-                    case 0:
-                      return const Icon(Icons.sentiment_very_dissatisfied,
-                          color: Colors.red);
-                    case 1:
-                      return const Icon(Icons.sentiment_dissatisfied,
-                          color: Colors.redAccent);
-                    case 2:
-                      return const Icon(Icons.sentiment_neutral,
-                          color: Colors.amber);
-                    case 3:
-                      return const Icon(Icons.sentiment_satisfied,
-                          color: Colors.lightGreen);
-                    default:
-                      return const Icon(Icons.sentiment_very_satisfied,
-                          color: Colors.green);
-                  }
-                },
-                onRatingUpdate: (rating) {
-                  rate = rating;
-                },
-              ),
-            ],
+          CircleAvatar(
+            backgroundImage: NetworkImage(user!.photoURL.toString()),
+            backgroundColor: const Color(0xffadd1dc),
+            radius: 20,
+          ),
+          Text('\t${user!.displayName.toString()}',
+              style: const TextStyle(fontSize: 16)),
+          const SizedBox(height: 10),
+          RatingBar.builder(
+            itemSize: 40,
+            minRating: 1,
+            initialRating: rate,
+            itemCount: 5,
+            itemPadding: const EdgeInsets.symmetric(horizontal: 2.0),
+            itemBuilder: (context, index) {
+              switch (index) {
+                case 0:
+                  return const Icon(Icons.sentiment_very_dissatisfied,
+                      color: Colors.red);
+                case 1:
+                  return const Icon(Icons.sentiment_dissatisfied,
+                      color: Colors.redAccent);
+                case 2:
+                  return const Icon(Icons.sentiment_neutral,
+                      color: Colors.amber);
+                case 3:
+                  return const Icon(Icons.sentiment_satisfied,
+                      color: Colors.lightGreen);
+                default:
+                  return const Icon(Icons.sentiment_very_satisfied,
+                      color: Colors.green);
+              }
+            },
+            onRatingUpdate: (rating) {
+              rate = rating;
+            },
           ),
           const SizedBox(height: 10),
           TextField(
