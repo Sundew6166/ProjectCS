@@ -75,7 +75,7 @@ class _TabSearchState extends State<TabSearch> {
                   bottom: const TabBar(tabs: [
                     Tab(text: 'หนังสือ'),
                     Tab(text: 'โพสต์'),
-                    Tab(text: 'ซื้อ'),
+                    Tab(text: 'การขาย'),
                   ]),
                 ),
                 body: TabBarView(

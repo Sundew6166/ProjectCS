@@ -112,10 +112,11 @@ class BookCard extends StatelessWidget {
                                 Text(books[index]['title'],
                                     maxLines: 2,
                                     overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(fontSize: 16)),
+                                    style: const TextStyle(fontSize: 15)),
                                 Text(
                                   books[index]['author'],
-                                  style: const TextStyle(fontSize: 14),
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontSize: 13),
                                 ),
                               ]))
                     ],

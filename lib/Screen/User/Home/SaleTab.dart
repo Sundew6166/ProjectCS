@@ -49,7 +49,7 @@ class _SaleTabState extends State<SaleTab> {
                       SliverFillRemaining(
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(150, 20, 0, 0),
-                          child: Text("ไม่มีโพสต์",
+                          child: Text("ไม่มีการขาย",
                               style: TextStyle(fontSize: 18)),
                         ),
                       ),
