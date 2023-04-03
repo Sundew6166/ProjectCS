@@ -103,6 +103,7 @@ class _StockTabState extends State<StockTab> {
                                                               widget.bookList[
                                                                       index]![
                                                                   'title'],
+                                                                  maxLines: 2,
                                                               style:
                                                                   const TextStyle(
                                                                       fontSize:
