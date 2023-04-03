@@ -150,6 +150,7 @@ class RecommendCard extends StatelessWidget {
                                 style: const TextStyle(fontSize: 14)),
                             Text(
                               recommendList['author'],
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(fontSize: 12),
                             ),
                           ]))
