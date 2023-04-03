@@ -33,7 +33,7 @@ class NotificationController {
           noti['moreInfo'] = value;
         });
       // } else if (noti['type'] == "P" && DateTime.now().isAfter(noti['dateTime'].add(const Duration(minutes: 5)))) {
-      //   await db.collection('notification').doc(noti['id']).update({
+      //   await db.collection('notifications').doc(noti['id']).update({
       //     'isRead': true
       //   });
       } else {
@@ -95,5 +95,12 @@ class NotificationController {
       }
     });
     return output;
+  }
+
+  Future<void> updateIsRead(String idNoti) async {
+      final db = FirebaseFirestore.instance;
+      await db.collection('notifications').doc(idNoti).update({
+          'isRead': true
+        });
   }
 }

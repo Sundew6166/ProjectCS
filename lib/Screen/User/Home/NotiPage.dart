@@ -2,6 +2,7 @@ import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
@@ -32,7 +33,8 @@ class _NotificationPageState extends State<NotificationPage> {
 
   Future<void> setNotiList() async {
     if (isRefresh) {
-      widget.notiList = (await NotificationController().getNotiRead())['notiList'];
+      widget.notiList =
+          (await NotificationController().getNotiRead())['notiList'];
     } else {
       setState(() {
         isRefresh = true;
@@ -44,7 +46,9 @@ class _NotificationPageState extends State<NotificationPage> {
       });
       print("setNotiList empty");
     } else {
-      await NotificationController().getNotificationInformation(widget.notiList).then((value) {
+      await NotificationController()
+          .getNotificationInformation(widget.notiList)
+          .then((value) {
         setState(() {
           notiList = value;
         });
@@ -82,6 +86,8 @@ class _NotificationPageState extends State<NotificationPage> {
                               return GestureDetector(
                                   onTap: () async {
                                     var data = notiList![index];
+                                    await NotificationController()
+                                        .updateIsRead(data['id']);
                                     if (data!['type'] == "A") {
                                       var bookInfo = data['moreInfo'];
                                       var hasBook = await BookController()
@@ -101,7 +107,10 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   bookInfo: bookInfo,
                                                   hasBook: hasBook,
                                                   hasSale: hasSale)));
-                                    } else if (data['type'] == "P" && DateTime.now().isBefore(notiList![index]!['dateTime'].add(const Duration(minutes: 5)))) {
+                                    } else if (data['type'] == "P" &&
+                                        DateTime.now().isBefore(
+                                            notiList![index]!['dateTime'].add(
+                                                const Duration(minutes: 5)))) {
                                       Navigator.push(
                                           context,
                                           MaterialPageRoute(
@@ -109,8 +118,18 @@ class _NotificationPageState extends State<NotificationPage> {
                                                   saleInfo: data['moreInfo'])));
                                     } else if (data['type'] == "S") {
                                       await Clipboard.setData(ClipboardData(
-                                          text: notiList![index]!['moreInfo']
-                                              ['deliveryInfo']));
+                                              text:
+                                                  notiList![index]!['moreInfo']
+                                                      ['deliveryInfo']))
+                                          .then((value) => Fluttertoast.showToast(
+                                              msg:
+                                                  "คัดลอกที่อยู่จัดส่งเรียบร้อยแล้ว",
+                                              toastLength: Toast.LENGTH_SHORT,
+                                              gravity: ToastGravity.BOTTOM,
+                                              timeInSecForIosWeb: 1,
+                                              backgroundColor: Colors.grey,
+                                              textColor: Colors.black,
+                                              fontSize: 18.0));
                                     }
                                   },
                                   child: SizedBox(
