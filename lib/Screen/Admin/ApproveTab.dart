@@ -96,6 +96,10 @@ class _ApproveTabState extends State<ApproveTab> {
                                                               approveList![
                                                                       index]
                                                                   ['title'],
+                                                              maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
                                                               style:
                                                                   const TextStyle(
                                                                       fontSize:
@@ -110,7 +114,6 @@ class _ApproveTabState extends State<ApproveTab> {
                                                           ))
                                                         ])),
                                               ),
-                                              // Text("03.03.2020"),
                                             ])))));
                       },
                     ),

@@ -25,66 +25,66 @@ class _TabSearchState extends State<TabSearch> {
 
   @override
   Widget build(BuildContext context) => DefaultTabController(
-        length: 3,
-        child: Scaffold(
-                appBar: AppBar(
-                  title: Container(
-                    height: 40,
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(5)),
-                    child: TextField(
-                      controller: _controller,
-                      keyboardType: TextInputType.multiline,
-                      decoration: InputDecoration(
-                          suffixIcon: IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _controller.clear();
-                            },
-                          ),
-                          hintText: '\tค้นหา...',
-                          border: InputBorder.none,
-                          contentPadding:
-                              const EdgeInsets.only(left: 3.0, top: 3.0)),
-                    ),
+      length: 3,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Container(
+            height: 40,
+            decoration: BoxDecoration(
+                color: Colors.white, borderRadius: BorderRadius.circular(5)),
+            child: TextField(
+              onTapOutside: (event) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              },
+              controller: _controller,
+              keyboardType: TextInputType.multiline,
+              decoration: InputDecoration(
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _controller.clear();
+                    },
                   ),
-                  actions: [
-                    IconButton(
-                      icon: const Icon(Icons.search),
-                      onPressed: () {
-                        _controller.text.trim().isNotEmpty
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      TabSearch(data: _controller.text),
-                                ),
-                              )
-                            : Fluttertoast.showToast(
-                                msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.red,
-                                textColor: Colors.white,
-                                fontSize: 18.0);
-                      },
-                    ),
-                  ],
-                  bottom: const TabBar(tabs: [
-                    Tab(text: 'หนังสือ'),
-                    Tab(text: 'โพสต์'),
-                    Tab(text: 'การขาย'),
-                  ]),
-                ),
-                body: TabBarView(
-                  children: [
-                    BookSearch(text: _controller.text),
-                    PostTab(page: 'search', text: _controller.text),
-                    SaleTab(page: 'search', text: _controller.text),
-                  ],
-                ),
-              )
-      );
+                  hintText: '\tค้นหา...',
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.only(left: 3.0, top: 3.0)),
+            ),
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: () {
+                _controller.text.trim().isNotEmpty
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TabSearch(data: _controller.text),
+                        ),
+                      )
+                    : Fluttertoast.showToast(
+                        msg: "กรุณากรอกข้อมูลที่ต้องการค้นหา",
+                        toastLength: Toast.LENGTH_SHORT,
+                        gravity: ToastGravity.BOTTOM,
+                        timeInSecForIosWeb: 1,
+                        backgroundColor: Colors.red,
+                        textColor: Colors.white,
+                        fontSize: 18.0);
+              },
+            ),
+          ],
+          bottom: const TabBar(tabs: [
+            Tab(text: 'หนังสือ'),
+            Tab(text: 'โพสต์'),
+            Tab(text: 'การขาย'),
+          ]),
+        ),
+        body: TabBarView(
+          children: [
+            BookSearch(text: _controller.text),
+            PostTab(page: 'search', text: _controller.text),
+            SaleTab(page: 'search', text: _controller.text),
+          ],
+        ),
+      ));
 }

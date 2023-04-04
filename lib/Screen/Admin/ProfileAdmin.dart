@@ -55,6 +55,7 @@ class _ProfileAdminState extends State<ProfileAdmin>
             Center(
                 child: Text(
               user!.displayName.toString(),
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 18),
             )),
           ],
@@ -67,21 +68,21 @@ class _ProfileAdminState extends State<ProfileAdmin>
 
     return WillPopScope(
         onWillPop: () async {
-            Navigator.pushReplacement(
+          Navigator.pushReplacement(
               context,
               MaterialPageRoute(
                   builder: (context) => BottomBar(
                         accType: "ADMIN",
                         tab: "HOME",
                       )));
-            return false;
-          },
+          return false;
+        },
         child: bookList != null
             ? Scaffold(
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   centerTitle: false,
-                  title: const Text("My Book"),
+                  title: const Text("My Books"),
                   actions: [
                     IconButton(
                       icon: const Icon(Icons.more_vert),

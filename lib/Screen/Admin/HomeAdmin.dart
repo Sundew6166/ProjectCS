@@ -56,7 +56,7 @@ class _HomeAdminState extends State<HomeAdmin> {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   centerTitle: false,
-                  title: const Text("My Book"),
+                  title: const Text("My Books"),
                 ),
                 body: Container(
                     color: const Color(0xfff5f3e8),
@@ -163,6 +163,8 @@ class _PostSecState extends State<PostSec> {
                                             children: [
                                               Text(
                                                   '${widget.posts[i]['CreateBy']}',
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
                                                   style: const TextStyle(
                                                       fontSize: 18)),
                                               Text(

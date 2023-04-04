@@ -23,6 +23,9 @@ class _SearchPageState extends State<SearchPage> {
                   color: Colors.white, borderRadius: BorderRadius.circular(5)),
               child: Center(
                 child: TextField(
+                  onTapOutside: (event) {
+                    FocusManager.instance.primaryFocus?.unfocus();
+                  },
                   controller: data,
                   decoration: InputDecoration(
                       suffixIcon: IconButton(

@@ -22,6 +22,7 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
   bool isCurPasswordVisible = false;
   bool isConPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
+  final FocusNode _unUsedFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -56,6 +57,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                   Container(
                                     alignment: Alignment.center,
                                     child: TextFormField(
+                                      onTapOutside: (PointerDownEvent event) {
+                                        FocusScope.of(context)
+                                            .requestFocus(_unUsedFocusNode);
+                                      },
                                       controller: _textEditCurPassword,
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
@@ -82,6 +87,10 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                   Container(
                                     alignment: Alignment.center,
                                     child: TextFormField(
+                                      onTapOutside: (PointerDownEvent event) {
+                                        FocusScope.of(context)
+                                            .requestFocus(_unUsedFocusNode);
+                                      },
                                       controller: _textEditConPassword,
                                       keyboardType: TextInputType.text,
                                       textInputAction: TextInputAction.next,
@@ -108,9 +117,13 @@ class _ChangePasswordPageState extends State<ChangePasswordPage> {
                                   Container(
                                     alignment: Alignment.center,
                                     child: TextFormField(
+                                      onTapOutside: (PointerDownEvent event) {
+                                        FocusScope.of(context)
+                                            .requestFocus(_unUsedFocusNode);
+                                      },
                                       controller: _textEditConConfirmPassword,
                                       keyboardType: TextInputType.text,
-                                      textInputAction: TextInputAction.next,
+                                      textInputAction: TextInputAction.done,
                                       obscureText: !isConfirmPasswordVisible,
                                       validator: (value) => MatchValidator(
                                               errorText: "รหัสผ่านไม่ตรงกัน")

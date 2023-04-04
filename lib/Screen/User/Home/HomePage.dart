@@ -59,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                   appBar: AppBar(
                     automaticallyImplyLeading: false,
                     centerTitle: false,
-                    title: const Text("My Book"),
+                    title: const Text("My Books"),
                     actions: [
                       Badge(
                           isLabelVisible: noti!['newNoti'] ? true : false,

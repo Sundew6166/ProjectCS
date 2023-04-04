@@ -58,10 +58,12 @@ class _SocialPageState extends State<SocialPage> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text('\t${widget.posts!['CreateBy']}',
+                                          overflow: TextOverflow.ellipsis,
                                           style: const TextStyle(fontSize: 16)),
                                     ])),
                           ),
                           Text("${widget.posts!['Create_DateTime_Post']}",
+                              overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.right),
                         ],
                       ),

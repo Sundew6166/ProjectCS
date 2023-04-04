@@ -32,6 +32,7 @@ class _AddSaleState extends State<AddSale> {
   final TextEditingController _textDeliveryFee = TextEditingController();
   final TextEditingController _textNameBankAccount = TextEditingController();
   final TextEditingController _textBankAccountNumber = TextEditingController();
+  final FocusNode _unUsedFocusNode = FocusNode();
 
   Future<void> _openImagePicker() async {
     final XFile? pickedImage =
@@ -123,6 +124,10 @@ class _AddSaleState extends State<AddSale> {
                                     labelText: 'ครั้งที่พิมพ์'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textDetail,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
@@ -131,6 +136,10 @@ class _AddSaleState extends State<AddSale> {
                                     labelText: 'รายละเอียดสินค้า'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textSellingPrice,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
@@ -145,6 +154,10 @@ class _AddSaleState extends State<AddSale> {
                                     const InputDecoration(labelText: 'ราคาขาย'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textDeliveryFee,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
@@ -159,6 +172,10 @@ class _AddSaleState extends State<AddSale> {
                                     const InputDecoration(labelText: 'ค่าส่ง'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textNameBankAccount,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
@@ -168,9 +185,13 @@ class _AddSaleState extends State<AddSale> {
                                     const InputDecoration(labelText: 'ธนาคาร'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textBankAccountNumber,
                                 keyboardType: TextInputType.number,
-                                textInputAction: TextInputAction.next,
+                                textInputAction: TextInputAction.done,
                                 validator: RequiredValidator(
                                     errorText: "กรุณากรอกเลขบัญชีธนาคาร"),
                                 decoration: const InputDecoration(

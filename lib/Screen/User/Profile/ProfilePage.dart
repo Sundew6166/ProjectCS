@@ -50,6 +50,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
             Center(
                 child: Text(
               user!.displayName.toString(),
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 18),
             )),
           ],
@@ -76,7 +77,7 @@ class _ProfileState extends State<Profile> with TickerProviderStateMixin {
                 appBar: AppBar(
                   automaticallyImplyLeading: false,
                   centerTitle: false,
-                  title: const Text("My Book"),
+                  title: const Text("My Books"),
                   actions: [
                     IconButton(
                       icon: const Icon(Icons.more_vert),

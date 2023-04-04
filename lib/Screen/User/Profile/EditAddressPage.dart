@@ -16,6 +16,7 @@ class _EditAddressPageState extends State<EditAddressPage> {
   final TextEditingController _textEditName = TextEditingController();
   final TextEditingController _textEditAddress = TextEditingController();
   final TextEditingController _textEditPhone = TextEditingController();
+  final FocusNode _unUsedFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -65,6 +66,10 @@ class _EditAddressPageState extends State<EditAddressPage> {
                                         margin: const EdgeInsets.only(left: 15),
                                       ),
                                       TextFormField(
+                                        onTapOutside: (PointerDownEvent event) {
+                                          FocusScope.of(context)
+                                              .requestFocus(_unUsedFocusNode);
+                                        },
                                         controller: _textEditName,
                                         keyboardType: TextInputType.text,
                                         textInputAction: TextInputAction.next,
@@ -74,6 +79,10 @@ class _EditAddressPageState extends State<EditAddressPage> {
                                                 Icons.text_fields_outlined)),
                                       ),
                                       TextFormField(
+                                        onTapOutside: (PointerDownEvent event) {
+                                          FocusScope.of(context)
+                                              .requestFocus(_unUsedFocusNode);
+                                        },
                                         controller: _textEditAddress,
                                         keyboardType: TextInputType.text,
                                         textInputAction: TextInputAction.next,
@@ -83,9 +92,13 @@ class _EditAddressPageState extends State<EditAddressPage> {
                                             icon: Icon(Icons.home)),
                                       ),
                                       TextFormField(
+                                        onTapOutside: (PointerDownEvent event) {
+                                          FocusScope.of(context)
+                                              .requestFocus(_unUsedFocusNode);
+                                        },
                                         controller: _textEditPhone,
                                         keyboardType: TextInputType.phone,
-                                        textInputAction: TextInputAction.next,
+                                        textInputAction: TextInputAction.done,
                                         validator: (value) {
                                           return (value!.isNotEmpty &&
                                                   value.length != 10)

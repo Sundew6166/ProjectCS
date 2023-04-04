@@ -35,6 +35,7 @@ class _AddBookState extends State<AddBook> {
   final TextEditingController _textPrice = TextEditingController();
   final TextEditingController _textSynopsys = TextEditingController();
   final TextEditingController _textEdition = TextEditingController();
+  final FocusNode _unUsedFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -122,6 +123,10 @@ class _AddBookState extends State<AddBook> {
                                 ),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textISBN,
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
@@ -130,6 +135,10 @@ class _AddBookState extends State<AddBook> {
                               ),
                               // book name
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textTitle,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
@@ -139,6 +148,10 @@ class _AddBookState extends State<AddBook> {
                                     labelText: 'ชื่อหนังสือ'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textAuthor,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
@@ -148,6 +161,10 @@ class _AddBookState extends State<AddBook> {
                                     labelText: 'ชื่อผู้แต่ง'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textPublisher,
                                 keyboardType: TextInputType.text,
                                 textInputAction: TextInputAction.next,
@@ -157,6 +174,10 @@ class _AddBookState extends State<AddBook> {
                                     labelText: 'สำนักพิมพ์'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textEdition,
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
@@ -171,6 +192,10 @@ class _AddBookState extends State<AddBook> {
                                     labelText: 'ครั้งที่พิมพ์'),
                               ),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textPrice,
                                 keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
@@ -199,6 +224,12 @@ class _AddBookState extends State<AddBook> {
                                           child: Padding(
                                             padding: const EdgeInsets.all(5),
                                             child: TextFormField(
+                                              onTapOutside:
+                                                  (PointerDownEvent event) {
+                                                FocusScope.of(context)
+                                                    .requestFocus(
+                                                        _unUsedFocusNode);
+                                              },
                                               strutStyle:
                                                   const StrutStyle(height: 1.0),
                                               decoration: const InputDecoration(
@@ -220,9 +251,13 @@ class _AddBookState extends State<AddBook> {
                                     autocompleteLabelController: typeOption,
                                   )),
                               TextFormField(
+                                onTapOutside: (PointerDownEvent event) {
+                                  FocusScope.of(context)
+                                      .requestFocus(_unUsedFocusNode);
+                                },
                                 controller: _textSynopsys,
                                 keyboardType: TextInputType.text,
-                                textInputAction: TextInputAction.next,
+                                textInputAction: TextInputAction.done,
                                 maxLines: 3,
                                 decoration: const InputDecoration(
                                     labelText: 'เรื่องย่อ'),
@@ -292,13 +327,16 @@ class _AddBookState extends State<AddBook> {
                                                       _textTitle.text,
                                                       _textAuthor.text,
                                                       _textPublisher.text,
-                                                      int.parse(_textPrice.text),
+                                                      int.parse(
+                                                          _textPrice.text),
                                                       widget.bookInfo!['types'],
                                                       typeOption!.values,
                                                       _textSynopsys.text,
-                                                      widget.bookInfo!['coverImage'],
+                                                      widget.bookInfo![
+                                                          'coverImage'],
                                                       _image,
-                                                      widget.bookInfo!['createBy'])
+                                                      widget.bookInfo![
+                                                          'createBy'])
                                                   .then((value) => showDialog(
                                                       context: context,
                                                       builder: (_) =>
@@ -360,7 +398,8 @@ class _AddBookState extends State<AddBook> {
                                       child: Text(
                                           widget.bookInfo == null
                                               ? "บันทึก"
-                                              : widget.bookInfo!['approveStatus']
+                                              : widget.bookInfo![
+                                                      'approveStatus']
                                                   ? "บันทึก"
                                                   : "อนุมัติ",
                                           style:

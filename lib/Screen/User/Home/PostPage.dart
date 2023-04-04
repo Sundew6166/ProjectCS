@@ -16,6 +16,7 @@ class PostPage extends StatefulWidget {
 class _PostPageState extends State<PostPage> {
   static final _keyValidationForm = GlobalKey<FormState>();
   TextEditingController textarea = TextEditingController();
+  final FocusNode _unUsedFocusNode = FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +32,12 @@ class _PostPageState extends State<PostPage> {
               child: Column(
                 children: [
                   TextFormField(
+                    onTapOutside: (PointerDownEvent event) {
+                      FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                    },
                     controller: textarea,
                     keyboardType: TextInputType.multiline,
+                    textInputAction: TextInputAction.done,
                     maxLines: 8,
                     validator: (value) {
                       return value!.isEmpty ? 'ข้อมูลไม่ถูกต้อง' : null;
@@ -81,7 +86,8 @@ class _PostPageState extends State<PostPage> {
                           fixedSize: const Size(400, 40),
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10))),
-                      child: const Text("โพสต์", style: TextStyle(fontSize: 20)))
+                      child:
+                          const Text("โพสต์", style: TextStyle(fontSize: 20)))
                 ],
               ),
             )));

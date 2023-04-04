@@ -57,7 +57,9 @@ class _PaymentPageState extends State<PaymentPage> {
                       Total(
                           total: widget.saleInfo['sellingPrice'] +
                               widget.saleInfo['deliveryFee']),
-                      Bank(name: widget.saleInfo['bank'],number: widget.saleInfo['bankAccountNumber'])
+                      Bank(
+                          name: widget.saleInfo['bank'],
+                          number: widget.saleInfo['bankAccountNumber'])
                     ])),
                 PaymentSlip(),
                 const SizedBox(height: 20),
@@ -149,13 +151,16 @@ class BookName extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(title, style: const TextStyle(fontSize: 20)),
+              child: Text(title,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 20)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
               child: Text('${price} บ.',
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
@@ -185,6 +190,7 @@ class DeliveryFee extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text('${deliveryFee} บ.',
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
@@ -211,6 +217,7 @@ class Address extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(deliveryInfo,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 20, color: Colors.black54)),
           ),
         ],
@@ -239,6 +246,7 @@ class Total extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text('${total} บ.',
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 20, color: Colors.red)),
             ),
           ),
@@ -266,6 +274,7 @@ class Bank extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(name,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 20, color: Colors.black54)),
           ),
           const Align(
@@ -275,6 +284,7 @@ class Bank extends StatelessWidget {
           Align(
             alignment: Alignment.centerLeft,
             child: Text(number,
+                overflow: TextOverflow.ellipsis,
                 style: const TextStyle(fontSize: 20, color: Colors.black54)),
           ),
         ],

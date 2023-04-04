@@ -97,12 +97,12 @@ class _SaleTabState extends State<SaleTab> {
                                                     saleList![index]['book']
                                                         ['title'],
                                                     maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
+                                                    overflow: TextOverflow.ellipsis,
                                                     style: const TextStyle(
                                                         fontSize: 18)),
                                                 Text(
                                                   '${saleList![index]['sellingPrice']}฿',
+                                                  overflow: TextOverflow.ellipsis,
                                                   style: const TextStyle(
                                                       fontSize: 15,
                                                       color: Colors.red),

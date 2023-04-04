@@ -25,6 +25,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool isPasswordVisible = false;
   bool isConfirmPasswordVisible = false;
   String? _errorFromFirebase;
+  final FocusNode _unUsedFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -99,6 +100,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: const Text('ลงทะเบียน'),
                 ),
                 TextFormField(
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                  },
                   controller: _textEditUsername,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
@@ -110,6 +114,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       errorText: _errorFromFirebase),
                 ),
                 TextFormField(
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                  },
                   controller: _textEditPassword,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
@@ -131,9 +138,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       icon: const Icon(Icons.vpn_key)),
                 ),
                 TextFormField(
+                    onTapOutside: (PointerDownEvent event) {
+                      FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                    },
                     controller: _textEditConfirmPassword,
                     keyboardType: TextInputType.text,
-                    textInputAction: TextInputAction.done,
+                    textInputAction: TextInputAction.next,
                     validator: (value) =>
                         MatchValidator(errorText: "รหัสผ่านไม่ตรงกัน")
                             .validateMatch(value ?? "", _textEditPassword.text),
@@ -153,6 +163,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         icon: const Icon(Icons.vpn_key))),
                 TextFormField(
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                  },
                   controller: _textEditName,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
@@ -161,6 +174,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       icon: Icon(Icons.text_fields_outlined)),
                 ),
                 TextFormField(
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                  },
                   controller: _textEditAddress,
                   keyboardType: TextInputType.emailAddress,
                   textInputAction: TextInputAction.next,
@@ -169,9 +185,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       icon: Icon(Icons.home)),
                 ),
                 TextFormField(
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                  },
                   controller: _textEditPhone,
                   keyboardType: TextInputType.emailAddress,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   decoration: const InputDecoration(
                       labelText: 'เบอร์โทรศัพท์ (ข้อมูลการจัดส่ง)',
                       icon: Icon(Icons.phone)),

@@ -20,6 +20,7 @@ class _LogInPageState extends State<LogInPage> {
   final TextEditingController _textEditPassword = TextEditingController();
   bool isPasswordVisible = false;
   String? _errorFromFirebase;
+  final FocusNode _unUsedFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -79,6 +80,9 @@ class _LogInPageState extends State<LogInPage> {
                   child: const Text('เข้าสู่ระบบ'),
                 ),
                 TextFormField(
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                  },
                   controller: _textEditUsername,
                   keyboardType: TextInputType.text,
                   textInputAction: TextInputAction.next,
@@ -88,9 +92,12 @@ class _LogInPageState extends State<LogInPage> {
                       labelText: 'ชื่อผู้ใช้', icon: Icon(Icons.person)),
                 ),
                 TextFormField(
+                  onTapOutside: (PointerDownEvent event) {
+                    FocusScope.of(context).requestFocus(_unUsedFocusNode);
+                  },
                   controller: _textEditPassword,
                   keyboardType: TextInputType.text,
-                  textInputAction: TextInputAction.next,
+                  textInputAction: TextInputAction.done,
                   validator: RequiredValidator(errorText: "กรุณากรอกรหัสผ่าน"),
                   obscureText: !isPasswordVisible,
                   decoration: InputDecoration(

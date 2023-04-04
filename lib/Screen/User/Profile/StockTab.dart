@@ -57,11 +57,10 @@ class _StockTabState extends State<StockTab> {
                             onTap: () async {
                               var bookInfo = widget.bookList[index]!;
                               if (widget.accType == "ADMIN") {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => AddBook(
-                                            accType: widget.accType,
+                                Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                    builder: (_) => AddBook(
+                                        accType: widget.accType,
                                             bookInfo: bookInfo)));
                               } else {
                                 Navigator.push(
@@ -103,7 +102,10 @@ class _StockTabState extends State<StockTab> {
                                                               widget.bookList[
                                                                       index]![
                                                                   'title'],
-                                                                  maxLines: 2,
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
                                                               style:
                                                                   const TextStyle(
                                                                       fontSize:

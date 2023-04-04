@@ -52,7 +52,6 @@ class _BuyPageState extends State<BuyPage> {
         resizeToAvoidBottomInset: false,
         body: Container(
             color: const Color(0xfff5f3e8),
-            // alignment: Alignment.topCenter,
             child: SingleChildScrollView(
                 child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -226,7 +225,10 @@ class BookName extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Center(
-        child: Text(title, style: const TextStyle(fontSize: 20)),
+        child: Text(title,
+        maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 20)),
       ),
     );
   }
@@ -274,13 +276,15 @@ class Author extends StatelessWidget {
           const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('ชื่อผู้แต่ง : ', style: TextStyle(fontSize: 16)),
+              child: Text('ชื่อผู้แต่ง : \n', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(author,
+              maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 16,
                   )),
@@ -305,13 +309,15 @@ class Publisher extends StatelessWidget {
           const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('สำนักพิมพ์ : ', style: TextStyle(fontSize: 16)),
+              child: Text('สำนักพิมพ์ : \n', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
               child: Text(publisher,
+              maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 16,
                   )),
@@ -343,6 +349,7 @@ class DeliveryFee extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerRight,
               child: Text('$deliveryFee บาท',
+                  overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     fontSize: 16,
                   )),
@@ -367,7 +374,7 @@ class Type extends StatelessWidget {
           const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('ประเภทหนังสือ : ', style: TextStyle(fontSize: 16)),
+              child: Text('ประเภทหนังสือ : \n', style: TextStyle(fontSize: 16)),
             ),
           ),
           Wrap(
@@ -385,6 +392,8 @@ class Type extends StatelessWidget {
       labelPadding: const EdgeInsets.all(2.0),
       label: Text(
         label,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
         style: const TextStyle(color: Colors.black),
       ),
       backgroundColor: const Color(0xffadd1dc),
@@ -413,7 +422,8 @@ class Synopsys extends StatelessWidget {
             margin: const EdgeInsets.only(top: 10.0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(synopsys, style: const TextStyle(fontSize: 16)),
+              child: Text(synopsys,
+                  style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -440,7 +450,8 @@ class Detail extends StatelessWidget {
             margin: const EdgeInsets.only(top: 10.0),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(detail, style: const TextStyle(fontSize: 16)),
+              child: Text(detail,
+                  style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],

@@ -50,7 +50,7 @@ class _ReviewPageState extends State<ReviewPage> {
             appBar: AppBar(
               title: const Text('รีวิวหนังสือ'),
             ),
-            resizeToAvoidBottomInset: false,
+            resizeToAvoidBottomInset: true,
             body: RefreshIndicator(
                 onRefresh: setData,
                 child: Container(
@@ -58,174 +58,185 @@ class _ReviewPageState extends State<ReviewPage> {
                     alignment: Alignment.topCenter,
                     child: SingleChildScrollView(
                         child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 20),
-                        Row(
                           mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              alignment: Alignment.center,
-                              width: 50,
-                            ),
-                            ImageProduct(
-                                coverImageURL: widget.bookInfo['coverImage']),
-                            Column(
+                            const SizedBox(height: 20),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                IconButton(
-                                  icon: Icon(
-                                    Icons.book,
-                                    size: 45,
-                                    color: widget.hasBook
-                                        ? Colors.green
-                                        : Colors.black,
-                                  ),
-                                  onPressed: (() async {
-                                    if (widget.hasBook) {
-                                      showDialog(
-                                          context: context,
-                                          builder: (_) => AlertDialog(
-                                                title: const Text(
-                                                    "ลบออกจากคลังหนังสือ"),
-                                                content: const Text(
-                                                    'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
-                                                actions: <Widget>[
-                                                  TextButton(
-                                                    onPressed: () =>
-                                                        Navigator.pop(
-                                                            context, 'ยกเลิก'),
-                                                    child: const Text('ยกเลิก'),
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () async {
-                                                      try {
-                                                        await BookController()
-                                                            .deleteBookFromLibrary(
-                                                                widget.bookInfo[
-                                                                    'isbn'],
-                                                                widget.bookInfo[
-                                                                        'edition']
-                                                                    .toString())
-                                                            .then((value) {
-                                                          setState(() {
-                                                            widget.hasBook =
-                                                                false;
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-                                                        });
-                                                      } on FirebaseException catch (e) {
-                                                        print(e.code);
-                                                        showDialog(
-                                                            context: context,
-                                                            builder: (_) =>
-                                                                AlertDialog(
-                                                                    title: Text(e
-                                                                        .message
-                                                                        .toString()),
-                                                                    content:
-                                                                        const Text(
-                                                                            "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
-                                                                    actions: <
-                                                                        Widget>[
-                                                                      TextButton(
-                                                                        onPressed:
-                                                                            () =>
-                                                                                Navigator.pop(context),
-                                                                        child: const Text(
-                                                                            'ตกลง'),
-                                                                      )
-                                                                    ]));
-                                                      }
-                                                    },
-                                                    child: const Text('ตกลง'),
-                                                  ),
-                                                ],
-                                              ));
-                                    } else {
-                                      try {
-                                        await BookController()
-                                            .addBookToLibrary(
-                                                widget.bookInfo['isbn'],
-                                                widget.bookInfo['edition']
-                                                    .toString())
-                                            .then((value) {
-                                          setState(() {
-                                            widget.hasBook = true;
-                                          });
-                                        });
-                                      } on FirebaseException catch (e) {
-                                        print(e.code);
-                                        showDialog(
-                                            context: context,
-                                            builder: (_) => AlertDialog(
-                                                    title: Text(
-                                                        e.message.toString()),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: 50,
+                                ),
+                                ImageProduct(
+                                    coverImageURL:
+                                        widget.bookInfo['coverImage']),
+                                Column(
+                                  children: [
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.book,
+                                        size: 45,
+                                        color: widget.hasBook
+                                            ? Colors.green
+                                            : Colors.black,
+                                      ),
+                                      onPressed: (() async {
+                                        if (widget.hasBook) {
+                                          showDialog(
+                                              context: context,
+                                              builder: (_) => AlertDialog(
+                                                    title: const Text(
+                                                        "ลบออกจากคลังหนังสือ"),
                                                     content: const Text(
-                                                        "เกิดข้อผิดพลาดในการเพิ่มหนังสือเข้าคลัง กรุณาลองใหม่"),
+                                                        'ยืนยันเพื่อลบออกจากคลังหนังสือ'),
                                                     actions: <Widget>[
                                                       TextButton(
                                                         onPressed: () =>
                                                             Navigator.pop(
-                                                                context),
+                                                                context,
+                                                                'ยกเลิก'),
+                                                        child: const Text(
+                                                            'ยกเลิก'),
+                                                      ),
+                                                      TextButton(
+                                                        onPressed: () async {
+                                                          try {
+                                                            await BookController()
+                                                                .deleteBookFromLibrary(
+                                                                    widget.bookInfo[
+                                                                        'isbn'],
+                                                                    widget
+                                                                        .bookInfo[
+                                                                            'edition']
+                                                                        .toString())
+                                                                .then((value) {
+                                                              setState(() {
+                                                                widget.hasBook =
+                                                                    false;
+                                                                Navigator.pop(
+                                                                    context);
+                                                              });
+                                                            });
+                                                          } on FirebaseException catch (e) {
+                                                            print(e.code);
+                                                            showDialog(
+                                                                context:
+                                                                    context,
+                                                                builder: (_) =>
+                                                                    AlertDialog(
+                                                                        title: Text(e
+                                                                            .message
+                                                                            .toString()),
+                                                                        content:
+                                                                            const Text(
+                                                                                "เกิดข้อผิดพลาดในการเอาหนังสือออกจากคลัง กรุณาลองใหม่"),
+                                                                        actions: <
+                                                                            Widget>[
+                                                                          TextButton(
+                                                                            onPressed: () =>
+                                                                                Navigator.pop(context),
+                                                                            child:
+                                                                                const Text('ตกลง'),
+                                                                          )
+                                                                        ]));
+                                                          }
+                                                        },
                                                         child:
                                                             const Text('ตกลง'),
-                                                      )
-                                                    ]));
-                                      }
-                                    }
-                                  }),
-                                ),
-                                const SizedBox(height: 20),
-                                if (widget.hasBook)
-                                  IconButton(
-                                      icon: Icon(
-                                        Icons.shopping_cart,
-                                        size: 45,
-                                        color: widget.hasSale
-                                            ? Colors.black
-                                            : Colors.red,
-                                      ),
-                                      onPressed: (() {
-                                        if (!widget.hasSale)
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => AddSale(
-                                                    bookInfo: widget.bookInfo)),
-                                          );
-                                      })),
+                                                      ),
+                                                    ],
+                                                  ));
+                                        } else {
+                                          try {
+                                            await BookController()
+                                                .addBookToLibrary(
+                                                    widget.bookInfo['isbn'],
+                                                    widget.bookInfo['edition']
+                                                        .toString())
+                                                .then((value) {
+                                              setState(() {
+                                                widget.hasBook = true;
+                                              });
+                                            });
+                                          } on FirebaseException catch (e) {
+                                            print(e.code);
+                                            showDialog(
+                                                context: context,
+                                                builder: (_) => AlertDialog(
+                                                        title: Text(e.message
+                                                            .toString()),
+                                                        content: const Text(
+                                                            "เกิดข้อผิดพลาดในการเพิ่มหนังสือเข้าคลัง กรุณาลองใหม่"),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () =>
+                                                                Navigator.pop(
+                                                                    context),
+                                                            child: const Text(
+                                                                'ตกลง'),
+                                                          )
+                                                        ]));
+                                          }
+                                        }
+                                      }),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    if (widget.hasBook)
+                                      IconButton(
+                                          icon: Icon(
+                                            Icons.shopping_cart,
+                                            size: 45,
+                                            color: widget.hasSale
+                                                ? Colors.black
+                                                : Colors.red,
+                                          ),
+                                          onPressed: (() {
+                                            if (!widget.hasSale)
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddSale(
+                                                            bookInfo: widget
+                                                                .bookInfo)),
+                                              );
+                                          })),
+                                  ],
+                                )
                               ],
-                            )
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              margin:
+                                  const EdgeInsets.symmetric(horizontal: 10),
+                              color: Colors.white,
+                              child: Column(
+                                children: [
+                                  BookName(title: widget.bookInfo['title']),
+                                  Author(author: widget.bookInfo['author']),
+                                  Publisher(
+                                      publisher: widget.bookInfo['publisher']),
+                                  Edition(
+                                      edition: widget.bookInfo['edition']
+                                          .toString()),
+                                  Price(
+                                      price:
+                                          widget.bookInfo['price'].toString()),
+                                  Type(types: widget.bookInfo['types']),
+                                  Synopsys(
+                                      synopsys: widget.bookInfo['synopsys']),
+                                ],
+                              ),
+                            ),
+                            WriteReview(
+                                edition: widget.bookInfo['edition'].toString(),
+                                isbn: widget.bookInfo['isbn'],
+                                reviews: reviews!),
                           ],
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          margin: const EdgeInsets.symmetric(horizontal: 10),
-                          color: Colors.white,
-                          child: Column(
-                            children: [
-                              BookName(title: widget.bookInfo['title']),
-                              Author(author: widget.bookInfo['author']),
-                              Publisher(
-                                  publisher: widget.bookInfo['publisher']),
-                              Edition(
-                                  edition:
-                                      widget.bookInfo['edition'].toString()),
-                              Price(price: widget.bookInfo['price'].toString()),
-                              Type(types: widget.bookInfo['types']),
-                              Synopsys(synopsys: widget.bookInfo['synopsys']),
-                            ],
-                          ),
-                        ),
-                        WriteReview(
-                            edition: widget.bookInfo['edition'].toString(),
-                            isbn: widget.bookInfo['isbn'],
-                            reviews: reviews!),
-                      ],
-                    )))))
+                        )))))
         : Container(
             width: MediaQuery.of(context).size.width,
             height: MediaQuery.of(context).size.height,
@@ -263,7 +274,10 @@ class BookName extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8),
       child: Center(
-        child: Text(title, style: const TextStyle(fontSize: 20)),
+        child: Text(title,
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(fontSize: 20)),
       ),
     );
   }
@@ -282,13 +296,16 @@ class Author extends StatelessWidget {
           const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('ชื่อผู้แต่ง : ', style: TextStyle(fontSize: 16)),
+              child: Text('ชื่อผู้แต่ง : \n', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text(author, style: const TextStyle(fontSize: 16)),
+              child: Text(author,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -316,7 +333,9 @@ class Edition extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text(edition, style: const TextStyle(fontSize: 16)),
+              child: Text(edition,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -338,13 +357,16 @@ class Publisher extends StatelessWidget {
           const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('สำนักพิมพ์ : ', style: TextStyle(fontSize: 16)),
+              child: Text('สำนักพิมพ์ : \n', style: TextStyle(fontSize: 16)),
             ),
           ),
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text(publisher, style: const TextStyle(fontSize: 16)),
+              child: Text(publisher,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 2,
+                  style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -372,7 +394,9 @@ class Price extends StatelessWidget {
           Expanded(
             child: Align(
               alignment: Alignment.centerRight,
-              child: Text('$price บาท', style: const TextStyle(fontSize: 16)),
+              child: Text('$price บาท',
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(fontSize: 16)),
             ),
           ),
         ],
@@ -394,7 +418,7 @@ class Type extends StatelessWidget {
           const Expanded(
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text('ประเภทหนังสือ : ', style: TextStyle(fontSize: 16)),
+              child: Text('ประเภท : \n', style: TextStyle(fontSize: 16)),
             ),
           ),
           Wrap(
@@ -410,7 +434,10 @@ class Type extends StatelessWidget {
   Widget _buildChip(String label) {
     return Chip(
       labelPadding: const EdgeInsets.all(2.0),
-      label: Text(label, style: const TextStyle(color: Colors.black)),
+      label: Text(label,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(color: Colors.black)),
       backgroundColor: const Color(0xffadd1dc),
       elevation: 6.0,
       shadowColor: Colors.grey[60],
@@ -488,11 +515,14 @@ class _WriteReviewState extends State<WriteReview> {
                         radius: 12,
                       ),
                       Text('\t${widget.reviews[index]['CreateBy']}',
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(fontSize: 14)),
                     ],
                   ),
                   const SizedBox(height: 5),
                   Text('${widget.reviews[index]['Detail_Review']}',
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
                       style: const TextStyle(fontSize: 14)),
                   Padding(
                     padding: const EdgeInsets.symmetric(vertical: 5),
@@ -562,8 +592,9 @@ class _WriteReviewState extends State<WriteReview> {
             radius: 20,
           ),
           Text('\t${user!.displayName.toString()}',
+              overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 16)),
-          const SizedBox(height: 10),
+          const SizedBox(width: 10),
           RatingBar.builder(
             itemSize: 40,
             minRating: 1,
@@ -595,9 +626,13 @@ class _WriteReviewState extends State<WriteReview> {
           ),
           const SizedBox(height: 10),
           TextField(
+            onTapOutside: (event) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
             controller: textarea,
             keyboardType: TextInputType.multiline,
-            maxLines: 8,
+            textInputAction: TextInputAction.done,
+            maxLines: 4,
             decoration: const InputDecoration(
                 filled: true,
                 fillColor: Colors.white,

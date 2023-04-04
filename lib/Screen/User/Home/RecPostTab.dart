@@ -218,18 +218,19 @@ class _PostSectionState extends State<PostSection> {
                                                   children: [
                                                     Text(
                                                         '${widget.postList[i]['CreateBy']}',
+                                                        overflow: TextOverflow.ellipsis,
                                                         style: const TextStyle(
                                                             fontSize: 18)),
                                                     Text(
                                                       '${widget.postList[i]['Detail_Post']}',
                                                       maxLines: 2,
-                                                      overflow:
-                                                          TextOverflow.ellipsis,
+                                                      overflow: TextOverflow.ellipsis,
                                                     )
                                                   ])),
                                         ),
                                         Text(
                                             '${widget.postList[i]['Create_DateTime_Post']}',
+                                            overflow: TextOverflow.ellipsis,
                                             textAlign: TextAlign.right),
                                       ])))));
                 },

@@ -76,6 +76,10 @@ class _SaleListState extends State<SaleList> {
                                                         children: [
                                                           Text(
                                                               '${saleList![i]['book']['title']}',
+                                                              overflow:
+                                                                  TextOverflow
+                                                                      .ellipsis,
+                                                              maxLines: 2,
                                                               style:
                                                                   const TextStyle(
                                                                       fontSize:
@@ -89,7 +93,6 @@ class _SaleListState extends State<SaleList> {
                                                           ))
                                                         ])),
                                               ),
-                                              // Text("03.03.2020"),
                                             ])))));
                       },
                     ),

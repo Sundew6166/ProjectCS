@@ -47,7 +47,8 @@ class _PostTabState extends State<PostTab> {
                     padding: const EdgeInsets.fromLTRB(150, 20, 0, 0),
                     child: const Text("ไม่มีโพสต์",
                         style: TextStyle(fontSize: 18)))
-                : SizedBox(
+                : Container(
+                    color: const Color(0xfff5f3e8),
                     height: MediaQuery.of(context).size.height,
                     child: ListView.builder(
                       itemCount: postList!.length,
