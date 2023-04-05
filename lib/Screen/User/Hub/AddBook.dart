@@ -22,7 +22,7 @@ class AddBook extends StatefulWidget {
 }
 
 class _AddBookState extends State<AddBook> {
-  static final _bookInfoFormKey = GlobalKey<FormState>();
+  final _bookInfoFormKey = GlobalKey<FormState>();
   AutocompleteLabelController<String>? typeOption;
   File? _image;
 

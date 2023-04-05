@@ -20,7 +20,7 @@ class _AddSaleState extends State<AddSale> {
   File? _image;
 
   final _picker = ImagePicker();
-  static final _addSaleFormKey = GlobalKey<FormState>();
+  final _addSaleFormKey = GlobalKey<FormState>();
 
   final TextEditingController _textISBN = TextEditingController();
   final TextEditingController _textTitle = TextEditingController();

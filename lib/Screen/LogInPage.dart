@@ -15,7 +15,7 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-  static final _loginFormKey = GlobalKey<FormState>();
+  final _loginFormKey = GlobalKey<FormState>();
   final TextEditingController _textEditUsername = TextEditingController();
   final TextEditingController _textEditPassword = TextEditingController();
   bool isPasswordVisible = false;

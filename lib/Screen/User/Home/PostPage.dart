@@ -14,7 +14,7 @@ class PostPage extends StatefulWidget {
 }
 
 class _PostPageState extends State<PostPage> {
-  static final _keyValidationForm = GlobalKey<FormState>();
+  final _keyValidationForm = GlobalKey<FormState>();
   TextEditingController textarea = TextEditingController();
   final FocusNode _unUsedFocusNode = FocusNode();
 

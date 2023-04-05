@@ -11,7 +11,7 @@ class EditAddressPage extends StatefulWidget {
 }
 
 class _EditAddressPageState extends State<EditAddressPage> {
-  static final _addressFormKey = GlobalKey<FormState>();
+  final _addressFormKey = GlobalKey<FormState>();
 
   final TextEditingController _textEditName = TextEditingController();
   final TextEditingController _textEditAddress = TextEditingController();
