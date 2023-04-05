@@ -23,19 +23,11 @@ class _StockTabState extends State<StockTab> {
   }
 
   setData() async {
-    if (widget.accType == 'ADMIN') {
-      await BookController().getAllBookInLibrary(widget.accType).then((value) {
-        setState(() {
-          widget.bookList = value;
-        });
+    await BookController().getAllBookInLibrary(widget.accType).then((value) {
+      setState(() {
+        widget.bookList = value;
       });
-    } else {
-      await BookController().getAllBookInLibrary(widget.accType).then((value) {
-        setState(() {
-          widget.bookList = value;
-        });
-      });
-    }
+    });
   }
 
   @override
@@ -57,7 +49,7 @@ class _StockTabState extends State<StockTab> {
                             onTap: () async {
                               var bookInfo = widget.bookList[index]!;
                               if (widget.accType == "ADMIN") {
-                                Navigator.of(context).pushReplacement(
+                                Navigator.of(context).push(
                                   MaterialPageRoute(
                                     builder: (_) => AddBook(
                                         accType: widget.accType,
