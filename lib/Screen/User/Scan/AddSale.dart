@@ -141,7 +141,7 @@ class _AddSaleState extends State<AddSale> {
                                       .requestFocus(_unUsedFocusNode);
                                 },
                                 controller: _textSellingPrice,
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
                                 validator: (value) {
                                   return value!.isEmpty
@@ -159,7 +159,7 @@ class _AddSaleState extends State<AddSale> {
                                       .requestFocus(_unUsedFocusNode);
                                 },
                                 controller: _textDeliveryFee,
-                                keyboardType: TextInputType.text,
+                                keyboardType: TextInputType.number,
                                 textInputAction: TextInputAction.next,
                                 validator: (value) {
                                   return value!.isEmpty
