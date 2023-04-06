@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -54,8 +52,6 @@ class _NotificationPageState extends State<NotificationPage> {
         });
       });
     }
-    // print(notiList);
-    // print('----------------------------------------------------');
   }
 
   @override
@@ -157,7 +153,7 @@ class _NotificationPageState extends State<NotificationPage> {
                                           ),
                                           subtitle: Text(
                                             notiList![index]!['type'] == "A"
-                                                ? "หนังสือได้รับการอนุมัติแล้ว "
+                                                ? "หนังสือได้รับการอนุมัติแล้ว"
                                                 : notiList![index]!['type'] ==
                                                         "P"
                                                     ? "กรุณาแจ้งชำระเงินภายใน 5 นาที"

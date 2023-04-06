@@ -133,7 +133,6 @@ class _AddBookState extends State<AddBook> {
                                 decoration:
                                     const InputDecoration(labelText: 'ISBN'),
                               ),
-                              // book name
                               TextFormField(
                                 onTapOutside: (PointerDownEvent event) {
                                   FocusScope.of(context)

@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
@@ -8,7 +7,6 @@ import 'package:my_book/Screen/User/Home/SaleTab.dart';
 import 'package:my_book/Screen/User/Home/SearchPage.dart';
 import 'package:my_book/Screen/User/Home/NotiPage.dart';
 import 'package:my_book/Service/NotificationController.dart';
-import 'package:my_book/Service/Recommendation.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -34,7 +32,6 @@ class _HomePageState extends State<HomePage> {
         noti = value;
       });
     });
-    // print(noti);
   }
 
   var presscount = 0;
@@ -90,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                     ],
                     bottom: const TabBar(tabs: [
                       Tab(text: 'โพสต์'),
-                      Tab(text: 'ซื้อ'),
+                      Tab(text: 'การขาย'),
                     ]),
                   ),
                   body: TabBarView(

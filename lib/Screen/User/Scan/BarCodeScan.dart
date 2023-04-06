@@ -147,10 +147,11 @@ class _BarCodeScanState extends State<BarCodeScan> {
               await BookController().getBookInfo(result!, dropdownValue!);
           hasBook =
               await BookController().checkHasBook(result!, dropdownValue!);
-          if (hasBook)
+          if (hasBook) {
             hasSale = await SaleController().checkHasSale(result!, dropdownValue!);
-          else
+          } else {
             hasSale = false;
+          }
         } else {
           bookInfo = null;
           hasBook = false;
@@ -283,14 +284,15 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                                                     .checkHasBook(
                                                                         result!,
                                                                         dropdownValue!);
-                                                                if (hasBook)
+                                                                if (hasBook) {
                                                                   hasSale = await SaleController()
                                                                       .checkHasSale(
                                                                           result!,
                                                                           dropdownValue!);
-                                                                else
+                                                                } else {
                                                                   hasSale =
                                                                       false;
+                                                                }
                                                               });
                                                             }
                                                           },
