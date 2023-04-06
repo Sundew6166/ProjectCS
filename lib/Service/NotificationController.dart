@@ -32,10 +32,6 @@ class NotificationController {
             .then((value) {
           noti['moreInfo'] = value;
         });
-        // } else if (noti['type'] == "P" && DateTime.now().isAfter(noti['dateTime'].add(const Duration(minutes: 5)))) {
-        //   await db.collection('notifications').doc(noti['id']).update({
-        //     'isRead': true
-        //   });
       } else {
         await db.collection("sales").doc(noti['ref']).get().then((value) async {
           var moreInfo = {
@@ -71,7 +67,7 @@ class NotificationController {
     return notiList;
   }
 
-  Future<Map<String, dynamic>> getNotiRead() async {
+  Future<Map<String, dynamic>> getListNoti() async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
     Map<String, dynamic> output = {"newNoti": false, "notiList": []};

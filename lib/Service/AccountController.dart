@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_book/Service/ImageController.dart';
 
 class AccountController {
-  // AccountController()
   Future<void> register(String username, String password, String name,
       String address, String phone) async {
     await FirebaseAuth.instance

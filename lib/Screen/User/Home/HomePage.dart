@@ -27,7 +27,7 @@ class _HomePageState extends State<HomePage> {
 
   Future<void> setData() async {
     // ถ้ามี noti ที่ยังไม่อ่านจะได้ true
-    await NotificationController().getNotiRead().then((value) {
+    await NotificationController().getListNoti().then((value) {
       setState(() {
         noti = value;
       });

@@ -182,7 +182,6 @@ class SaleController {
           'createDateTime': docSnap.data()['createDateTime']
         };
         output.add(temp);
-        // print(temp);
       }
     });
     await db

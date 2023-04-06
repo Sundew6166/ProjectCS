@@ -152,6 +152,7 @@ class BookName extends StatelessWidget {
             child: Align(
               alignment: Alignment.centerLeft,
               child: Text(title,
+              maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 20)),
             ),

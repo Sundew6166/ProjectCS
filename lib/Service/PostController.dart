@@ -29,18 +29,6 @@ class PostController {
           'Image': acc['imageURL']
         };
         output.add(temp);
-
-        // print('${docSnap.id} => ${docSnap.data()['Create_DateTime_Post']}');
-        // DateTime myDateTime = (docSnap.data()['Create_DateTime_Post']).toDate();
-        // print(myDateTime);
-        // print(docSnap.data()['Detail_Post']);
-        // print(docSnap.data()['CreateBy']);
-
-        // print(DateFormat.yMMMd().format(DateTime.now()));
-        // Mar 7, 2023
-        // DateTime now = DateTime.now();
-        // String formattedDate = DateFormat('yyyy-MM-dd - kk:mm').format(now);
-        // 2023-03-07 – 22:14
       }
     });
     return output;
@@ -52,7 +40,6 @@ class PostController {
     List<dynamic> output = [];
     await db
         .collection('posts')
-        // .orderBy('Create_DateTime_Post')
         .where('CreateBy', isEqualTo: user!.uid)
         .get()
         .then((value) {
@@ -90,13 +77,11 @@ class PostController {
   Future<List<dynamic>> getComment(String idpost) async {
     final db = FirebaseFirestore.instance;
     List<dynamic> output = [];
-    // print('ID: $idpost');
     await db
         .collection("comments")
         .where('ID_Post', isEqualTo: idpost)
         .get()
         .then((querySnapshot) async {
-      // print('count: ${querySnapshot.size}');
       for (var docSnap in querySnapshot.docs) {
         Map<String, dynamic> acc = await AccountController()
             .getAnotherProfile(docSnap.data()['CreateBy']);
@@ -113,7 +98,6 @@ class PostController {
         output.add(temp);
       }
     });
-    // print('>>>>> $output');
     output.sort((a, b) =>
         b['Create_DateTime_Comment'].compareTo(a['Create_DateTime_Comment']));
     return output;
@@ -132,8 +116,4 @@ class PostController {
 
     await db.collection('comments').add(data);
   }
-
-
-
-
 }

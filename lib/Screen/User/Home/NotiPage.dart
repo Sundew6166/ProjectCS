@@ -32,7 +32,7 @@ class _NotificationPageState extends State<NotificationPage> {
   Future<void> setNotiList() async {
     if (isRefresh) {
       widget.notiList =
-          (await NotificationController().getNotiRead())['notiList'];
+          (await NotificationController().getListNoti())['notiList'];
     } else {
       setState(() {
         isRefresh = true;

@@ -11,7 +11,6 @@ class SearchController {
 
     for (var element in allPost) {
       if (element['Detail_Post'].toLowerCase().contains(item)) {
-        // print(element);
         output.add(element);
       }
     }
