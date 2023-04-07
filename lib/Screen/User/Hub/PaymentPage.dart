@@ -86,7 +86,7 @@ class _PaymentPageState extends State<PaymentPage> {
                             content: const Text("แจ้งชำระเงินเสร็จสิ้น อย่าลืมเพิ่มหนังสือเข้าคลังหลังจากได้รับหนังสือแล้ว"),
                             actions: <Widget>[
                               TextButton(
-                                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: "USER", tab: "PROFILE"))),
+                                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => BottomBar(accType: "USER", tab: "HOME"))),
                                 child: const Text("ตกลง"),
                               ),
                             ],
