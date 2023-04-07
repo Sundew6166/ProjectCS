@@ -120,6 +120,7 @@ class _AddBookState extends State<AddBook> {
                           controller: _textISBN,
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
+                          validator: RequiredValidator(errorText: "กรุณากรอกเลข ISBN"),
                           decoration: const InputDecoration(labelText: "ISBN"),
                         ),
                         TextFormField(
