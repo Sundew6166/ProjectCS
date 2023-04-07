@@ -1,22 +1,14 @@
 import 'dart:io';
-import 'package:cloud_functions/cloud_functions.dart';
-import 'package:intl/intl.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:my_book/Service/BookController.dart';
 import 'package:my_book/Service/ImageController.dart';
 import 'package:my_book/Service/NotificationController.dart';
 
 class SaleController {
-  Future<void> addSale(
-      String idBook,
-      String detail,
-      String sellingPrice,
-      String deliveryFee,
-      String bank,
-      String bankAccountNumber,
-      File image) async {
+  Future<void> addSale(String idBook, String detail, String sellingPrice, String deliveryFee, String bank, String bankAccountNumber, File image) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
 
@@ -99,8 +91,7 @@ class SaleController {
     return output;
   }
 
-  Future<Map<String, dynamic>?> getBookInfo(
-      Map<String, dynamic>? data, String id) async {
+  Future<Map<String, dynamic>?> getBookInfo(Map<String, dynamic>? data, String id) async {
     if (data != null) {
       data['createDateTime'] = DateFormat('dd/MM/yyyy \n kk:mm')
           .format(data['createDateTime'].toDate());
