@@ -212,7 +212,7 @@ class _AddBookState extends State<AddBook> {
                                       .then((value) => showDialog(
                                         context: context,
                                         builder: (_) => AlertDialog(
-                                          title: Text(widget.accType == "ADMIN" ? "เสร็จสิ้น" : "รอการยืนยันจากผู้ดูแล"),
+                                          title: Text(widget.accType == "ADMIN" ? "เสร็จสิ้น" : "รอการยืนยันจากผู้ดูแลระบบ"),
                                           content: Text(widget.accType == "ADMIN" ? "เพิ่มข้อมูลหนังสือใหม่เสร็จสิ้น" : "ส่งข้อมูลเสร็จสิ้น รอการยืนยันจากผู้ดูแล"),
                                           actions: <Widget>[
                                             TextButton(

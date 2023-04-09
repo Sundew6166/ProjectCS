@@ -137,7 +137,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
         if (editions.isNotEmpty) {
           dropdownValue = editions.first;
           editions.add("เพิ่ม");
-          bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
+          bookInfo = await BookController().getBookInfo("${result}_${dropdownValue}");
           hasBook = await BookController().checkHasBook(result!, dropdownValue!);
           hasSale = hasBook ? await SaleController().checkHasSale(result!, dropdownValue!) : false;
         } else {
@@ -199,7 +199,7 @@ class _BarCodeScanState extends State<BarCodeScan> {
                                               });
                                           } else {
                                             dropdownValue = value!;
-                                            bookInfo = await BookController().getBookInfo(result!, dropdownValue!);
+                                            bookInfo = await BookController().getBookInfo("${result}_${dropdownValue}");
                                             hasBook = await BookController().checkHasBook(result!, dropdownValue!);
                                             hasSale = hasBook ? await SaleController().checkHasSale(result!, dropdownValue!) : false;
                                           }

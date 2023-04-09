@@ -4,10 +4,8 @@ import 'package:intl/intl.dart';
 import 'package:my_book/Service/BookController.dart';
 
 class NotificationController {
-  Future<void> createNotification(
-      String type, String refId, String sendTo) async {
+  Future<void> createNotification(String type, String refId, String sendTo) async {
     final db = FirebaseFirestore.instance;
-
     final data = {
       "type": type,
       "ref": refId,
@@ -22,16 +20,12 @@ class NotificationController {
   Future<List> getNotificationInformation(List<dynamic> notiList) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
-
     for (var noti in notiList) {
       noti['dateTime'] = noti['dateTime'].toDate();
       if (noti['type'] == "A") {
-        var idSplit = noti['ref'].split("_");
-        await BookController()
-            .getBookInfo(idSplit[0], idSplit[1])
-            .then((value) {
-          noti['moreInfo'] = value;
-        });
+        await BookController().getBookInfo(noti['ref']).then(
+          (value) => noti['moreInfo'] = value
+        );
       } else {
         await db.collection("sales").doc(noti['ref']).get().then((value) async {
           var moreInfo = {
@@ -43,26 +37,16 @@ class NotificationController {
             "bank": value.data()!['bank'],
             "bankAccountNumber": value.data()!['bankAccountNumber']
           };
-          await db
-              .collection("books")
-              .doc(moreInfo['book'])
-              .get()
-              .then((value) {
-            moreInfo["title"] = value.data()!['title'];
-          });
-          await db
-              .collection("accounts")
-              .doc(moreInfo['buyer'])
-              .get()
-              .then((value) {
-            moreInfo["deliveryInfo"] =
-                "${value.data()!['name']}\n${value.data()!['address']}\nเบอร์โทรศัพท์ ${value.data()!['phone']}";
-          });
+          await db.collection("books").doc(moreInfo['book']).get().then(
+            (value) => moreInfo["title"] = value.data()!['title']
+          );
+          await db.collection("accounts").doc(moreInfo['buyer']).get().then(
+            (value) => moreInfo["deliveryInfo"] = "${value.data()!['name']}\n${value.data()!['address']}\nเบอร์โทรศัพท์ ${value.data()!['phone']}"
+          );
           noti['moreInfo'] = moreInfo;
         });
       }
     }
-
     notiList.sort((a, b) => b!['dateTime'].compareTo(a!['dateTime']));
     return notiList;
   }
@@ -72,20 +56,15 @@ class NotificationController {
     final user = FirebaseAuth.instance.currentUser;
     Map<String, dynamic> output = {"newNoti": false, "notiList": []};
 
-    await db
-        .collection('notifications')
-        .where('sendTo', isEqualTo: user!.uid)
-        .get()
-        .then((querySnapshot) async {
-      for (var docSnap in querySnapshot.docs) {
-        var data = docSnap.data();
-        data.addAll({'id': docSnap.id});
-        output['notiList'].add(data);
-        if (docSnap.data()['isRead'] == false) {
-          output['newNoti'] = true;
+    await db.collection('notifications').where('sendTo', isEqualTo: user!.uid).get()
+      .then((querySnapshot) async {
+        for (var docSnap in querySnapshot.docs) {
+          var data = docSnap.data();
+          data.addAll({'id': docSnap.id});
+          output['notiList'].add(data);
+          if (docSnap.data()['isRead'] == false) {output['newNoti'] = true;}
         }
-      }
-    });
+      });
     return output;
   }
 

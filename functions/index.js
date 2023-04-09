@@ -8,15 +8,14 @@ const db = admin.firestore();
 
 exports.paymentTimeout = functions.https.onCall((data, context) => {
   setTimeout(() => {
-    db.collection("sales").doc(data.idSale).get()
-        .then((docSnap) => {
-          if (docSnap.data()["saleStatus"] == "B") {
-            db.collection("sales").doc(data.idSale).update({
-              "buyer": "",
-              "saleStatus": "N",
-              "updateDateTime": Timestamp.now(),
-            });
-          }
+    db.collection("sales").doc(data.idSale).get().then((docSnap) => {
+      if (docSnap.data()["saleStatus"] == "B") {
+        db.collection("sales").doc(data.idSale).update({
+          "buyer": "",
+          "saleStatus": "N",
+          "updateDateTime": Timestamp.now(),
         });
+      }
+    });
   }, 300000); // 5 minutes
 });

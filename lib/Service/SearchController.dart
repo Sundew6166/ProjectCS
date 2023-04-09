@@ -6,7 +6,6 @@ class SearchController {
   Future<List<dynamic>> getPosts(String item) async {
     List<dynamic> allPost = await PostController().getPostAll();
     item = item.toLowerCase();
-
     List<dynamic> output = [];
 
     for (var element in allPost) {
@@ -20,7 +19,6 @@ class SearchController {
   Future<List<dynamic>> getBooks(String item) async {
     List<dynamic> allBook = await BookController().getAllBookInLibrary('ADMIN');
     item = item.toLowerCase();
-
     List<dynamic> output = [];
 
     for (var element in allBook) {
@@ -37,18 +35,15 @@ class SearchController {
         }
       }
     }
-    // print(output);
     return output;
   }
 
   Future<List<dynamic>> getSales(String item) async {
     List<dynamic> allBook = await SaleController().getAllSale();
     item = item.toLowerCase();
-
     List<dynamic> output = [];
 
     for (var element in allBook) {
-      // print('>>>>>> ${element}');
       if (element['book']['title'].toLowerCase().contains(item) ||
           element['book']['author'].toLowerCase().contains(item) ||
           element['book']['publisher'].toLowerCase().contains(item) ||
@@ -63,7 +58,6 @@ class SearchController {
         }
       }
     }
-    // print(output);
     return output;
   }
 }

@@ -5,40 +5,42 @@ import 'package:my_book/Service/ImageController.dart';
 
 class AccountController {
   Future<void> register(String username, String password, String name, String address, String phone) async {
-    await FirebaseAuth.instance
-        .createUserWithEmailAndPassword(
-            email: username + "@mybook.com", password: password)
-        .then((value) => postAccountDetails(username, name, address, phone));
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: username + "@mybook.com",
+      password: password
+    ).then((value) => postAccountDetails(username, name, address, phone));
   }
 
   void postAccountDetails(String username, String name, String address, String phone) async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
+    String urlImage = "https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346";
     final data = {
       "username": username,
       "type": "USER",
       "name": name,
       "address": address,
       "phone": phone,
-      "image":
-          "https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346"
+      "image": urlImage
     };
 
     db.collection('accounts').doc(user!.uid).set(data);
     user.updateDisplayName(username);
-    user.updatePhotoURL(
-        "https://firebasestorage.googleapis.com/v0/b/mybook-f9b37.appspot.com/o/defaultProfilePic.png?alt=media&token=4b8f691a-6093-48fa-b8ba-86a074ffd346");
+    user.updatePhotoURL(urlImage);
   }
 
   Future<String> login(String username, String password) async {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: username + "@mybook.com", password: password);
+      email: username + "@mybook.com",
+      password: password
+    );
     return getAccountType();
   }
 
   Future<String> getAccountType() async {
     final db = FirebaseFirestore.instance;
     final user = FirebaseAuth.instance.currentUser;
+    
     if (user == null) return "";
     final docSnap = await db.collection('accounts').doc(user.uid).get();
     return docSnap.data()!['type'];
@@ -48,15 +50,18 @@ class AccountController {
     FirebaseAuth.instance.signOut();
   }
 
-  Future<void> changePassword(
-      String currentPassword, String newPassword) async {
+  Future<void> changePassword(String currentPassword, String newPassword) async {
     final user = FirebaseAuth.instance.currentUser;
     final cred = EmailAuthProvider.credential(
-        email: user?.email ?? "", password: currentPassword);
+      email: user?.email ?? "",
+      password: currentPassword
+    );
 
-    await user?.reauthenticateWithCredential(cred).then((value) async {
-      await user.updatePassword(newPassword);
-    });
+    await user?.reauthenticateWithCredential(cred).then(
+      (value) async {
+        await user.updatePassword(newPassword);
+      }
+    );
   }
 
   Future<Map<String, dynamic>> getDeliveryInformation() async {
@@ -89,10 +94,9 @@ class AccountController {
 
     String downloadURL = await ImageController().uploadToFireStorage(file, user!.uid);
     print("downloadURL: " + downloadURL);
-    await db.collection('accounts').doc(user.uid)
-      .update({
-        "image": downloadURL
-      });
+    await db.collection('accounts').doc(user.uid).update({
+      "image": downloadURL
+    });
     user.updatePhotoURL(downloadURL);
   }
 

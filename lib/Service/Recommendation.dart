@@ -63,7 +63,6 @@ class Recommendation {
       output.addAll(allBook);
     }
 
-
     return output;
   }
 }
